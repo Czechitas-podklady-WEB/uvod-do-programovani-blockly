@@ -28,7 +28,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build'
+          path: 'dist'
   deploy:
     if: github.ref == 'refs/heads/deploy'
     needs: build
