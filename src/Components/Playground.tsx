@@ -19,7 +19,7 @@ const blocks = [
 	},
 	{
 		type: 'jump',
-		message0: 'Skočit',
+		message0: 'Přeskočit',
 		colour: 200,
 		previousStatement: 'Action',
 		nextStatement: 'Action',
