@@ -31,13 +31,8 @@ export const App: FunctionComponent = () => {
 				<CssBaseline enableColorScheme />
 				<Routes>
 					<Route index element={<Home />} />
-					<Route path="level">
-						<Route path=":level" element={<Level />} />
-					</Route>
-					<Route
-						path="*"
-						element={<NotFound />} /* @TODO: match /level too. */
-					/>
+					<Route path="level/:group/:level" element={<Level />} />
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 				<div>
 					<a href="https://vite.dev" target="_blank">
@@ -63,7 +58,7 @@ export const App: FunctionComponent = () => {
 				<NavLink to="/" end>
 					Home
 				</NavLink>{' '}
-				<NavLink to="/level/7" end>
+				<NavLink to="/level/hard/7" end>
 					Level 7
 				</NavLink>
 			</ThemeProvider>
