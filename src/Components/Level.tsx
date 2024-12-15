@@ -4,6 +4,7 @@ import { FunctionComponent } from 'react'
 import { NavLink, useParams } from 'react-router'
 import { useLevel } from '../data/levels'
 import { NotFound } from './NotFound'
+import { Playground } from './Playground'
 
 export const Level: FunctionComponent = () => {
 	const { group: groupKey, level: levelKey } = useParams()
@@ -39,7 +40,10 @@ const InHasLevel: FunctionComponent<{
 				</NavLink>{' '}
 				{level.label}
 			</Typography>
-			<Typography variant="body1">{level.description}</Typography>
+			<Typography variant="body1" gutterBottom>
+				{level.description}
+			</Typography>
+			<Playground allowedBlocks={level.allowedBlocks} />
 		</Container>
 	)
 }
