@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import story1 from '../assets/story-1.png'
 import story10 from '../assets/story-10.png'
 import story11 from '../assets/story-11.png'
@@ -87,3 +88,12 @@ export const levelGroups = [
 ] as const
 
 export type Level = (typeof levelGroups)[number]['levels'][number]
+
+export const useLevel = (groupKey: string, levelKey: string) =>
+	useMemo(
+		() =>
+			levelGroups
+				.find((group) => group.key === groupKey)
+				?.levels.find((level) => level.key === levelKey) ?? null,
+		[groupKey, levelKey],
+	)
