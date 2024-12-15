@@ -15,9 +15,12 @@ import styles from './Home.module.css'
 export const Home: FunctionComponent = () => {
 	return (
 		<Container>
+			<Typography variant="h3" component="h1" gutterBottom mt={4}>
+				Úvod do programování
+			</Typography>
 			{levelGroups.map((group) => (
 				<div key={group.key}>
-					<Typography variant="h4" component="h2" gutterBottom mt={4}>
+					<Typography variant="h4" component="h2" gutterBottom mt={6}>
 						{group.label}
 					</Typography>
 					<Grid container spacing={2}>
