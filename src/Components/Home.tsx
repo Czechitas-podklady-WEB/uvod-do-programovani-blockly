@@ -5,7 +5,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
 import { FunctionComponent } from 'react'
-import { levelGroups } from '../data/levels'
+import { Level, levelGroups } from '../data/levels'
 
 export const Home: FunctionComponent = () => {
 	return (
@@ -13,7 +13,7 @@ export const Home: FunctionComponent = () => {
 			Home
 			{levelGroups.map((group) => (
 				<div key={group.key}>
-					<Typography variant="h3" align="left" component="h2">
+					<Typography variant="h4" component="h2" gutterBottom mt={4}>
 						{group.label /* @TODO: translate */}
 					</Typography>
 					<Grid container spacing={2}>
@@ -26,8 +26,9 @@ export const Home: FunctionComponent = () => {
 									lg: 3,
 									xl: 2,
 								}}
+								key={level.key}
 							>
-								<Tile key={level.key} />
+								<Tile level={level} />
 							</Grid>
 						))}
 					</Grid>
@@ -37,19 +38,19 @@ export const Home: FunctionComponent = () => {
 	)
 }
 
-const Tile: FunctionComponent = () => {
+const Tile: FunctionComponent<{ level: Level }> = ({ level }) => {
 	return (
 		<Card>
 			<CardActionArea>
 				<CardMedia
 					component="img"
 					height="140"
-					image="/static/images/cards/contemplative-reptile.jpg"
+					image={level.image}
 					alt="green iguana"
 				/>
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="div">
-						Lizard
+						{level.label}
 					</Typography>
 					<Typography variant="body2" sx={{ color: 'text.secondary' }}>
 						Lizards are a widespread group of squamate reptiles, with over 6,000
