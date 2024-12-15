@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { FunctionComponent, useMemo } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
@@ -78,6 +79,17 @@ export const Playground: FunctionComponent<{
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
 			/>
+			<div className={styles.run}>
+				<Button
+					variant="contained"
+					color="primary"
+					onClick={() => {
+						alert('Zatím neimplementováno.')
+					}}
+				>
+					Spustit
+				</Button>
+			</div>
 		</>
 	)
 }
