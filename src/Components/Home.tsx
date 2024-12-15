@@ -1,3 +1,4 @@
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Container } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
@@ -5,6 +6,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
+import clsx from 'clsx'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import { Level, levelGroups } from '../data/levels'
@@ -26,7 +28,6 @@ export const Home: FunctionComponent = () => {
 									sm: 6,
 									md: 4,
 									lg: 3,
-									xl: 2,
 								}}
 								key={level.key}
 								className={styles.tile}
@@ -45,14 +46,30 @@ const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
 	level,
 	groupKey,
 }) => {
+	const isUnlocked = level.allowedBlocks.length > 0 // @TODO: store finished levels and improve this logic
+
 	return (
-		<Card>
+		<Card className={clsx(styles.card, isUnlocked && styles.is_unlocked)}>
 			{/* @ts-expect-error: Fix to vs href prop. */}
 			<CardActionArea
 				LinkComponent={NavLink}
 				to={`/level/${groupKey}/${level.key}`}
+				disabled={!isUnlocked}
 			>
-				<CardMedia component="img" height="260" image={level.image} alt="" />
+				<div className={styles.card_media}>
+					<CardMedia
+						component="img"
+						height="260"
+						image={level.image}
+						alt=""
+						className={styles.card_media_in}
+					/>
+					{!isUnlocked && (
+						<div className={styles.card_lock}>
+							<LockOutlinedIcon fontSize="inherit" />
+						</div>
+					)}
+				</div>
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="div">
 						{level.label}

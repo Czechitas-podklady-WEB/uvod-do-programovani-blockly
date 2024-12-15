@@ -1,3 +1,20 @@
 .tile {
 	display: grid;
 }
+
+.card:not(.is_unlocked) .card_media_in {
+	filter: grayscale(100%);
+	opacity: 0.2;
+}
+
+.card_media {
+	position: relative;
+}
+
+.card_lock {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	font-size: 5em;
+}
