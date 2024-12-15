@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import { Level, levelGroups } from '../data/levels'
+import styles from './Home.module.css'
 
 export const Home: FunctionComponent = () => {
 	return (
@@ -28,6 +29,7 @@ export const Home: FunctionComponent = () => {
 									xl: 2,
 								}}
 								key={level.key}
+								className={styles.tile}
 							>
 								<Tile level={level} groupKey={group.key} />
 							</Grid>
@@ -56,8 +58,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
 						{level.label}
 					</Typography>
 					<Typography variant="body2" sx={{ color: 'text.secondary' }}>
-						Lizards are a widespread group of squamate reptiles, with over 6,000
-						species, ranging across all continents except Antarctica
+						{level.description}
 					</Typography>
 				</CardContent>
 			</CardActionArea>

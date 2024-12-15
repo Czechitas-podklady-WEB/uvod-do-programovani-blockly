@@ -39,6 +39,7 @@ const InHasLevel: FunctionComponent<{
 				</NavLink>{' '}
 				{level.label}
 			</Typography>
+			<Typography variant="body1">{level.description}</Typography>
 		</Container>
 	)
 }

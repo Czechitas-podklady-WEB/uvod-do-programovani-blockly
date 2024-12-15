@@ -19,31 +19,39 @@ export const levelGroups = [
 			{
 				label: 'Level 1',
 				key: '1',
+				description:
+					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
 			},
 			{
 				label: 'Level 2',
 				key: '2',
+				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 			},
 			{
 				label: 'Level 3',
 				key: '3',
+				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 			},
 			{
 				label: 'Level 4',
 				key: '4',
+				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
 			},
 			{
 				label: 'Level 5',
 				key: '5',
+				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 			},
 			{
 				label: 'Level 6',
 				key: '6',
+				description:
+					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
 			},
 		],
@@ -55,16 +63,19 @@ export const levelGroups = [
 			{
 				label: 'Level 1',
 				key: '1',
+				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 			},
 			{
 				label: 'Level 2',
 				key: '2',
+				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 			},
 			{
 				label: 'Level 3',
 				key: '3',
+				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 			},
 		],
@@ -76,11 +87,15 @@ export const levelGroups = [
 			{
 				label: 'Level 1',
 				key: '1',
+				description:
+					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
 			},
 			{
 				label: 'Level 2',
 				key: '2',
+				description:
+					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
 			},
 		],
