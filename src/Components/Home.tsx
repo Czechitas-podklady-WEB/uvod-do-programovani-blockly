@@ -1,5 +1,5 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { Container } from '@mui/material'
+import { Container, Rating } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
 import CardContent from '@mui/material/CardContent'
@@ -50,6 +50,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
 	groupKey,
 }) => {
 	const isUnlocked = level.allowedBlocks.length > 0 // @TODO: store finished levels and improve this logic
+	const rating = level.key === '1' ? 3 : level.key === '2' ? 1 : 0 // @TODO
 
 	return (
 		<Card className={clsx(styles.card, isUnlocked && styles.is_unlocked)}>
@@ -75,7 +76,10 @@ const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
 				</div>
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="div">
-						{level.label}
+						<div className={styles.card_header}>
+							<div className={styles.card_label}>{level.label}</div>
+							{isUnlocked && <Rating value={rating} readOnly max={3} />}
+						</div>
 					</Typography>
 					<Typography variant="body2" sx={{ color: 'text.secondary' }}>
 						{level.description}
