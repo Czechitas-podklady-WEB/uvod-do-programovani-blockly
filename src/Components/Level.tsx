@@ -53,7 +53,7 @@ const InHasLevel: FunctionComponent<{
 			</Typography>
 			<div className={styles.images}>
 				{/* @TODO */}
-				<Grid container spacing={2}>
+				<Grid container spacing={1}>
 					{level.key === '1' && <Grid size={2} />}
 					<Grid size={2}>
 						<img src={princess} />
