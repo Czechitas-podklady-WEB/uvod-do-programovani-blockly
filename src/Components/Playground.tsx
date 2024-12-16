@@ -4,6 +4,9 @@ import { FunctionComponent, useMemo } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import styles from './Playground.module.css'
 
+const initialXml =
+	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30"></block></xml>'
+
 const blocks = [
 	{
 		type: 'start',
@@ -75,9 +78,20 @@ export const Playground: FunctionComponent<{
 	return (
 		<>
 			<BlocklyWorkspace
+				initialXml={initialXml}
 				className={styles.workspace}
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
+				onWorkspaceChange={(workspace) => {
+					const blocks = workspace.getAllBlocks()
+					blocks.forEach((block) => {
+						if (block.type === 'start') {
+							block.setMovable(false)
+							block.setEditable(false)
+							block.setDeletable(false)
+						}
+					})
+				}}
 			/>
 			<div className={styles.run}>
 				<Button
