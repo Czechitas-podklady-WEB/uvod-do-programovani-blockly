@@ -1,2 +1,4 @@
+export const levelLinkPattern = '/level/:group/:level'
+
 export const levelLink = (groupKey: string, levelKey: string) =>
-	`/level/${groupKey}/${levelKey}`
+	levelLinkPattern.replace(':group', groupKey).replace(':level', levelKey)
