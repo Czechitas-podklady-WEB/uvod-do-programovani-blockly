@@ -17,6 +17,7 @@
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
 		"@eslint/js": "^9.15.0",
+		"@evolu/react": "^8.2.2",
 		"@fontsource/roboto": "^5.1.0",
 		"@mui/icons-material": "^6.2.0",
 		"@mui/material": "^6.2.0",
