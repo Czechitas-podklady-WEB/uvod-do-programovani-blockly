@@ -1,3 +1,4 @@
+import { NonEmptyString1000 } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
@@ -11,7 +12,7 @@ import hole from '../assets/hole.png'
 import princess from '../assets/princess.png'
 import sword from '../assets/sword.png'
 import thicket from '../assets/thicket.png'
-import { useLevel } from '../data/levels'
+import { useLevel, type GroupKey, type LevelKey } from '../data/levels'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
@@ -23,10 +24,15 @@ export const Level: FunctionComponent = () => {
 		return <NotFound />
 	}
 
-	return <In groupKey={groupKey} levelKey={levelKey} />
+	return (
+		<In
+			groupKey={NonEmptyString1000.make(groupKey)}
+			levelKey={NonEmptyString1000.make(levelKey)}
+		/>
+	)
 }
 
-const In: FunctionComponent<{ groupKey: string; levelKey: string }> = ({
+const In: FunctionComponent<{ groupKey: GroupKey; levelKey: LevelKey }> = ({
 	groupKey,
 	levelKey,
 }) => {
@@ -47,7 +53,7 @@ const InHasLevel: FunctionComponent<{
 			<Typography variant="h4" component="h1" gutterBottom>
 				<div className={styles.header}>
 					<div className={styles.header_label}>
-						{level.groupLabel}: {level.label}
+						{level.group.label}: {level.label}
 					</div>
 					<div className={styles.header_navigation}>
 						<Button startIcon={<HomeIcon />} component={NavLink} to="/">
@@ -129,7 +135,11 @@ const InHasLevel: FunctionComponent<{
 					</Grid>
 				</Grid>
 			</div>
-			<Playground allowedBlocks={level.allowedBlocks} />
+			<Playground
+				allowedBlocks={level.allowedBlocks}
+				levelKey={level.key}
+				groupKey={level.group.key}
+			/>
 		</Container>
 	)
 }

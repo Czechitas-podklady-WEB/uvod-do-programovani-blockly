@@ -1,3 +1,4 @@
+import { NonEmptyString1000 } from '@evolu/react'
 import { useMemo } from 'react'
 import story1 from '../assets/story-1.png'
 import story10 from '../assets/story-10.png'
@@ -13,14 +14,17 @@ import story9 from '../assets/story-9.png'
 import { BlockType } from '../Components/Playground'
 import { levelLink } from '../utilities/levelLink'
 
+export type GroupKey = typeof NonEmptyString1000.Type
+export type LevelKey = typeof NonEmptyString1000.Type
+
 export const levelGroups = [
 	{
 		label: 'Základní',
-		key: 'basics',
+		key: NonEmptyString1000.make('basics'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: '1',
+				key: NonEmptyString1000.make('1'),
 				description:
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
@@ -28,35 +32,35 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 2',
-				key: '2',
+				key: NonEmptyString1000.make('2'),
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 			},
 			{
 				label: 'Level 3',
-				key: '3',
+				key: NonEmptyString1000.make('3'),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 			},
 			{
 				label: 'Level 4',
-				key: '4',
+				key: NonEmptyString1000.make('4'),
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
 				allowedBlocks: [], // @TODO
 			},
 			{
 				label: 'Level 5',
-				key: '5',
+				key: NonEmptyString1000.make('5'),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 				allowedBlocks: [], // @TODO
 			},
 			{
 				label: 'Level 6',
-				key: '6',
+				key: NonEmptyString1000.make('6'),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
@@ -66,25 +70,25 @@ export const levelGroups = [
 	},
 	{
 		label: 'Středně obtížné',
-		key: 'medium',
+		key: NonEmptyString1000.make('medium'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: '1',
+				key: NonEmptyString1000.make('1'),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 				allowedBlocks: [], // @TODO
 			},
 			{
 				label: 'Level 2',
-				key: '2',
+				key: NonEmptyString1000.make('2'),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 				allowedBlocks: [], // @TODO
 			},
 			{
 				label: 'Level 3',
-				key: '3',
+				key: NonEmptyString1000.make('3'),
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 				allowedBlocks: [], // @TODO
@@ -93,11 +97,11 @@ export const levelGroups = [
 	},
 	{
 		label: 'Nejtěžší',
-		key: 'hard',
+		key: NonEmptyString1000.make('hard'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: '1',
+				key: NonEmptyString1000.make('1'),
 				description:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
@@ -105,7 +109,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 2',
-				key: '2',
+				key: NonEmptyString1000.make('2'),
 				description:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
@@ -115,10 +119,10 @@ export const levelGroups = [
 	},
 ] as const satisfies Array<{
 	label: string
-	key: string
+	key: GroupKey
 	levels: Array<{
 		label: string
-		key: string
+		key: LevelKey
 		description: string
 		image: string
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
@@ -134,7 +138,7 @@ const allLevels = levelGroups.flatMap((group) =>
 	})),
 )
 
-export const useLevel = (groupKey: string, levelKey: string) =>
+export const useLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
 	useMemo(() => {
 		const group = levelGroups.find((group) => group.key === groupKey)
 		if (!group) {
@@ -166,7 +170,10 @@ export const useLevel = (groupKey: string, levelKey: string) =>
 
 		return {
 			...level,
-			groupLabel: group.label,
+			group: {
+				label: group.label,
+				key: group.key,
+			},
 			previousLevel: previousLevel ? transformOtherLevel(previousLevel) : null,
 			nextLevel: nextLevel ? transformOtherLevel(nextLevel) : null,
 		}

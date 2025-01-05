@@ -9,8 +9,9 @@ import Typography from '@mui/material/Typography'
 import clsx from 'clsx'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
-import { Level, levelGroups } from '../data/levels'
+import { Level, levelGroups, type GroupKey } from '../data/levels'
 import { levelLink } from '../utilities/levelLink'
+import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Home.module.css'
 
 export const Home: FunctionComponent = () => {
@@ -46,12 +47,12 @@ export const Home: FunctionComponent = () => {
 	)
 }
 
-const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
+const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 	level,
 	groupKey,
 }) => {
 	const isUnlocked = level.allowedBlocks.length > 0 // @TODO: store finished levels and improve this logic
-	const rating = level.key === '1' ? 3 : level.key === '2' ? 1 : 0 // @TODO
+	const rating = useLevelRating(groupKey, level.key)
 
 	return (
 		<Card className={clsx(styles.card, isUnlocked && styles.is_unlocked)}>

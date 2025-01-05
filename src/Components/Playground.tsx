@@ -1,7 +1,10 @@
+import { PositiveInt, useEvolu } from '@evolu/react'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { FunctionComponent, useMemo } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
+import type { GroupKey, LevelKey } from '../data/levels'
+import type { Database } from '../database/Database'
 import styles from './Playground.module.css'
 
 const initialXml =
@@ -65,7 +68,9 @@ const configuration = {
 
 export const Playground: FunctionComponent<{
 	allowedBlocks: ReadonlyArray<BlockType>
-}> = ({ allowedBlocks }) => {
+	levelKey: LevelKey
+	groupKey: GroupKey
+}> = ({ allowedBlocks, levelKey, groupKey }) => {
 	const toolbox = useMemo(
 		() => ({
 			kind: 'flyoutToolbox',
@@ -75,6 +80,8 @@ export const Playground: FunctionComponent<{
 		}),
 		[allowedBlocks],
 	)
+	const { create } = useEvolu<Database>()
+
 	return (
 		<>
 			<BlocklyWorkspace
@@ -127,7 +134,11 @@ export const Playground: FunctionComponent<{
 					variant="contained"
 					color="success"
 					onClick={() => {
-						alert('Zatím neimplementováno.')
+						create('finishedLevel', {
+							levelKey,
+							groupKey,
+							rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
+						})
 					}}
 				>
 					Předstírat úspěšné splnění
