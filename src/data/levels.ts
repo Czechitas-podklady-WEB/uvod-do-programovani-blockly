@@ -138,6 +138,13 @@ const allLevels = levelGroups.flatMap((group) =>
 	})),
 )
 
+export const getPreviousLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
+	allLevels.find(
+		(_, index) =>
+			allLevels.at(index + 1)?.key === levelKey &&
+			allLevels.at(index + 1)?.groupKey === groupKey,
+	) ?? null
+
 export const useLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
 	useMemo(() => {
 		const group = levelGroups.find((group) => group.key === groupKey)
@@ -154,12 +161,7 @@ export const useLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
 			label: level.label,
 			link: levelLink(level.groupKey, level.key),
 		})
-		const previousLevel =
-			allLevels.find(
-				(_, index) =>
-					allLevels.at(index + 1)?.key === levelKey &&
-					allLevels.at(index + 1)?.groupKey === groupKey,
-			) ?? null
+		const previousLevel = getPreviousLevel(groupKey, levelKey)
 		const nextLevel =
 			allLevels.find(
 				(_, index) =>

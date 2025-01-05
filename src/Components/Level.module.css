@@ -1,3 +1,8 @@
+.container {
+	display: flex;
+	flex-direction: column;
+}
+
 .images {
 	margin-block: 2rem;
 }
@@ -12,4 +17,17 @@
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.5rem;
+}
+
+.locked {
+	margin-top: 2rem;
+	text-align: center;
+	font-size: 10em;
+	flex-grow: 1;
+	display: grid;
+	grid-template-rows: 1fr auto 2fr;
+	max-height: 60rem;
+}
+.locked_in {
+	grid-row: 2;
 }

@@ -11,6 +11,7 @@ import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import { Level, levelGroups, type GroupKey } from '../data/levels'
 import { levelLink } from '../utilities/levelLink'
+import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Home.module.css'
 
@@ -51,7 +52,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 	level,
 	groupKey,
 }) => {
-	const isUnlocked = level.allowedBlocks.length > 0 // @TODO: store finished levels and improve this logic
+	const isUnlocked = useIsLevelUnlocked(groupKey, level.key)
 	const rating = useLevelRating(groupKey, level.key)
 
 	return (

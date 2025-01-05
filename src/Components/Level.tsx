@@ -2,6 +2,7 @@ import { NonEmptyString1000 } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Button, ButtonGroup, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { FunctionComponent } from 'react'
@@ -13,6 +14,7 @@ import princess from '../assets/princess.png'
 import sword from '../assets/sword.png'
 import thicket from '../assets/thicket.png'
 import { useLevel, type GroupKey, type LevelKey } from '../data/levels'
+import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
@@ -48,8 +50,10 @@ const In: FunctionComponent<{ groupKey: GroupKey; levelKey: LevelKey }> = ({
 const InHasLevel: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
 }> = ({ level }) => {
+	const isUnlocked = useIsLevelUnlocked(level.group.key, level.key)
+
 	return (
-		<Container>
+		<Container className={styles.container}>
 			<Typography variant="h4" component="h1" gutterBottom>
 				<div className={styles.header}>
 					<div className={styles.header_label}>
@@ -83,63 +87,76 @@ const InHasLevel: FunctionComponent<{
 			<Typography variant="body1" gutterBottom>
 				{level.description}
 			</Typography>
-			<div className={styles.images}>
-				{/* @TODO */}
-				<Grid container spacing={1}>
-					{level.key === '1' && <Grid size={2} />}
-					<Grid size={2}>
-						<img src={princess} />
-					</Grid>
-					{level.key === '1' ? (
-						<>
+			{isUnlocked ? (
+				<>
+					<div className={styles.images}>
+						{/* @TODO */}
+						<Grid container spacing={1}>
+							{level.key === '1' && <Grid size={2} />}
 							<Grid size={2}>
-								<img src={grass} />
+								<img src={princess} />
 							</Grid>
+							{level.key === '1' ? (
+								<>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+								</>
+							) : level.key === '2' ? (
+								<>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+									<Grid size={2}>
+										<img src={hole} />
+									</Grid>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+								</>
+							) : level.key === '3' ? (
+								<>
+									<Grid size={2}>
+										<img src={sword} />
+									</Grid>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+									<Grid size={2}>
+										<img src={thicket} />
+									</Grid>
+									<Grid size={2}>
+										<img src={grass} />
+									</Grid>
+								</>
+							) : null}
 							<Grid size={2}>
-								<img src={grass} />
+								<img src={frog} />
 							</Grid>
-						</>
-					) : level.key === '2' ? (
-						<>
-							<Grid size={2}>
-								<img src={grass} />
-							</Grid>
-							<Grid size={2}>
-								<img src={hole} />
-							</Grid>
-							<Grid size={2}>
-								<img src={grass} />
-							</Grid>
-							<Grid size={2}>
-								<img src={grass} />
-							</Grid>
-						</>
-					) : level.key === '3' ? (
-						<>
-							<Grid size={2}>
-								<img src={sword} />
-							</Grid>
-							<Grid size={2}>
-								<img src={grass} />
-							</Grid>
-							<Grid size={2}>
-								<img src={thicket} />
-							</Grid>
-							<Grid size={2}>
-								<img src={grass} />
-							</Grid>
-						</>
-					) : null}
-					<Grid size={2}>
-						<img src={frog} />
-					</Grid>
-				</Grid>
-			</div>
-			<Playground
-				allowedBlocks={level.allowedBlocks}
-				levelKey={level.key}
-				groupKey={level.group.key}
-			/>
+						</Grid>
+					</div>
+					<Playground
+						allowedBlocks={level.allowedBlocks}
+						levelKey={level.key}
+						groupKey={level.group.key}
+					/>
+				</>
+			) : (
+				<div className={styles.locked}>
+					<div className={styles.locked_in}>
+						<LockOutlinedIcon fontSize="inherit" />
+						<Typography variant="body1">
+							Zamčeno. Je potřeba nejdříve vyřešit předchozí úkoly.
+						</Typography>
+					</div>
+				</div>
+			)}
 		</Container>
 	)
 }
