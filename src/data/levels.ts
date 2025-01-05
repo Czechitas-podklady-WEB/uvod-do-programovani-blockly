@@ -15,7 +15,7 @@ import { BlockType } from '../Components/Playground'
 export const levelGroups = [
 	{
 		label: 'Základní',
-		key: 'easy',
+		key: 'basics',
 		levels: [
 			{
 				label: 'Level 1',
@@ -64,7 +64,7 @@ export const levelGroups = [
 		],
 	},
 	{
-		label: 'Pokročilí',
+		label: 'Středně obtížné',
 		key: 'medium',
 		levels: [
 			{
@@ -91,7 +91,7 @@ export const levelGroups = [
 		],
 	},
 	{
-		label: 'Obtížné',
+		label: 'Nejtěžší',
 		key: 'hard',
 		levels: [
 			{
