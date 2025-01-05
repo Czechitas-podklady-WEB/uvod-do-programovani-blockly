@@ -82,6 +82,8 @@ export const Playground: FunctionComponent<{
 	)
 	const { create } = useEvolu<Database>()
 
+	// @TODO: update theme with media query changes
+
 	return (
 		<>
 			<BlocklyWorkspace
