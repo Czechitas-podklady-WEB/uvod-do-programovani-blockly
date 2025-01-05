@@ -104,6 +104,35 @@ export const Playground: FunctionComponent<{
 					Spustit
 				</Button>
 			</div>
+			<div className={styles.otherActions}>
+				<Button
+					variant="contained"
+					color="warning"
+					onClick={() => {
+						alert('Zatím neimplementováno.')
+					}}
+				>
+					Vrátit do původního stavu
+				</Button>{' '}
+				<Button
+					variant="contained"
+					color="secondary"
+					onClick={() => {
+						alert('Zatím neimplementováno.')
+					}}
+				>
+					Načíst nejlepší pokus
+				</Button>{' '}
+				<Button
+					variant="contained"
+					color="success"
+					onClick={() => {
+						alert('Zatím neimplementováno.')
+					}}
+				>
+					Předstírat úspěšné splnění
+				</Button>
+			</div>
 		</>
 	)
 }

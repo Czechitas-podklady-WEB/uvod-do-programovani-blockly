@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import { Level, levelGroups } from '../data/levels'
+import { levelLink } from '../utilities/levelLink'
 import styles from './Home.module.css'
 
 export const Home: FunctionComponent = () => {
@@ -57,7 +58,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: string }> = ({
 			{/* @ts-expect-error: Fix to vs href prop. */}
 			<CardActionArea
 				LinkComponent={NavLink}
-				to={`/level/${groupKey}/${level.key}`}
+				to={levelLink(groupKey, level.key)}
 				disabled={!isUnlocked}
 			>
 				<div className={styles.card_media}>

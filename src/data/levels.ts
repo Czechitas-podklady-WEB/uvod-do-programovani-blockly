@@ -11,6 +11,7 @@ import story7 from '../assets/story-7.png'
 import story8 from '../assets/story-8.png'
 import story9 from '../assets/story-9.png'
 import { BlockType } from '../Components/Playground'
+import { levelLink } from '../utilities/levelLink'
 
 export const levelGroups = [
 	{
@@ -126,11 +127,47 @@ export const levelGroups = [
 
 export type Level = (typeof levelGroups)[number]['levels'][number]
 
+const allLevels = levelGroups.flatMap((group) =>
+	group.levels.map((level) => ({
+		...level,
+		groupKey: group.key,
+	})),
+)
+
 export const useLevel = (groupKey: string, levelKey: string) =>
-	useMemo(
-		() =>
-			levelGroups
-				.find((group) => group.key === groupKey)
-				?.levels.find((level) => level.key === levelKey) ?? null,
-		[groupKey, levelKey],
-	)
+	useMemo(() => {
+		const group = levelGroups.find((group) => group.key === groupKey)
+		if (!group) {
+			return null
+		}
+		const level = group.levels.find((level) => level.key === levelKey)
+
+		if (!level) {
+			return null
+		}
+
+		const transformOtherLevel = (level: (typeof allLevels)[number]) => ({
+			label: level.label,
+			link: levelLink(level.groupKey, level.key),
+		})
+		const previousLevel =
+			allLevels.find(
+				(_, index) =>
+					allLevels.at(index + 1)?.key === levelKey &&
+					allLevels.at(index + 1)?.groupKey === groupKey,
+			) ?? null
+		const nextLevel =
+			allLevels.find(
+				(_, index) =>
+					index > 0 &&
+					allLevels.at(index - 1)?.key === levelKey &&
+					allLevels.at(index - 1)?.groupKey === groupKey,
+			) ?? null
+
+		return {
+			...level,
+			groupLabel: group.label,
+			previousLevel: previousLevel ? transformOtherLevel(previousLevel) : null,
+			nextLevel: nextLevel ? transformOtherLevel(nextLevel) : null,
+		}
+	}, [groupKey, levelKey])

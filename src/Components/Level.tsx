@@ -1,5 +1,7 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import { Container, Typography } from '@mui/material'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import HomeIcon from '@mui/icons-material/Home'
+import { Button, ButtonGroup, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { FunctionComponent } from 'react'
 import { NavLink, useParams } from 'react-router'
@@ -43,10 +45,34 @@ const InHasLevel: FunctionComponent<{
 	return (
 		<Container>
 			<Typography variant="h4" component="h1" gutterBottom>
-				<NavLink to="/" aria-label="zpět">
-					<ArrowBackIosIcon />
-				</NavLink>{' '}
-				{level.label}
+				<div className={styles.header}>
+					<div className={styles.header_label}>
+						{level.groupLabel}: {level.label}
+					</div>
+					<div className={styles.header_navigation}>
+						<Button startIcon={<HomeIcon />} component={NavLink} to="/">
+							Domů
+						</Button>{' '}
+						<ButtonGroup>
+							<Button
+								startIcon={<ArrowBackIosIcon />}
+								component={NavLink}
+								disabled={!level.previousLevel}
+								to={level.previousLevel?.link ?? '/'}
+							>
+								Předchozí
+							</Button>
+							<Button
+								endIcon={<ArrowForwardIosIcon />}
+								component={NavLink}
+								disabled={!level.nextLevel}
+								to={level.nextLevel?.link ?? '/'}
+							>
+								Další
+							</Button>
+						</ButtonGroup>
+					</div>
+				</div>
 			</Typography>
 			<Typography variant="body1" gutterBottom>
 				{level.description}
