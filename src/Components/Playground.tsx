@@ -1,7 +1,8 @@
 import { PositiveInt, useEvolu } from '@evolu/react'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
-import { FunctionComponent, useMemo } from 'react'
+import { javascriptGenerator } from 'blockly/javascript'
+import { FunctionComponent, useMemo, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
@@ -53,6 +54,27 @@ const blocks = [
 	},
 ] as const
 
+for (const { type: blockType } of blocks) {
+	javascriptGenerator.forBlock[blockType] = () => {
+		if (blockType === 'start') {
+			return 'start()\n'
+		} else if (blockType === 'go_forward') {
+			return 'goForward()\n'
+		} else if (blockType === 'hit') {
+			return 'hit()\n'
+		} else if (blockType === 'jump') {
+			return 'jump()\n'
+		} else if (blockType === 'kiss') {
+			return 'kiss()\n'
+		} else if (blockType === 'pick') {
+			return 'pick()\n'
+		} else {
+			blockType satisfies never
+		}
+		return null
+	}
+}
+
 export type BlockType = (typeof blocks)[number]['type']
 
 Blockly.defineBlocksWithJsonArray([...blocks])
@@ -81,8 +103,9 @@ export const Playground: FunctionComponent<{
 		[allowedBlocks],
 	)
 	const { create } = useEvolu<Database>()
+	const [code, setCode] = useState('')
 
-	// @TODO: update theme with media query changes
+	// @TODO: update theme with media query changes (workspace.setTheme(theme))
 
 	return (
 		<>
@@ -92,6 +115,8 @@ export const Playground: FunctionComponent<{
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
 				onWorkspaceChange={(workspace) => {
+					setCode(javascriptGenerator.workspaceToCode(workspace))
+					// @TODO: do this with first change only
 					const blocks = workspace.getAllBlocks()
 					blocks.forEach((block) => {
 						if (block.type === 'start') {
@@ -101,12 +126,17 @@ export const Playground: FunctionComponent<{
 						}
 					})
 				}}
+				onXmlChange={() => {
+					// @TODO: save this xml to database to remember last state so user can continue later
+				}}
 			/>
 			<div className={styles.run}>
 				<Button
 					variant="contained"
 					color="primary"
 					onClick={() => {
+						// @TODO: ignore parts of code that doesn't start with start()
+						console.log('Will run code:', code)
 						alert('Zatím neimplementováno.')
 					}}
 				>
