@@ -6,6 +6,11 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { FunctionComponent } from 'react'
 import { Route, HashRouter as Router, Routes } from 'react-router'
+import {
+	LoadingSuspense,
+	SharedLoadingIndicatorContextProvider,
+	SharedProgressLoadingIndicator,
+} from 'shared-loading-indicator'
 import { DatabaseProvider } from './Components/DatabaseProvider'
 import { Home } from './Components/Home'
 import { Layout } from './Components/Layout'
@@ -23,19 +28,24 @@ const theme = createTheme({
 
 export const App: FunctionComponent = () => {
 	return (
-		<Router>
-			<ThemeProvider theme={theme} noSsr>
-				<CssBaseline enableColorScheme />
-				<DatabaseProvider>
-					<Layout>
-						<Routes>
-							<Route index element={<Home />} />
-							<Route path={levelLinkPattern} element={<Level />} />
-							<Route path="*" element={<NotFound />} />
-						</Routes>
-					</Layout>
-				</DatabaseProvider>
-			</ThemeProvider>
-		</Router>
+		<SharedLoadingIndicatorContextProvider>
+			<LoadingSuspense>
+				<Router>
+					<ThemeProvider theme={theme} noSsr>
+						<CssBaseline enableColorScheme />
+						<DatabaseProvider>
+							<Layout>
+								<SharedProgressLoadingIndicator />
+								<Routes>
+									<Route index element={<Home />} />
+									<Route path={levelLinkPattern} element={<Level />} />
+									<Route path="*" element={<NotFound />} />
+								</Routes>
+							</Layout>
+						</DatabaseProvider>
+					</ThemeProvider>
+				</Router>
+			</LoadingSuspense>
+		</SharedLoadingIndicatorContextProvider>
 	)
 }

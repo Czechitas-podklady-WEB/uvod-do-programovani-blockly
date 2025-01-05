@@ -1,3 +1,7 @@
+:root {
+	--ProgressLoadingIndicator-color: #ec018c;
+}
+
 body {
 	overflow-y: scroll;
 }
