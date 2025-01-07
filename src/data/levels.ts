@@ -49,14 +49,14 @@ export const levelGroups = [
 				key: NonEmptyString1000.make('4'),
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: ['go_forward'], // @TODO
 			},
 			{
 				label: 'Level 5',
 				key: NonEmptyString1000.make('5'),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: ['go_forward', 'go_forward'], // @TODO
 			},
 			{
 				label: 'Level 6',
@@ -64,7 +64,7 @@ export const levelGroups = [
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: ['go_forward', 'go_forward', 'go_forward'], // @TODO
 			},
 		],
 	},
@@ -77,21 +77,34 @@ export const levelGroups = [
 				key: NonEmptyString1000.make('1'),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: ['go_forward', 'go_forward', 'go_forward', 'go_forward'], // @TODO
 			},
 			{
 				label: 'Level 2',
 				key: NonEmptyString1000.make('2'),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: [
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+				], // @TODO
 			},
 			{
 				label: 'Level 3',
 				key: NonEmptyString1000.make('3'),
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: [
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+				], // @TODO
 			},
 		],
 	},
@@ -105,7 +118,15 @@ export const levelGroups = [
 				description:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: [
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+				], // @TODO
 			},
 			{
 				label: 'Level 2',
@@ -113,7 +134,16 @@ export const levelGroups = [
 				description:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
-				allowedBlocks: [], // @TODO
+				allowedBlocks: [
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+					'go_forward',
+				], // @TODO
 			},
 		],
 	},

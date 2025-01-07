@@ -1,7 +1,22 @@
 import { id } from '@evolu/react'
-import type { GroupKey, LevelKey } from '../data/levels'
+import { GroupKey, LevelKey } from '../data/levels'
 
-const LevelIdentifier = id('LevelIdentifier')
+export const LevelIdentifier = id('LevelIdentifier')
+export type LevelIdentifier = typeof LevelIdentifier.Type
 
-export const getLevelIdentifier = (groupKey: GroupKey, levelKey: LevelKey) =>
-	LevelIdentifier.make(`${groupKey}_${levelKey}`)
+const levelIdentifiers: {
+	[groupKey: GroupKey]: {
+		[levelKey: LevelKey]: LevelIdentifier
+	}
+} = {}
+
+export const getLevelIdentifier = (groupKey: GroupKey, levelKey: LevelKey) => {
+	const group = (levelIdentifiers[groupKey] ??= {})
+	const levelIdentifier = (group[levelKey] ??= LevelIdentifier.make(
+		(() => {
+			const base = `${groupKey}_${levelKey}`
+			return `${base}${''.padStart(21 - base.length, '0')}`
+		})(),
+	))
+	return levelIdentifier
+}
