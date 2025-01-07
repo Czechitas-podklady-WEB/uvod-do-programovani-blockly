@@ -190,6 +190,19 @@ const allLevels = levelGroups.flatMap((group) =>
 	})),
 )
 
+export const getLevel = (groupKey: GroupKey, levelKey: LevelKey) => {
+	const group = levelGroups.find((group) => group.key === groupKey)
+	if (!group) {
+		return null
+	}
+	const level = group.levels.find((level) => level.key === levelKey)
+
+	if (!level) {
+		return null
+	}
+	return level
+}
+
 export const getPreviousLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
 	allLevels.find(
 		(_, index) =>

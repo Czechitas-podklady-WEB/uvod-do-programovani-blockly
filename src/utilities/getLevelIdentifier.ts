@@ -1,5 +1,5 @@
 import { id } from '@evolu/react'
-import { GroupKey, LevelKey } from '../data/levels'
+import { GroupKey, LevelKey, getLevel } from '../data/levels'
 
 export const LevelIdentifier = id('LevelIdentifier')
 export type LevelIdentifier = typeof LevelIdentifier.Type
@@ -24,7 +24,13 @@ const levelIdentifiers: {
 export const getLevelIdentifier = (groupKey: GroupKey, levelKey: LevelKey) => {
 	const group = (levelIdentifiers[groupKey] ??= {})
 	const levelIdentifier = (group[levelKey] ??= LevelIdentifier.make(
-		(() => hashCode(`${groupKey}_${levelKey}`))(),
+		(() => {
+			const level = getLevel(groupKey, levelKey)
+			if (!level) {
+				throw new Error(`Level not found: ${groupKey} ${levelKey}`)
+			}
+			return hashCode([...level.environment, ...level.allowedBlocks].join('')) // Combination of environment and allowed blocks make a unique level
+		})(),
 	))
 	return levelIdentifier
 }
