@@ -1,15 +1,21 @@
-import { useQuery } from '@evolu/react'
+import { cast, useQuery } from '@evolu/react'
 import { useMemo } from 'react'
 import type { GroupKey, LevelKey } from '../data/levels'
-import { finishedLevels } from './finishedLevels'
+import { evolu } from '../database/Database'
+import { getLevelIdentifier } from './getLevelIdentifier'
 
 export const useLevelRating = (groupKey: GroupKey, levelKey: LevelKey) => {
-	const { rows } = useQuery(finishedLevels) // @TODO: maybe use groupKey, levelKey as filter
-
-	return useMemo(
-		() =>
-			rows.find((row) => row.groupKey === groupKey && row.levelKey === levelKey)
-				?.rating ?? 0,
-		[rows, groupKey, levelKey],
-	)
+	const query = useMemo(() => {
+		const levelIdentifier = getLevelIdentifier(groupKey, levelKey)
+		return evolu.createQuery((database) =>
+			database
+				.selectFrom('finishedLevel')
+				.select('rating')
+				.where('isDeleted', 'is not', cast(true))
+				.where('id', 'is', levelIdentifier)
+				.limit(1),
+		)
+	}, [groupKey, levelKey])
+	const { row } = useQuery(query)
+	return row?.rating ?? 0
 }

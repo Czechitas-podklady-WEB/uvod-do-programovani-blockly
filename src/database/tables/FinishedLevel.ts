@@ -1,12 +1,8 @@
-import { NonEmptyString1000, PositiveInt, id, table } from '@evolu/react'
-
-export const FinishedLevelId = id('FinishedLevel')
-export type FinishedLevelId = typeof FinishedLevelId.Type
+import { PositiveInt, table } from '@evolu/react'
+import { LevelIdentifier } from '../../utilities/getLevelIdentifier'
 
 export const FinishedLevelTable = table({
-	id: FinishedLevelId,
-	groupKey: NonEmptyString1000,
-	levelKey: NonEmptyString1000,
+	id: LevelIdentifier,
 	rating: PositiveInt, // 1, 2, 3 // @TODO: change to enum
 	// @TODO: add solution snapshot
 })

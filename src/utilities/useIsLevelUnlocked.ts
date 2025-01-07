@@ -1,23 +1,31 @@
-import { useQuery } from '@evolu/react'
+import { cast, useQuery } from '@evolu/react'
 import { useMemo } from 'react'
 import { GroupKey, LevelKey, getPreviousLevel } from '../data/levels'
-import { finishedLevels } from './finishedLevels'
+import { evolu } from '../database/Database'
+import { getLevelIdentifier } from './getLevelIdentifier'
 
 export const useIsLevelUnlocked = (groupKey: GroupKey, levelKey: LevelKey) => {
-	const { rows } = useQuery(finishedLevels) // @TODO: maybe use groupKey, levelKey as filter
-	const previousLevel = useMemo(
-		() => getPreviousLevel(groupKey, levelKey),
-		[groupKey, levelKey],
-	)
+	const previousLevelIdentifier = useMemo(() => {
+		const previousLevel = getPreviousLevel(groupKey, levelKey)
+		if (previousLevel === null) {
+			return null
+		}
+		return getLevelIdentifier(previousLevel.groupKey, previousLevel.key)
+	}, [groupKey, levelKey])
 
-	return useMemo(
+	const query = useMemo(
 		() =>
-			previousLevel === null ||
-			(rows.find(
-				(row) =>
-					row.groupKey === previousLevel.groupKey &&
-					row.levelKey === previousLevel.key,
-			)?.rating ?? 0) > 0,
-		[rows, previousLevel],
+			evolu.createQuery((database) =>
+				database
+					.selectFrom('finishedLevel')
+					.select('rating')
+					.where('isDeleted', 'is not', cast(true))
+					.where('id', 'is', previousLevelIdentifier)
+					.limit(1),
+			),
+		[previousLevelIdentifier],
 	)
+	const { row } = useQuery(query)
+
+	return previousLevelIdentifier === null || (row?.rating ?? 0) > 0
 }

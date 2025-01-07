@@ -1,4 +1,3 @@
-import { NonEmptyString1000 } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
@@ -12,7 +11,13 @@ import hole from '../assets/hole.png'
 import princess from '../assets/princess.png'
 import sword from '../assets/sword.png'
 import thicket from '../assets/thicket.png'
-import { useLevel, type GroupKey, type LevelKey } from '../data/levels'
+import {
+	GroupKey,
+	LevelKey,
+	makeGroupKey,
+	makeLevelKey,
+	useLevel,
+} from '../data/levels'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
@@ -26,10 +31,7 @@ export const Level: FunctionComponent = () => {
 	}
 
 	return (
-		<In
-			groupKey={NonEmptyString1000.make(groupKey)}
-			levelKey={NonEmptyString1000.make(levelKey)}
-		/>
+		<In groupKey={makeGroupKey(groupKey)} levelKey={makeLevelKey(levelKey)} />
 	)
 }
 

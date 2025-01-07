@@ -6,8 +6,7 @@ import { FunctionComponent, useMemo, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
-import { FinishedLevelId } from '../database/tables/FinishedLevel'
-import { useFinishedLevelId } from '../utilities/useFinishedLevelId'
+import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import styles from './Playground.module.css'
 
 const initialXml =
@@ -106,7 +105,6 @@ export const Playground: FunctionComponent<{
 	)
 	const { createOrUpdate } = useEvolu<Database>()
 	const [code, setCode] = useState('')
-	const finishedLevelId = useFinishedLevelId(groupKey, levelKey)
 
 	// @TODO: update theme with media query changes (workspace.setTheme(theme))
 
@@ -170,17 +168,7 @@ export const Playground: FunctionComponent<{
 					color="success"
 					onClick={() => {
 						createOrUpdate('finishedLevel', {
-							id:
-								finishedLevelId ??
-								FinishedLevelId.make(
-									Math.random()
-										.toString(16)
-										.substring(
-											2,
-										) /* @TODO: This is very dumb. Assign to each level static global id. Or save each success to FinishedLevelTabel individually (multiple per level). */,
-								),
-							levelKey,
-							groupKey,
+							id: getLevelIdentifier(groupKey, levelKey),
 							rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
 						})
 					}}

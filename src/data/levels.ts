@@ -1,4 +1,4 @@
-import { NonEmptyString1000 } from '@evolu/react'
+import { Brand } from 'effect'
 import { useMemo } from 'react'
 import story1 from '../assets/story-1.png'
 import story10 from '../assets/story-10.png'
@@ -14,19 +14,21 @@ import story9 from '../assets/story-9.png'
 import { BlockType } from '../Components/Playground'
 import { levelLink } from '../utilities/levelLink'
 
-export type GroupKey = typeof NonEmptyString1000.Type
-export type LevelKey = typeof NonEmptyString1000.Type
+export type GroupKey = string & Brand.Brand<'GroupKey'>
+export type LevelKey = string & Brand.Brand<'LevelKey'>
+export const makeGroupKey = Brand.nominal<GroupKey>()
+export const makeLevelKey = Brand.nominal<LevelKey>()
 
 export type EnvironmentSegment = 'grass' | 'hole' | 'thicket' | 'sword'
 
 export const levelGroups = [
 	{
 		label: 'Základní',
-		key: NonEmptyString1000.make('basics'),
+		key: makeGroupKey('basics'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: NonEmptyString1000.make('1'),
+				key: makeLevelKey('1'),
 				description:
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
@@ -35,7 +37,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 2',
-				key: NonEmptyString1000.make('2'),
+				key: makeLevelKey('2'),
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
@@ -43,7 +45,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 3',
-				key: NonEmptyString1000.make('3'),
+				key: makeLevelKey('3'),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
@@ -51,7 +53,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 4',
-				key: NonEmptyString1000.make('4'),
+				key: makeLevelKey('4'),
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
 				allowedBlocks: [], // @TODO
@@ -59,7 +61,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 5',
-				key: NonEmptyString1000.make('5'),
+				key: makeLevelKey('5'),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 				allowedBlocks: [], // @TODO
@@ -67,7 +69,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 6',
-				key: NonEmptyString1000.make('6'),
+				key: makeLevelKey('6'),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
@@ -78,11 +80,11 @@ export const levelGroups = [
 	},
 	{
 		label: 'Středně obtížné',
-		key: NonEmptyString1000.make('medium'),
+		key: makeGroupKey('medium'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: NonEmptyString1000.make('1'),
+				key: makeLevelKey('1'),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 				allowedBlocks: [], // @TODO
@@ -90,7 +92,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 2',
-				key: NonEmptyString1000.make('2'),
+				key: makeLevelKey('2'),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 				allowedBlocks: [], // @TODO
@@ -106,7 +108,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 3',
-				key: NonEmptyString1000.make('3'),
+				key: makeLevelKey('3'),
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 				allowedBlocks: [], // @TODO
@@ -125,11 +127,11 @@ export const levelGroups = [
 	},
 	{
 		label: 'Nejtěžší',
-		key: NonEmptyString1000.make('hard'),
+		key: makeGroupKey('hard'),
 		levels: [
 			{
 				label: 'Level 1',
-				key: NonEmptyString1000.make('1'),
+				key: makeLevelKey('1'),
 				description:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
@@ -148,7 +150,7 @@ export const levelGroups = [
 			},
 			{
 				label: 'Level 2',
-				key: NonEmptyString1000.make('2'),
+				key: makeLevelKey('2'),
 				description:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
