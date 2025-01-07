@@ -10,7 +10,7 @@ import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import styles from './Playground.module.css'
 
 const initialXml =
-	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30"></block></xml>'
+	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>'
 
 const blocks = [
 	{
@@ -117,15 +117,6 @@ export const Playground: FunctionComponent<{
 				toolboxConfiguration={toolbox}
 				onWorkspaceChange={(workspace) => {
 					setCode(javascriptGenerator.workspaceToCode(workspace))
-					// @TODO: do this with first change only
-					const blocks = workspace.getAllBlocks()
-					blocks.forEach((block) => {
-						if (block.type === 'start') {
-							block.setMovable(false)
-							block.setEditable(false)
-							block.setDeletable(false)
-						}
-					})
 				}}
 				onXmlChange={() => {
 					// @TODO: save this xml to database to remember last state so user can continue later
