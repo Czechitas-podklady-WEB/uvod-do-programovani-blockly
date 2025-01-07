@@ -167,6 +167,7 @@ export const Playground: FunctionComponent<{
 					variant="contained"
 					color="success"
 					onClick={() => {
+						// @TODO: update only if better rating
 						createOrUpdate('finishedLevel', {
 							id: getLevelIdentifier(groupKey, levelKey),
 							rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
