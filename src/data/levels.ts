@@ -17,6 +17,8 @@ import { levelLink } from '../utilities/levelLink'
 export type GroupKey = typeof NonEmptyString1000.Type
 export type LevelKey = typeof NonEmptyString1000.Type
 
+export type EnvironmentSegment = 'grass' | 'hole' | 'thicket' | 'sword'
+
 export const levelGroups = [
 	{
 		label: 'Základní',
@@ -29,6 +31,7 @@ export const levelGroups = [
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
 				allowedBlocks: ['go_forward', 'kiss'],
+				environment: ['grass', 'grass'],
 			},
 			{
 				label: 'Level 2',
@@ -36,6 +39,7 @@ export const levelGroups = [
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
+				environment: ['grass', 'hole', 'grass', 'grass'],
 			},
 			{
 				label: 'Level 3',
@@ -43,6 +47,7 @@ export const levelGroups = [
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
+				environment: ['sword', 'grass', 'thicket', 'grass'],
 			},
 			{
 				label: 'Level 4',
@@ -50,6 +55,7 @@ export const levelGroups = [
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
 				allowedBlocks: [], // @TODO
+				environment: ['grass', 'grass', 'grass'], // @TODO
 			},
 			{
 				label: 'Level 5',
@@ -57,6 +63,7 @@ export const levelGroups = [
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 				allowedBlocks: [], // @TODO
+				environment: ['grass', 'grass', 'grass', 'grass'], // @TODO
 			},
 			{
 				label: 'Level 6',
@@ -65,6 +72,7 @@ export const levelGroups = [
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
 				allowedBlocks: [], // @TODO
+				environment: ['grass', 'grass', 'grass', 'grass', 'grass'], // @TODO
 			},
 		],
 	},
@@ -78,6 +86,7 @@ export const levelGroups = [
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 				allowedBlocks: [], // @TODO
+				environment: ['grass', 'grass', 'grass', 'grass', 'grass', 'grass'], // @TODO
 			},
 			{
 				label: 'Level 2',
@@ -85,6 +94,15 @@ export const levelGroups = [
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 				allowedBlocks: [], // @TODO
+				environment: [
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+				], // @TODO
 			},
 			{
 				label: 'Level 3',
@@ -92,6 +110,16 @@ export const levelGroups = [
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 				allowedBlocks: [], // @TODO
+				environment: [
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+				], // @TODO
 			},
 		],
 	},
@@ -106,6 +134,17 @@ export const levelGroups = [
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
 				allowedBlocks: [], // @TODO
+				environment: [
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+				], // @TODO
 			},
 			{
 				label: 'Level 2',
@@ -114,6 +153,18 @@ export const levelGroups = [
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
 				allowedBlocks: [], // @TODO
+				environment: [
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+					'grass',
+				], // @TODO
 			},
 		],
 	},
@@ -126,6 +177,7 @@ export const levelGroups = [
 		description: string
 		image: string
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
+		environment: Array<EnvironmentSegment>
 	}>
 }>
 

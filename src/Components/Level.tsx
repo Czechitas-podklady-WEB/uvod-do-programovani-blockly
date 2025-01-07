@@ -90,52 +90,27 @@ const InHasLevel: FunctionComponent<{
 			{isUnlocked ? (
 				<>
 					<div className={styles.images}>
-						{/* @TODO */}
-						<Grid container spacing={1}>
-							{level.key === '1' && <Grid size={2} />}
+						<Grid container spacing={1} justifyContent="center">
 							<Grid size={2}>
 								<img src={princess} />
 							</Grid>
-							{level.key === '1' ? (
-								<>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-								</>
-							) : level.key === '2' ? (
-								<>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-									<Grid size={2}>
-										<img src={hole} />
-									</Grid>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-								</>
-							) : level.key === '3' ? (
-								<>
-									<Grid size={2}>
-										<img src={sword} />
-									</Grid>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-									<Grid size={2}>
-										<img src={thicket} />
-									</Grid>
-									<Grid size={2}>
-										<img src={grass} />
-									</Grid>
-								</>
-							) : null}
+							{level.environment.map((segment, index) => (
+								<Grid size={2} key={index}>
+									<img
+										src={
+											segment === 'grass'
+												? grass
+												: segment === 'hole'
+													? hole
+													: segment === 'sword'
+														? sword
+														: segment === 'thicket'
+															? thicket
+															: (segment satisfies never)
+										}
+									/>
+								</Grid>
+							))}
 							<Grid size={2}>
 								<img src={frog} />
 							</Grid>
