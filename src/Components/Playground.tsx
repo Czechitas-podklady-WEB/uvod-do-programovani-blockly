@@ -2,8 +2,8 @@ import { PositiveInt, useEvolu } from '@evolu/react'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { javascriptGenerator } from 'blockly/javascript'
-import { FunctionComponent, useMemo, useRef, useState } from 'react'
-import { useBlocklyWorkspace } from 'react-blockly'
+import { FunctionComponent, useMemo, useState } from 'react'
+import { BlocklyWorkspace } from 'react-blockly'
 import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
@@ -80,7 +80,7 @@ export type BlockType = (typeof blocks)[number]['type']
 
 Blockly.defineBlocksWithJsonArray([...blocks])
 
-const workspaceConfiguration = {
+const configuration = {
 	grid: {
 		spacing: 22,
 		length: 3,
@@ -94,7 +94,7 @@ export const Playground: FunctionComponent<{
 	levelKey: LevelKey
 	groupKey: GroupKey
 }> = ({ allowedBlocks, levelKey, groupKey }) => {
-	const toolboxConfiguration = useMemo(
+	const toolbox = useMemo(
 		() => ({
 			kind: 'flyoutToolbox',
 			contents: blocks
@@ -103,27 +103,6 @@ export const Playground: FunctionComponent<{
 		}),
 		[allowedBlocks],
 	)
-	const blocklyRef = useRef<HTMLDivElement>(null)
-	const { workspace, xml, json } = useBlocklyWorkspace({
-		ref: blocklyRef,
-		workspaceConfiguration,
-		toolboxConfiguration,
-		initialXml,
-		onWorkspaceChange(workspace) {
-			setCode(javascriptGenerator.workspaceToCode(workspace))
-			// @TODO: do this with first change only
-			const blocks = workspace.getAllBlocks()
-			blocks.forEach((block) => {
-				if (block.type === 'start') {
-					block.setMovable(false)
-					block.setEditable(false)
-					block.setDeletable(false)
-				}
-			})
-		},
-	})
-	console.log(workspace, xml)
-	console.log(JSON.stringify(json))
 	const { createOrUpdate } = useEvolu<Database>()
 	const [code, setCode] = useState('')
 
@@ -131,7 +110,27 @@ export const Playground: FunctionComponent<{
 
 	return (
 		<>
-			<div ref={blocklyRef} className={styles.workspace} />
+			<BlocklyWorkspace
+				initialXml={initialXml}
+				className={styles.workspace}
+				workspaceConfiguration={configuration}
+				toolboxConfiguration={toolbox}
+				onWorkspaceChange={(workspace) => {
+					setCode(javascriptGenerator.workspaceToCode(workspace))
+					// @TODO: do this with first change only
+					const blocks = workspace.getAllBlocks()
+					blocks.forEach((block) => {
+						if (block.type === 'start') {
+							block.setMovable(false)
+							block.setEditable(false)
+							block.setDeletable(false)
+						}
+					})
+				}}
+				onXmlChange={() => {
+					// @TODO: save this xml to database to remember last state so user can continue later
+				}}
+			/>
 			<div className={styles.run}>
 				<Button
 					variant="contained"
