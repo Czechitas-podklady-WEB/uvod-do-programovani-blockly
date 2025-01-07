@@ -1,4 +1,5 @@
 import { PositiveInt, useEvolu } from '@evolu/react'
+import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { javascriptGenerator } from 'blockly/javascript'
@@ -105,6 +106,7 @@ export const Playground: FunctionComponent<{
 	)
 	const { createOrUpdate } = useEvolu<Database>()
 	const [code, setCode] = useState('')
+	const [workspace, setWorkspace] = useState<Blockly.WorkspaceSvg | null>(null)
 
 	// @TODO: update theme with media query changes (workspace.setTheme(theme))
 
@@ -117,6 +119,9 @@ export const Playground: FunctionComponent<{
 				toolboxConfiguration={toolbox}
 				onWorkspaceChange={(workspace) => {
 					setCode(javascriptGenerator.workspaceToCode(workspace))
+				}}
+				onInject={(workspace) => {
+					setWorkspace(workspace)
 				}}
 				onXmlChange={() => {
 					// @TODO: save this xml to database to remember last state so user can continue later
@@ -139,8 +144,17 @@ export const Playground: FunctionComponent<{
 				<Button
 					variant="contained"
 					color="warning"
+					startIcon={<RestartAltIcon />}
 					onClick={() => {
-						alert('Zatím neimplementováno.')
+						console.log(workspace)
+						if (!workspace) {
+							throw new Error('Workspace is not ready.')
+						}
+						Blockly.Xml.clearWorkspaceAndLoadFromXml(
+							new window.DOMParser().parseFromString(initialXml, 'text/xml')
+								.documentElement,
+							workspace,
+						)
 					}}
 				>
 					Vrátit do původního stavu
