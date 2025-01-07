@@ -4,7 +4,6 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Button, ButtonGroup, Container, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
 import { FunctionComponent } from 'react'
 import { NavLink, useParams } from 'react-router'
 import frog from '../assets/frog.png'
@@ -89,32 +88,30 @@ const InHasLevel: FunctionComponent<{
 			</Typography>
 			{isUnlocked ? (
 				<>
-					<div className={styles.images}>
-						<Grid container spacing={1} justifyContent="center">
-							<Grid size={2}>
-								<img src={princess} />
-							</Grid>
-							{level.environment.map((segment, index) => (
-								<Grid size={2} key={index}>
-									<img
-										src={
-											segment === 'grass'
-												? grass
-												: segment === 'hole'
-													? hole
-													: segment === 'sword'
-														? sword
-														: segment === 'thicket'
-															? thicket
-															: (segment satisfies never)
-										}
-									/>
-								</Grid>
-							))}
-							<Grid size={2}>
-								<img src={frog} />
-							</Grid>
-						</Grid>
+					<div className={styles.environment}>
+						<div className={styles.environment_segment}>
+							<img src={princess} />
+						</div>
+						{level.environment.map((segment, index) => (
+							<div className={styles.environment_segment} key={index}>
+								<img
+									src={
+										segment === 'grass'
+											? grass
+											: segment === 'hole'
+												? hole
+												: segment === 'sword'
+													? sword
+													: segment === 'thicket'
+														? thicket
+														: (segment satisfies never)
+									}
+								/>
+							</div>
+						))}
+						<div className={styles.environment_segment}>
+							<img src={frog} />
+						</div>
 					</div>
 					<Playground
 						allowedBlocks={level.allowedBlocks}
