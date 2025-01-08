@@ -11,7 +11,7 @@ import story6 from '../assets/story-6.png'
 import story7 from '../assets/story-7.png'
 import story8 from '../assets/story-8.png'
 import story9 from '../assets/story-9.png'
-import { BlockType } from '../Components/Playground'
+import type { BlockType } from '../utilities/blocks'
 import { levelLink } from '../utilities/levelLink'
 
 export type GroupKey = string & Brand.Brand<'GroupKey'>

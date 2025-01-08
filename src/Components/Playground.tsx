@@ -7,77 +7,17 @@ import { FunctionComponent, useMemo, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
+import { blocks, type BlockType } from '../utilities/blocks'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
+import { parseCode } from '../utilities/parseCode'
 import styles from './Playground.module.css'
 
 const initialXml =
 	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>'
 
-const blocks = [
-	{
-		type: 'start',
-		message0: 'Začátek',
-		colour: 6,
-		nextStatement: 'Action',
-	},
-	{
-		type: 'go_forward',
-		message0: 'Jít vpřed',
-		colour: 160,
-		previousStatement: 'Action',
-		nextStatement: 'Action',
-	},
-	{
-		type: 'jump',
-		message0: 'Přeskočit',
-		colour: 200,
-		previousStatement: 'Action',
-		nextStatement: 'Action',
-	},
-	{
-		type: 'pick',
-		message0: 'Zvednout meč',
-		colour: 300,
-		previousStatement: 'Action',
-		nextStatement: 'Action',
-	},
-	{
-		type: 'hit',
-		message0: 'Švihnout mečem',
-		colour: 350,
-		previousStatement: 'Action',
-		nextStatement: 'Action',
-	},
-	{
-		type: 'kiss',
-		message0: 'Políbit',
-		colour: 800,
-		previousStatement: 'Action',
-	},
-] as const
-
 for (const { type: blockType } of blocks) {
-	javascriptGenerator.forBlock[blockType] = () => {
-		if (blockType === 'start') {
-			return 'start()\n'
-		} else if (blockType === 'go_forward') {
-			return 'goForward()\n'
-		} else if (blockType === 'hit') {
-			return 'hit()\n'
-		} else if (blockType === 'jump') {
-			return 'jump()\n'
-		} else if (blockType === 'kiss') {
-			return 'kiss()\n'
-		} else if (blockType === 'pick') {
-			return 'pick()\n'
-		} else {
-			blockType satisfies never
-		}
-		return null
-	}
+	javascriptGenerator.forBlock[blockType] = () => `${blockType}\n`
 }
-
-export type BlockType = (typeof blocks)[number]['type']
 
 Blockly.defineBlocksWithJsonArray([...blocks])
 
@@ -140,8 +80,10 @@ export const Playground: FunctionComponent<{
 					variant="contained"
 					color="primary"
 					onClick={() => {
+						const parsedCode = parseCode(code)
 						// @TODO: ignore parts of code that doesn't start with start()
 						console.log('Will run code:', code)
+						console.log(parsedCode)
 						alert('Zatím neimplementováno.')
 					}}
 				>
