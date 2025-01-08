@@ -5,12 +5,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Button, ButtonGroup, Container, Typography } from '@mui/material'
 import { FunctionComponent } from 'react'
 import { NavLink, useParams } from 'react-router'
-import frog from '../assets/frog.png'
-import grass from '../assets/grass.png'
-import hole from '../assets/hole.png'
-import princess from '../assets/princess.png'
-import sword from '../assets/sword.png'
-import thicket from '../assets/thicket.png'
 import {
 	GroupKey,
 	LevelKey,
@@ -19,6 +13,7 @@ import {
 	useLevel,
 } from '../data/levels'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
+import { Environment } from './Environment'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
@@ -90,31 +85,7 @@ const InHasLevel: FunctionComponent<{
 			</Typography>
 			{isUnlocked ? (
 				<>
-					<div className={styles.environment}>
-						<div className={styles.environment_segment}>
-							<img src={princess} />
-						</div>
-						{level.environment.map((segment, index) => (
-							<div className={styles.environment_segment} key={index}>
-								<img
-									src={
-										segment === 'grass'
-											? grass
-											: segment === 'hole'
-												? hole
-												: segment === 'sword'
-													? sword
-													: segment === 'thicket'
-														? thicket
-														: (segment satisfies never)
-									}
-								/>
-							</div>
-						))}
-						<div className={styles.environment_segment}>
-							<img src={frog} />
-						</div>
-					</div>
+					<Environment segments={level.environment} />
 					<Playground
 						allowedBlocks={level.allowedBlocks}
 						levelKey={level.key}

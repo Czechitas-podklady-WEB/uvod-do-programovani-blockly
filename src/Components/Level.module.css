@@ -3,24 +3,6 @@
 	flex-direction: column;
 }
 
-.environment {
-	margin-block: 2rem;
-	display: flex;
-	justify-content: center;
-	column-gap: 0.125rem;
-}
-.environment_segment {
-	display: grid;
-	align-items: center;
-	max-width: 8rem;
-	height: 8rem;
-}
-.environment_segment img {
-	width: 100%;
-	aspect-ratio: 1;
-	object-fit: cover;
-}
-
 .header {
 	display: flex;
 	justify-content: space-between;
