@@ -1,4 +1,4 @@
-import { PositiveInt, useEvolu } from '@evolu/react'
+import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
@@ -106,6 +106,7 @@ export const Playground: FunctionComponent<{
 	)
 	const { createOrUpdate } = useEvolu<Database>()
 	const [code, setCode] = useState('')
+	const [xml, setXml] = useState(initialXml)
 	const [workspace, setWorkspace] = useState<Blockly.WorkspaceSvg | null>(null)
 
 	// @TODO: update theme with media query changes (workspace.setTheme(theme))
@@ -123,8 +124,9 @@ export const Playground: FunctionComponent<{
 				onInject={(workspace) => {
 					setWorkspace(workspace)
 				}}
-				onXmlChange={() => {
+				onXmlChange={(xml) => {
 					// @TODO: save this xml to database to remember last state so user can continue later
+					setXml(xml)
 				}}
 			/>
 			<div className={styles.run}>
@@ -176,6 +178,7 @@ export const Playground: FunctionComponent<{
 						createOrUpdate('finishedLevel', {
 							id: getLevelIdentifier(groupKey, levelKey),
 							rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
+							blocklyWorkspaceXml: NonEmptyString1000.make(xml),
 						})
 					}}
 				>
