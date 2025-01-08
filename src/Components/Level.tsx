@@ -13,10 +13,10 @@ import {
 	useLevel,
 } from '../data/levels'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
+import { Editor } from './Editor'
 import { Environment } from './Environment'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
-import { Playground } from './Playground'
 
 export const Level: FunctionComponent = () => {
 	const { group: groupKey, level: levelKey } = useParams()
@@ -86,7 +86,7 @@ const InHasLevel: FunctionComponent<{
 			{isUnlocked ? (
 				<>
 					<Environment segments={level.environment} />
-					<Playground
+					<Editor
 						allowedBlocks={level.allowedBlocks}
 						levelKey={level.key}
 						groupKey={level.group.key}

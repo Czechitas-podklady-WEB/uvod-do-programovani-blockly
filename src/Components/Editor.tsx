@@ -10,7 +10,7 @@ import type { Database } from '../database/Database'
 import { blocks, type BlockType } from '../utilities/blocks'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { parseCode } from '../utilities/parseCode'
-import styles from './Playground.module.css'
+import styles from './Editor.module.css'
 
 const initialXml =
 	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>'
@@ -30,7 +30,7 @@ const configuration = {
 	},
 }
 
-export const Playground: FunctionComponent<{
+export const Editor: FunctionComponent<{
 	allowedBlocks: ReadonlyArray<BlockType>
 	levelKey: LevelKey
 	groupKey: GroupKey
