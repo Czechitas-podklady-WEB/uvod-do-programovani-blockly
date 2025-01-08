@@ -114,7 +114,6 @@ export const Playground: FunctionComponent<{
 	return (
 		<>
 			<BlocklyWorkspace
-				// initialXml={initialXml}
 				className={styles.workspace}
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
