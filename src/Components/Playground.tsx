@@ -114,7 +114,7 @@ export const Playground: FunctionComponent<{
 	return (
 		<>
 			<BlocklyWorkspace
-				initialXml={initialXml}
+				// initialXml={initialXml}
 				className={styles.workspace}
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
@@ -123,6 +123,13 @@ export const Playground: FunctionComponent<{
 				}}
 				onInject={(workspace) => {
 					setWorkspace(workspace)
+					Blockly.Events.setRecordUndo(false)
+					Blockly.Xml.clearWorkspaceAndLoadFromXml(
+						new window.DOMParser().parseFromString(initialXml, 'text/xml')
+							.documentElement,
+						workspace,
+					)
+					Blockly.Events.setRecordUndo(true)
 				}}
 				onXmlChange={(xml) => {
 					// @TODO: save this xml to database to remember last state so user can continue later
