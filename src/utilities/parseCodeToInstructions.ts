@@ -1,6 +1,6 @@
 import { BlockType, blockTypes } from './blocks'
 
-export const parseCode = (code: string) => {
+export const parseCodeToInstructions = (code: string) => {
 	const [mainCode] = code.split('\n\n')
 	const instructions = mainCode
 		.split('\n')
@@ -10,4 +10,4 @@ export const parseCode = (code: string) => {
 	return instructions
 }
 
-export type Instructions = ReturnType<typeof parseCode>
+export type Instructions = ReturnType<typeof parseCodeToInstructions>

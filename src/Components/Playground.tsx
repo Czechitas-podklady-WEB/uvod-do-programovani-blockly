@@ -2,6 +2,8 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import { useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
+import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
+import { Plan, planInstructions } from '../utilities/planInstructions'
 import { Editor } from './Editor'
 import { Environment } from './Environment'
 import styles from './Playground.module.css'
@@ -9,27 +11,34 @@ import styles from './Playground.module.css'
 export const Playground: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
 }> = ({ level }) => {
-	const [isRunning, setIsRunning] = useState(false)
+	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
+	const [code, setCode] = useState('')
 
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.environment}>
-				<Environment segments={level.environment} />
+				<Environment
+					segments={level.environment}
+					runSteps={runningPlan?.steps}
+				/>
 			</div>
 			<div className={styles.editor}>
 				<Editor
 					allowedBlocks={level.allowedBlocks}
 					levelKey={level.key}
 					groupKey={level.group.key}
+					onCodeChange={(code) => {
+						setCode(code)
+					}}
 				/>
 			</div>
 			<div className={styles.run}>
-				{isRunning ? (
+				{runningPlan ? (
 					<Button
 						variant="contained"
 						color="warning"
 						onClick={() => {
-							setIsRunning(false)
+							setRunningPlan(null)
 						}}
 					>
 						Restartovat
@@ -39,7 +48,9 @@ export const Playground: FunctionComponent<{
 						variant="contained"
 						color="primary"
 						onClick={() => {
-							setIsRunning(true)
+							const instructions = parseCodeToInstructions(code)
+							const plan = planInstructions(instructions, level.environment)
+							setRunningPlan(plan)
 						}}
 					>
 						Spustit

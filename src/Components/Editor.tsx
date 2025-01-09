@@ -9,7 +9,6 @@ import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
 import { blocks, type BlockType } from '../utilities/blocks'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
-import { parseCode } from '../utilities/parseCode'
 import styles from './Editor.module.css'
 
 const initialXml =
@@ -34,7 +33,8 @@ export const Editor: FunctionComponent<{
 	allowedBlocks: ReadonlyArray<BlockType>
 	levelKey: LevelKey
 	groupKey: GroupKey
-}> = ({ allowedBlocks, levelKey, groupKey }) => {
+	onCodeChange: (code: string) => void
+}> = ({ allowedBlocks, levelKey, groupKey, onCodeChange }) => {
 	const toolbox = useMemo(
 		() => ({
 			kind: 'flyoutToolbox',
@@ -45,7 +45,6 @@ export const Editor: FunctionComponent<{
 		[allowedBlocks],
 	)
 	const { createOrUpdate } = useEvolu<Database>()
-	const [code, setCode] = useState('')
 	const [xml, setXml] = useState(initialXml)
 	const [workspace, setWorkspace] = useState<Blockly.WorkspaceSvg | null>(null)
 
@@ -58,7 +57,7 @@ export const Editor: FunctionComponent<{
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
 				onWorkspaceChange={(workspace) => {
-					setCode(javascriptGenerator.workspaceToCode(workspace))
+					onCodeChange(javascriptGenerator.workspaceToCode(workspace))
 				}}
 				onInject={(workspace) => {
 					setWorkspace(workspace)
@@ -80,11 +79,11 @@ export const Editor: FunctionComponent<{
 					variant="contained"
 					color="primary"
 					onClick={() => {
-						const parsedCode = parseCode(code)
-						// @TODO: ignore parts of code that doesn't start with start()
-						console.log('Will run code:', code)
-						console.log(parsedCode)
-						alert('Zatím neimplementováno.')
+						// const parsedCode = parseCode(code)
+						// // @TODO: ignore parts of code that doesn't start with start()
+						// console.log('Will run code:', code)
+						// console.log(parsedCode)
+						// alert('Zatím neimplementováno.')
 					}}
 				>
 					Spustit
