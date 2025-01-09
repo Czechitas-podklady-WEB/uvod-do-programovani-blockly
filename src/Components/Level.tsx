@@ -70,7 +70,9 @@ const InHasLevel: FunctionComponent<{
 							<Button
 								endIcon={<ArrowForwardIosIcon />}
 								component={NavLink}
-								disabled={!level.nextLevel}
+								disabled={
+									!level.nextLevel /* @TODO: disable if next is locked too */
+								}
 								to={level.nextLevel?.link ?? '/'}
 							>
 								Další
