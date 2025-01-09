@@ -2,7 +2,7 @@ import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { javascriptGenerator } from 'blockly/javascript'
-import { FunctionComponent, useMemo, useState } from 'react'
+import { FunctionComponent, useMemo, useRef, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import type { GroupKey, LevelKey } from '../data/levels'
 import type { Database } from '../database/Database'
@@ -52,7 +52,7 @@ export const Editor: FunctionComponent<{
 	)
 	const { createOrUpdate } = useEvolu<Database>()
 	const [xml, setXml] = useState(initialXml)
-	const [workspace, setWorkspace] = useState<Blockly.WorkspaceSvg | null>(null)
+	const lastReportedIfCanReset = useRef(false)
 
 	// @TODO: update theme with media query changes (workspace.setTheme(theme))
 
@@ -66,23 +66,25 @@ export const Editor: FunctionComponent<{
 					const code = javascriptGenerator.workspaceToCode(workspace)
 					onCodeChange(code)
 
-					// @TODO: don't retrigger this on every change - it's not necessary to do it this often - report only changes from null to function and back
-					onResetToInitialStateChange(
-						code === 'start\n'
-							? null
-							: () => {
-									Blockly.Xml.clearWorkspaceAndLoadFromXml(
-										new window.DOMParser().parseFromString(
-											initialXml,
-											'text/xml',
-										).documentElement,
-										workspace,
-									)
-								},
-					)
+					const canReset = code !== 'start\n'
+					if (lastReportedIfCanReset.current !== canReset) {
+						lastReportedIfCanReset.current = !lastReportedIfCanReset.current
+						onResetToInitialStateChange(
+							canReset
+								? () => {
+										Blockly.Xml.clearWorkspaceAndLoadFromXml(
+											new window.DOMParser().parseFromString(
+												initialXml,
+												'text/xml',
+											).documentElement,
+											workspace,
+										)
+									}
+								: null,
+						)
+					}
 				}}
 				onInject={(workspace) => {
-					setWorkspace(workspace)
 					Blockly.Events.setRecordUndo(false)
 					Blockly.Xml.clearWorkspaceAndLoadFromXml(
 						new window.DOMParser().parseFromString(initialXml, 'text/xml')
@@ -97,15 +99,6 @@ export const Editor: FunctionComponent<{
 				}}
 			/>
 			<div className={styles.otherActions}>
-				<Button
-					variant="contained"
-					color="secondary"
-					onClick={() => {
-						alert('Zatím neimplementováno.')
-					}}
-				>
-					Načíst nejlepší pokus
-				</Button>{' '}
 				<Button
 					variant="contained"
 					color="success"

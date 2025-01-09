@@ -68,7 +68,7 @@ export const Playground: FunctionComponent<{
 					color="warning"
 					startIcon={<RestartAltIcon />}
 					onClick={() => {
-						alert('Zatím neimplementováno.')
+						resetEditorToInitialState?.reset()
 					}}
 					disabled={resetEditorToInitialState === null}
 				>
