@@ -1,5 +1,4 @@
 import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
-import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import * as Blockly from 'blockly/core'
 import { javascriptGenerator } from 'blockly/javascript'
@@ -34,7 +33,14 @@ export const Editor: FunctionComponent<{
 	levelKey: LevelKey
 	groupKey: GroupKey
 	onCodeChange: (code: string) => void
-}> = ({ allowedBlocks, levelKey, groupKey, onCodeChange }) => {
+	onResetToInitialStateChange: (reset: null | (() => void)) => void
+}> = ({
+	allowedBlocks,
+	levelKey,
+	groupKey,
+	onCodeChange,
+	onResetToInitialStateChange,
+}) => {
 	const toolbox = useMemo(
 		() => ({
 			kind: 'flyoutToolbox',
@@ -57,7 +63,23 @@ export const Editor: FunctionComponent<{
 				workspaceConfiguration={configuration}
 				toolboxConfiguration={toolbox}
 				onWorkspaceChange={(workspace) => {
-					onCodeChange(javascriptGenerator.workspaceToCode(workspace))
+					const code = javascriptGenerator.workspaceToCode(workspace)
+					onCodeChange(code)
+
+					// @TODO: don't retrigger this on every change - it's not necessary to do it this often - report only changes from null to function and back
+					onResetToInitialStateChange(
+						code === 'start\n'
+							? null
+							: () => {
+									Blockly.Xml.clearWorkspaceAndLoadFromXml(
+										new window.DOMParser().parseFromString(
+											initialXml,
+											'text/xml',
+										).documentElement,
+										workspace,
+									)
+								},
+					)
 				}}
 				onInject={(workspace) => {
 					setWorkspace(workspace)
@@ -74,40 +96,7 @@ export const Editor: FunctionComponent<{
 					setXml(xml)
 				}}
 			/>
-			<div className={styles.run}>
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={() => {
-						// const parsedCode = parseCode(code)
-						// // @TODO: ignore parts of code that doesn't start with start()
-						// console.log('Will run code:', code)
-						// console.log(parsedCode)
-						// alert('Zatím neimplementováno.')
-					}}
-				>
-					Spustit
-				</Button>
-			</div>
 			<div className={styles.otherActions}>
-				<Button
-					variant="contained"
-					color="warning"
-					startIcon={<RestartAltIcon />}
-					onClick={() => {
-						console.log(workspace)
-						if (!workspace) {
-							throw new Error('Workspace is not ready.')
-						}
-						Blockly.Xml.clearWorkspaceAndLoadFromXml(
-							new window.DOMParser().parseFromString(initialXml, 'text/xml')
-								.documentElement,
-							workspace,
-						)
-					}}
-				>
-					Vrátit do původního stavu
-				</Button>{' '}
 				<Button
 					variant="contained"
 					color="secondary"

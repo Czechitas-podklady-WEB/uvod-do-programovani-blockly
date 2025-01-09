@@ -13,6 +13,8 @@ export const Playground: FunctionComponent<{
 }> = ({ level }) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
+	const [resetEditorToInitialState, setResetEditorToInitialState] =
+		useState<null | { reset: () => void }>(null)
 
 	return (
 		<div className={styles.wrapper}>
@@ -29,6 +31,9 @@ export const Playground: FunctionComponent<{
 					groupKey={level.group.key}
 					onCodeChange={(code) => {
 						setCode(code)
+					}}
+					onResetToInitialStateChange={(reset) => {
+						setResetEditorToInitialState(reset ? { reset } : null)
 					}}
 				/>
 			</div>
@@ -65,6 +70,7 @@ export const Playground: FunctionComponent<{
 					onClick={() => {
 						alert('Zatím neimplementováno.')
 					}}
+					disabled={resetEditorToInitialState === null}
 				>
 					Vrátit do původního stavu
 				</Button>{' '}
