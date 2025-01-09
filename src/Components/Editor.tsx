@@ -76,6 +76,7 @@ export const Editor: FunctionComponent<{
 					}
 				}}
 				onInject={(workspace) => {
+					workspace.addTrashcan() // @TODO: improve styling
 					Blockly.Events.setRecordUndo(false)
 					Blockly.Xml.clearWorkspaceAndLoadFromXml(
 						new window.DOMParser().parseFromString(initialXml, 'text/xml')
