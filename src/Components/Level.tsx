@@ -83,7 +83,7 @@ const InHasLevel: FunctionComponent<{
 				{level.description}
 			</Typography>
 			{isUnlocked ? (
-				<Playground level={level} />
+				<Playground level={level} key={`${level.group.key}_${level.key}`} />
 			) : (
 				<div className={styles.locked}>
 					<div className={styles.locked_in}>
