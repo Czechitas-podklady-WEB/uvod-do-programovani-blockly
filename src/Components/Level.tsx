@@ -1,9 +1,21 @@
+import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { Button, ButtonGroup, Container, Typography } from '@mui/material'
-import { FunctionComponent } from 'react'
+import {
+	Button,
+	ButtonGroup,
+	Container,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Rating,
+	Typography,
+} from '@mui/material'
+import { FunctionComponent, useCallback, useState } from 'react'
 import { NavLink, useParams } from 'react-router'
 import {
 	GroupKey,
@@ -12,6 +24,8 @@ import {
 	makeLevelKey,
 	useLevel,
 } from '../data/levels'
+import { Database } from '../database/Database'
+import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
@@ -25,7 +39,11 @@ export const Level: FunctionComponent = () => {
 	}
 
 	return (
-		<In groupKey={makeGroupKey(groupKey)} levelKey={makeLevelKey(levelKey)} />
+		<In
+			groupKey={makeGroupKey(groupKey)}
+			levelKey={makeLevelKey(levelKey)}
+			key={`${groupKey}_${levelKey}`}
+		/>
 	)
 }
 
@@ -46,9 +64,65 @@ const InHasLevel: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
 }> = ({ level }) => {
 	const isUnlocked = useIsLevelUnlocked(level.group.key, level.key)
+	const { createOrUpdate } = useEvolu<Database>()
+	const [successModal, setSuccessModal] = useState<null | {
+		rating: 1 | 2 | 3
+	}>(null)
+
+	const handleSuccess = useCallback(
+		(rating: 1 | 2 | 3, blocklyXml: string) => {
+			// @TODO: update only if better rating
+			createOrUpdate('finishedLevel', {
+				id: getLevelIdentifier(level.group.key, level.key),
+				rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
+				blocklyWorkspaceXml: NonEmptyString1000.make(blocklyXml),
+			})
+			setSuccessModal({ rating })
+		},
+		[createOrUpdate, level.group.key, level.key],
+	)
 
 	return (
 		<Container className={styles.container}>
+			<Dialog
+				open={successModal !== null}
+				onClose={() => {
+					setSuccessModal(null)
+				}}
+			>
+				<DialogTitle>Hurá! Máš to správně.</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						Tvé hodnocení je{' '}
+						<Rating
+							value={
+								successModal?.rating /* @TODO: always remember last state when closing dialog so rating will be defined */
+							}
+							readOnly
+							max={3}
+						/>
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button
+						onClick={() => {
+							setSuccessModal(null)
+						}}
+					>
+						Zavřít
+					</Button>
+					{level.nextLevel && (
+						<Button
+							component={NavLink}
+							to={level.nextLevel.link}
+							autoFocus
+							variant="contained"
+						>
+							Pokračovat
+						</Button>
+					)}
+				</DialogActions>
+			</Dialog>
 			<Typography variant="h4" component="h1" gutterBottom>
 				<div className={styles.header}>
 					<div className={styles.header_label}>
@@ -85,7 +159,7 @@ const InHasLevel: FunctionComponent<{
 				{level.description}
 			</Typography>
 			{isUnlocked ? (
-				<Playground level={level} key={`${level.group.key}_${level.key}`} />
+				<Playground level={level} onSuccess={handleSuccess} />
 			) : (
 				<div className={styles.locked}>
 					<div className={styles.locked_in}>

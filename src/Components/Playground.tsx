@@ -1,10 +1,7 @@
-import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import { useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
-import { Database } from '../database/Database'
-import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
 import { Plan, planInstructions } from '../utilities/planInstructions'
 import { Editor } from './Editor'
@@ -13,13 +10,13 @@ import styles from './Playground.module.css'
 
 export const Playground: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
-}> = ({ level }) => {
+	onSuccess: (rating: 1 | 2 | 3, blocklyXml: string) => void
+}> = ({ level, onSuccess }) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
 	const [xml, setXml] = useState('')
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
 		useState<null | { reset: () => void }>(null)
-	const { createOrUpdate } = useEvolu<Database>()
 
 	return (
 		<div className={styles.wrapper}>
@@ -67,13 +64,17 @@ export const Playground: FunctionComponent<{
 							// @TODO: show modal maybe after animation
 							setTimeout(() => {
 								if (plan.success) {
-									alert('Hurá! Máš to správně.')
-									// @TODO: update only if better rating
-									createOrUpdate('finishedLevel', {
-										id: getLevelIdentifier(level.group.key, level.key),
-										rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
-										blocklyWorkspaceXml: NonEmptyString1000.make(xml),
-									})
+									const rating = (() => {
+										const random = Math.random()
+										if (random < 0.33) {
+											return 1
+										}
+										if (random < 0.66) {
+											return 2
+										}
+										return 3
+									})()
+									onSuccess(rating, xml)
 								} else {
 									alert('Chyba. Zkus to znovu.')
 								}
