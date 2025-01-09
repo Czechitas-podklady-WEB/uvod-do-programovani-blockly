@@ -1,7 +1,10 @@
+import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import { useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
+import { Database } from '../database/Database'
+import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
 import { Plan, planInstructions } from '../utilities/planInstructions'
 import { Editor } from './Editor'
@@ -13,8 +16,10 @@ export const Playground: FunctionComponent<{
 }> = ({ level }) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
+	const [xml, setXml] = useState('')
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
 		useState<null | { reset: () => void }>(null)
+	const { createOrUpdate } = useEvolu<Database>()
 
 	return (
 		<div className={styles.wrapper}>
@@ -27,10 +32,12 @@ export const Playground: FunctionComponent<{
 			<div className={styles.editor}>
 				<Editor
 					allowedBlocks={level.allowedBlocks}
-					levelKey={level.key}
-					groupKey={level.group.key}
 					onCodeChange={(code) => {
 						setCode(code)
+					}}
+					onXmlChange={(xml) => {
+						// @TODO: save this xml to database to remember last state so user can continue later
+						setXml(xml)
 					}}
 					onResetToInitialStateChange={(reset) => {
 						setResetEditorToInitialState(reset ? { reset } : null)
@@ -56,6 +63,21 @@ export const Playground: FunctionComponent<{
 							const instructions = parseCodeToInstructions(code)
 							const plan = planInstructions(instructions, level.environment)
 							setRunningPlan(plan)
+
+							// @TODO: show modal maybe after animation
+							setTimeout(() => {
+								if (plan.success) {
+									alert('Hurá! Máš to správně.')
+									// @TODO: update only if better rating
+									createOrUpdate('finishedLevel', {
+										id: getLevelIdentifier(level.group.key, level.key),
+										rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
+										blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+									})
+								} else {
+									alert('Chyba. Zkus to znovu.')
+								}
+							}, 1000)
 						}}
 					>
 						Spustit
@@ -82,15 +104,6 @@ export const Playground: FunctionComponent<{
 					}}
 				>
 					Načíst nejlepší pokus
-				</Button>{' '}
-				<Button
-					variant="contained"
-					color="success"
-					onClick={() => {
-						alert('Zatím neimplementováno.')
-					}}
-				>
-					Předstírat úspěšné splnění
 				</Button>
 			</div>
 		</div>
