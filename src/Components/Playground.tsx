@@ -90,6 +90,9 @@ export const Playground: FunctionComponent<{
 					color="warning"
 					startIcon={<RestartAltIcon />}
 					onClick={() => {
+						if (runningPlan) {
+							setRunningPlan(null)
+						}
 						resetEditorToInitialState?.reset()
 					}}
 					disabled={resetEditorToInitialState === null}
