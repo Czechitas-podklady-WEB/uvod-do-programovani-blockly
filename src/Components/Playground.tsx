@@ -1,6 +1,6 @@
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
-import { useState, type FunctionComponent } from 'react'
+import { useCallback, useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
 import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
 import { Plan, planInstructions } from '../utilities/planInstructions'
@@ -18,12 +18,35 @@ export const Playground: FunctionComponent<{
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
 		useState<null | { reset: () => void }>(null)
 
+	const handleSuccess = useCallback(
+		(plan: Plan) => {
+			const rating = (() => {
+				const random = Math.random()
+				if (random < 0.33) {
+					return 1
+				}
+				if (random < 0.66) {
+					return 2
+				}
+				return 3
+			})()
+			onSuccess(rating, plan.xml)
+		},
+		[onSuccess],
+	)
+
+	const handleFail = useCallback(() => {
+		alert('Tak tohle se nepovedlo. Zkus to znovu.') // @TODO: show maybe some dialog
+	}, [])
+
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.environment}>
 				<Environment
 					segments={level.environment}
-					runSteps={runningPlan?.steps}
+					plan={runningPlan ?? null}
+					onSuccess={handleSuccess}
+					onFail={handleFail}
 				/>
 			</div>
 			<div className={styles.editor}>
@@ -58,27 +81,12 @@ export const Playground: FunctionComponent<{
 						color="primary"
 						onClick={() => {
 							const instructions = parseCodeToInstructions(code)
-							const plan = planInstructions(instructions, level.environment)
+							const plan = planInstructions(
+								instructions,
+								level.environment,
+								xml,
+							)
 							setRunningPlan(plan)
-
-							// @TODO: show modal maybe after animation
-							setTimeout(() => {
-								if (plan.success) {
-									const rating = (() => {
-										const random = Math.random()
-										if (random < 0.33) {
-											return 1
-										}
-										if (random < 0.66) {
-											return 2
-										}
-										return 3
-									})()
-									onSuccess(rating, xml)
-								} else {
-									alert('Chyba. Zkus to znovu.')
-								}
-							}, 1000)
 						}}
 					>
 						Spustit
