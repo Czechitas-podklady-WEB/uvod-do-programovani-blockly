@@ -46,21 +46,27 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	onFail,
 }) => {
 	const [isRunning, setIsRunning] = useState(false)
+	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
 	const [princessStep, setPrincessStep] = useState(0)
 	const [isSwordPicked, setIsSwordPicked] = useState(false) // @TODO: handle more than one
 	const [isThicketHit, setIsThicketHit] = useState(false) // @TODO: handle more than one
 
 	useEffect(() => {
+		if (isDoneRunningRef.current) {
+			return
+		}
 		if (instructions === null) {
 			setIsRunning(false)
 			return
 		}
 		const fail = () => {
 			onFail()
+			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
 		const success = () => {
 			onSuccess(instructions.xml)
+			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
 		let currentInstructionIndex = 0
