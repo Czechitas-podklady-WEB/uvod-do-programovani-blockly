@@ -51,12 +51,7 @@ const In: FunctionComponent<
 			<DialogActions>
 				<Button onClick={onClose}>Zavřít</Button>
 				{nextLevelLink && (
-					<Button
-						component={NavLink}
-						to={nextLevelLink}
-						autoFocus
-						variant="contained"
-					>
+					<Button component={NavLink} to={nextLevelLink} variant="contained">
 						Pokračovat
 					</Button>
 				)}

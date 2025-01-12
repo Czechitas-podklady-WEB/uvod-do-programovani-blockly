@@ -77,7 +77,6 @@ export const Playground: FunctionComponent<{
 				<DialogActions>
 					<Button onClick={handleCloseFailDialog}>Zavřít</Button>
 					<Button
-						autoFocus
 						variant="contained"
 						color="warning"
 						onClick={() => {
