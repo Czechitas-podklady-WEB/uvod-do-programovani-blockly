@@ -1,6 +1,12 @@
+import { Brand } from 'effect'
 import type { GroupKey, LevelKey } from '../data/levels'
 
 export const levelLinkPattern = '/level/:group/:level'
 
+export type LevelLink = string & Brand.Brand<'LevelLink'>
+export const makeLevelLink = Brand.nominal<LevelLink>()
+
 export const levelLink = (groupKey: GroupKey, levelKey: LevelKey) =>
-	levelLinkPattern.replace(':group', groupKey).replace(':level', levelKey)
+	makeLevelLink(
+		levelLinkPattern.replace(':group', groupKey).replace(':level', levelKey),
+	)
