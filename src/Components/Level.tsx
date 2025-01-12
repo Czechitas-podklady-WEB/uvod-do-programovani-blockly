@@ -72,7 +72,7 @@ const InHasLevel: FunctionComponent<{
 					id: getLevelIdentifier(level.group.key, level.key),
 					rating: PositiveInt.make(rating),
 					blocklyWorkspaceXml: NonEmptyString1000.make(xml),
-				})
+				}) // @TODO: figure out why this doesn't update
 			}
 			setSuccessDialog({
 				rating: newRating,
