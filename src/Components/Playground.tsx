@@ -2,6 +2,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { Button } from '@mui/material'
 import { useCallback, useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
+import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
 import { Plan, planInstructions } from '../utilities/planInstructions'
 import { Editor } from './Editor'
@@ -10,11 +11,11 @@ import styles from './Playground.module.css'
 
 export const Playground: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
-	onSuccess: (rating: 1 | 2 | 3, blocklyXml: string) => void
+	onSuccess: (rating: 1 | 2 | 3, xml: EditorXml) => void
 }> = ({ level, onSuccess }) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
-	const [xml, setXml] = useState('')
+	const [xml, setXml] = useState<EditorXml>(makeEditorXml(''))
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
 		useState<null | { reset: () => void }>(null)
 

@@ -3,10 +3,12 @@ import { javascriptGenerator } from 'blockly/javascript'
 import { FunctionComponent, useMemo, useRef } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import { blocks, type BlockType } from '../utilities/blocks'
+import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import styles from './Editor.module.css'
 
-const initialXml =
-	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>'
+const initialXml = makeEditorXml(
+	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>',
+)
 
 for (const { type: blockType } of blocks) {
 	javascriptGenerator.forBlock[blockType] = () => `${blockType}\n`
@@ -26,7 +28,7 @@ const configuration = {
 export const Editor: FunctionComponent<{
 	allowedBlocks: ReadonlyArray<BlockType>
 	onCodeChange: (code: string) => void
-	onXmlChange: (xml: string) => void
+	onXmlChange: (xml: EditorXml) => void
 	onResetToInitialStateChange: (reset: null | (() => void)) => void
 }> = ({
 	allowedBlocks,
@@ -86,7 +88,7 @@ export const Editor: FunctionComponent<{
 					Blockly.Events.setRecordUndo(true)
 				}}
 				onXmlChange={(xml) => {
-					onXmlChange(xml)
+					onXmlChange(makeEditorXml(xml))
 				}}
 			/>
 		</>

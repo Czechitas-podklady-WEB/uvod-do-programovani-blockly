@@ -1,4 +1,5 @@
 import type { EnvironmentSegment } from '../data/levels'
+import { EditorXml } from './editorXml'
 import { Instructions } from './parseCodeToInstructions'
 
 export type Step = 'go_forward' | 'kiss'
@@ -6,11 +7,11 @@ export type Step = 'go_forward' | 'kiss'
 export const planInstructions = (
 	instructions: Instructions,
 	environment: Array<EnvironmentSegment>,
-	xml: string,
+	xml: EditorXml,
 ): {
 	success: boolean
 	steps: Array<Step>
-	xml: string
+	xml: EditorXml
 } => {
 	return {
 		success: instructions.at(-1) === 'kiss' && environment.length > 0, // @TODO: improve this very naïve success resolution
