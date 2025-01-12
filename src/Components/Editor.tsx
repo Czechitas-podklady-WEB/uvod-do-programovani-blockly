@@ -1,6 +1,8 @@
+import DarkTheme from '@blockly/theme-dark'
+import ModernTheme from '@blockly/theme-modern'
 import * as Blockly from 'blockly/core'
 import { javascriptGenerator } from 'blockly/javascript'
-import { FunctionComponent, useMemo, useRef } from 'react'
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import { blocks, type BlockType } from '../utilities/blocks'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
@@ -23,6 +25,14 @@ const configuration = {
 		colour: '#cccccc',
 		snap: true,
 	},
+}
+
+const darkThemeQuery = '(prefers-color-scheme: dark)'
+
+const setTheme = (workspace: Blockly.WorkspaceSvg) => {
+	workspace.setTheme(
+		window.matchMedia(darkThemeQuery).matches ? DarkTheme : ModernTheme,
+	)
 }
 
 export const Editor: FunctionComponent<{
@@ -48,8 +58,20 @@ export const Editor: FunctionComponent<{
 		[allowedBlocks],
 	)
 	const lastReportedIfCanReset = useRef(false)
+	const [workspace, setWorkspace] = useState<null | Blockly.WorkspaceSvg>(null)
 
-	// @TODO: update theme with media query changes (workspace.setTheme(theme))
+	useEffect(() => {
+		if (workspace === null) {
+			return
+		}
+		const callback = () => {
+			setTheme(workspace)
+		}
+		window.matchMedia(darkThemeQuery).addEventListener('change', callback)
+		return () => {
+			window.matchMedia(darkThemeQuery).removeEventListener('change', callback)
+		}
+	}, [workspace])
 
 	return (
 		<>
@@ -80,6 +102,8 @@ export const Editor: FunctionComponent<{
 					}
 				}}
 				onInject={(workspace) => {
+					setWorkspace(workspace)
+					setTheme(workspace)
 					workspace.addTrashcan() // @TODO: improve styling
 					Blockly.Events.setRecordUndo(false)
 					Blockly.Xml.clearWorkspaceAndLoadFromXml(

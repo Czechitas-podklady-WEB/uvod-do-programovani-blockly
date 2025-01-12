@@ -5,3 +5,7 @@
 body {
 	overflow-y: scroll;
 }
+
+.blocklyMainBackground {
+	stroke: light-dark(#c6c6c6, #292929);
+}
