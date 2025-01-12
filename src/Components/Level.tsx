@@ -16,7 +16,7 @@ import {
 import { Database } from '../database/Database'
 import { EditorXml } from '../utilities/editorXml'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
-import type { LevelLink } from '../utilities/levelLink'
+import { levelLink, type LevelLink } from '../utilities/levelLink'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import { useLevelDraft } from '../utilities/useLevelDraft'
 import { useLevelRating } from '../utilities/useLevelRating'
@@ -100,10 +100,12 @@ const InHasLevel: FunctionComponent<{
 			}
 			setSuccessDialog({
 				rating: newRating,
-				nextLevelLink: level.nextLevel?.link ?? null,
+				nextLevelLink: level.nextLevel
+					? levelLink(level.nextLevel.group.key, level.nextLevel.key)
+					: null,
 			})
 		},
-		[createOrUpdate, level.group.key, level.key, level.nextLevel?.link, rating],
+		[createOrUpdate, level.group.key, level.key, level.nextLevel, rating],
 	)
 
 	const handleEditorXmlChange = useCallback(
@@ -136,21 +138,24 @@ const InHasLevel: FunctionComponent<{
 								startIcon={<ArrowBackIosIcon />}
 								component={NavLink}
 								disabled={!level.previousLevel}
-								to={level.previousLevel?.link ?? '/'}
+								to={
+									level.previousLevel
+										? levelLink(
+												level.previousLevel.group.key,
+												level.previousLevel.key,
+											)
+										: '/'
+								}
 								aria-label="předchozí"
 							/>
 							<Button startIcon={<HomeIcon />} component={NavLink} to="/">
 								Domů
 							</Button>
-							<Button
-								endIcon={<ArrowForwardIosIcon />}
-								component={NavLink}
-								disabled={
-									!level.nextLevel /* @TODO: disable if next is locked too */
-								}
-								to={level.nextLevel?.link ?? '/'}
-								aria-label="další"
-							/>
+							{level.nextLevel ? (
+								<NextLevelQueryButton nextLevel={level.nextLevel} />
+							) : (
+								<NextLevelButton link={null} />
+							)}
 						</ButtonGroup>
 					</div>
 				</div>
@@ -178,5 +183,30 @@ const InHasLevel: FunctionComponent<{
 				</div>
 			)}
 		</Container>
+	)
+}
+
+const NextLevelQueryButton: FunctionComponent<{
+	nextLevel: NonNullable<NonNullable<ReturnType<typeof useLevel>>['nextLevel']>
+}> = ({ nextLevel }) => {
+	const isUnlocked = useIsLevelUnlocked(nextLevel.group.key, nextLevel.key)
+	return isUnlocked ? (
+		<NextLevelButton link={levelLink(nextLevel.group.key, nextLevel.key)} />
+	) : (
+		<NextLevelButton link={null} />
+	)
+}
+
+const NextLevelButton: FunctionComponent<{ link: null | LevelLink }> = ({
+	link,
+}) => {
+	return (
+		<Button
+			endIcon={<ArrowForwardIosIcon />}
+			component={NavLink}
+			disabled={link === null}
+			to={link ?? '/'}
+			aria-label="další"
+		/>
 	)
 }

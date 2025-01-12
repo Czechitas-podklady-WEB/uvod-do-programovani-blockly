@@ -12,7 +12,6 @@ import story7 from '../assets/story-7.png'
 import story8 from '../assets/story-8.png'
 import story9 from '../assets/story-9.png'
 import type { BlockType } from '../utilities/blocks'
-import { levelLink } from '../utilities/levelLink'
 
 export type GroupKey = string & Brand.Brand<'GroupKey'>
 export type LevelKey = string & Brand.Brand<'LevelKey'>
@@ -226,7 +225,10 @@ export const useLevel = (groupKey: GroupKey, levelKey: LevelKey) =>
 
 		const transformOtherLevel = (level: (typeof allLevels)[number]) => ({
 			label: level.label,
-			link: levelLink(level.groupKey, level.key),
+			key: level.key,
+			group: {
+				key: level.groupKey,
+			},
 		})
 		const previousLevel = getPreviousLevel(groupKey, levelKey)
 		const nextLevel =
