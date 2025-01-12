@@ -67,7 +67,7 @@ const InHasLevel: FunctionComponent<{
 			// @TODO: update only if better rating
 			createOrUpdate('finishedLevel', {
 				id: getLevelIdentifier(level.group.key, level.key),
-				rating: PositiveInt.make(Math.floor(Math.random() * 3) + 1),
+				rating: PositiveInt.make(rating),
 				blocklyWorkspaceXml: NonEmptyString1000.make(xml),
 			})
 			setSuccessDialog({ rating, nextLevelLink: level.nextLevel?.link ?? null })
