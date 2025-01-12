@@ -11,8 +11,10 @@ import {
 import { useCallback, useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
-import { parseCodeToInstructions } from '../utilities/parseCodeToInstructions'
-import { Plan, planInstructions } from '../utilities/planInstructions'
+import {
+	Instructions,
+	parseCodeToInstructions,
+} from '../utilities/parseCodeToInstructions'
 import { Editor } from './Editor'
 import { Environment } from './Environment'
 import styles from './Playground.module.css'
@@ -30,7 +32,10 @@ export const Playground: FunctionComponent<{
 	initialEditorXml,
 	loadBestEditorXml,
 }) => {
-	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
+	const [runningInstructions, setRunningInstructions] = useState<null | {
+		instructions: Instructions
+		xml: EditorXml
+	}>(null)
 	const [code, setCode] = useState('')
 	const [xml, setXml] = useState<EditorXml>(makeEditorXml(''))
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
@@ -38,8 +43,9 @@ export const Playground: FunctionComponent<{
 	const [isFailDialogShown, setIsFailDialogShown] = useState(false)
 
 	const handleSuccess = useCallback(
-		(plan: Plan) => {
+		(xml: EditorXml) => {
 			const rating = (() => {
+				// @TODO: calculate rating
 				const random = Math.random()
 				if (random < 0.33) {
 					return 1
@@ -49,7 +55,7 @@ export const Playground: FunctionComponent<{
 				}
 				return 3
 			})()
-			onSuccess(rating, plan.xml)
+			onSuccess(rating, xml)
 		},
 		[onSuccess],
 	)
@@ -80,7 +86,7 @@ export const Playground: FunctionComponent<{
 						variant="contained"
 						color="warning"
 						onClick={() => {
-							setRunningPlan(null)
+							setRunningInstructions(null)
 							handleCloseFailDialog()
 						}}
 					>
@@ -91,7 +97,7 @@ export const Playground: FunctionComponent<{
 			<div className={styles.environment}>
 				<Environment
 					segments={level.environment}
-					plan={runningPlan ?? null}
+					instructions={runningInstructions ?? null}
 					onSuccess={handleSuccess}
 					onFail={handleFail}
 				/>
@@ -113,12 +119,12 @@ export const Playground: FunctionComponent<{
 				/>
 			</div>
 			<div className={styles.run}>
-				{runningPlan ? (
+				{runningInstructions ? (
 					<Button
 						variant="contained"
 						color="warning"
 						onClick={() => {
-							setRunningPlan(null)
+							setRunningInstructions(null)
 						}}
 					>
 						Restartovat
@@ -128,13 +134,10 @@ export const Playground: FunctionComponent<{
 						variant="contained"
 						color="primary"
 						onClick={() => {
-							const instructions = parseCodeToInstructions(code)
-							const plan = planInstructions(
-								instructions,
-								level.environment,
+							setRunningInstructions({
+								instructions: parseCodeToInstructions(code),
 								xml,
-							)
-							setRunningPlan(plan)
+							})
 						}}
 					>
 						Spustit
@@ -147,8 +150,8 @@ export const Playground: FunctionComponent<{
 					color="warning"
 					startIcon={<RestartAltIcon />}
 					onClick={() => {
-						if (runningPlan) {
-							setRunningPlan(null)
+						if (runningInstructions) {
+							setRunningInstructions(null)
 						}
 						resetEditorToInitialState?.reset()
 					}}

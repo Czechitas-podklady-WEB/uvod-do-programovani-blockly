@@ -7,26 +7,27 @@ import princess from '../assets/princess.png'
 import sword from '../assets/sword.png'
 import thicket from '../assets/thicket.png'
 import type { EnvironmentSegment } from '../data/levels'
-import { Plan } from '../utilities/planInstructions'
+import type { EditorXml } from '../utilities/editorXml'
+import { Instructions } from '../utilities/parseCodeToInstructions'
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
 	segments: Array<EnvironmentSegment>
-	plan: null | Plan
-	onSuccess: (plan: Plan) => void
+	instructions: null | { instructions: Instructions; xml: EditorXml }
+	onSuccess: (xml: EditorXml) => void
 	onFail: () => void
-}> = ({ segments, plan, onSuccess, onFail }) => {
+}> = ({ segments, instructions, onSuccess, onFail }) => {
 	const [isRunning, setIsRunning] = useState(false)
 
 	useEffect(() => {
-		if (plan === null) {
+		if (instructions === null) {
 			setIsRunning(false)
 			return
 		}
 		setIsRunning(true)
 		const timer = setTimeout(() => {
-			if (plan.success) {
-				onSuccess(plan)
+			if (instructions.instructions.includes('kiss') /* @TODO */) {
+				onSuccess(instructions.xml)
 			} else {
 				onFail()
 			}
@@ -36,7 +37,7 @@ export const Environment: FunctionComponent<{
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [plan, onSuccess, onFail])
+	}, [instructions, onSuccess, onFail])
 
 	return (
 		<div className={styles.wrapper}>
