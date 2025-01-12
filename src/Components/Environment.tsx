@@ -49,7 +49,8 @@ export const Environment: FunctionComponent<{
 				</div>
 			)}
 			<div className={styles.segment}>
-				<img src={princess} />
+				<img src={princess} className={styles.princess} />
+				<img src={grass} />
 			</div>
 			{segments.map((segment, index) => (
 				<div className={styles.segment} key={index}>

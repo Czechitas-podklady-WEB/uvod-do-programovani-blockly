@@ -6,6 +6,7 @@
 	position: relative;
 }
 .segment {
+	position: relative;
 	display: grid;
 	align-items: center;
 	max-width: 8rem;
@@ -26,4 +27,9 @@
 
 .fakeAnimationOfSteps ~ .segment {
 	opacity: 0.1;
+}
+
+.princess {
+	position: absolute;
+	inset: 0;
 }
