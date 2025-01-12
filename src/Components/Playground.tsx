@@ -143,7 +143,7 @@ export const Playground: FunctionComponent<{
 			</div>
 			<div className={styles.otherActions}>
 				<Button
-					variant="contained"
+					variant="outlined"
 					color="warning"
 					startIcon={<RestartAltIcon />}
 					onClick={() => {
@@ -157,7 +157,7 @@ export const Playground: FunctionComponent<{
 					Vrátit do původního stavu
 				</Button>{' '}
 				<Button
-					variant="contained"
+					variant="outlined"
 					color="secondary"
 					onClick={() => {
 						loadBestEditorXml?.()
