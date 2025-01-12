@@ -6,7 +6,7 @@ import { blocks, type BlockType } from '../utilities/blocks'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import styles from './Editor.module.css'
 
-const initialXml = makeEditorXml(
+const baseXml = makeEditorXml(
 	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>',
 )
 
@@ -30,7 +30,9 @@ export const Editor: FunctionComponent<{
 	onCodeChange: (code: string) => void
 	onXmlChange: (xml: EditorXml) => void
 	onResetToInitialStateChange: (reset: null | (() => void)) => void
+	initialXml: EditorXml | null
 }> = ({
+	initialXml,
 	allowedBlocks,
 	onCodeChange,
 	onXmlChange,
@@ -67,7 +69,7 @@ export const Editor: FunctionComponent<{
 								? () => {
 										Blockly.Xml.clearWorkspaceAndLoadFromXml(
 											new window.DOMParser().parseFromString(
-												initialXml,
+												baseXml,
 												'text/xml',
 											).documentElement,
 											workspace,
@@ -81,11 +83,18 @@ export const Editor: FunctionComponent<{
 					workspace.addTrashcan() // @TODO: improve styling
 					Blockly.Events.setRecordUndo(false)
 					Blockly.Xml.clearWorkspaceAndLoadFromXml(
-						new window.DOMParser().parseFromString(initialXml, 'text/xml')
+						new window.DOMParser().parseFromString(baseXml, 'text/xml')
 							.documentElement,
 						workspace,
 					)
 					Blockly.Events.setRecordUndo(true)
+					if (initialXml) {
+						Blockly.Xml.clearWorkspaceAndLoadFromXml(
+							new window.DOMParser().parseFromString(initialXml, 'text/xml')
+								.documentElement,
+							workspace,
+						)
+					}
 				}}
 				onXmlChange={(xml) => {
 					onXmlChange(makeEditorXml(xml))

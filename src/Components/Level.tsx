@@ -18,6 +18,7 @@ import { EditorXml } from '../utilities/editorXml'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import type { LevelLink } from '../utilities/levelLink'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
+import { useLevelDraft } from '../utilities/useLevelDraft'
 import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
@@ -64,6 +65,8 @@ const InHasLevel: FunctionComponent<{
 		nextLevelLink: LevelLink | null
 	}>(null)
 	const rating = useLevelRating(level.group.key, level.key)
+	const draftXml = useLevelDraft(level.group.key, level.key)
+	const [initialEditorXml] = useState(draftXml)
 
 	const handleSuccess = useCallback(
 		(newRating: 1 | 2 | 3, xml: EditorXml) => {
@@ -80,6 +83,16 @@ const InHasLevel: FunctionComponent<{
 			})
 		},
 		[createOrUpdate, level.group.key, level.key, level.nextLevel?.link, rating],
+	)
+
+	const handleEditorXmlChange = useCallback(
+		(xml: EditorXml) => {
+			createOrUpdate('levelDraft', {
+				id: getLevelIdentifier(level.group.key, level.key),
+				blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+			})
+		},
+		[createOrUpdate, level.group.key, level.key],
 	)
 
 	return (
@@ -127,7 +140,12 @@ const InHasLevel: FunctionComponent<{
 				{level.description}
 			</Typography>
 			{isUnlocked ? (
-				<Playground level={level} onSuccess={handleSuccess} />
+				<Playground
+					level={level}
+					onSuccess={handleSuccess}
+					initialEditorXml={initialEditorXml}
+					onEditorXmlChange={handleEditorXmlChange}
+				/>
 			) : (
 				<div className={styles.locked}>
 					<div className={styles.locked_in}>

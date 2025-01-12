@@ -11,8 +11,10 @@ import styles from './Playground.module.css'
 
 export const Playground: FunctionComponent<{
 	level: NonNullable<ReturnType<typeof useLevel>>
+	initialEditorXml: EditorXml | null
 	onSuccess: (rating: 1 | 2 | 3, xml: EditorXml) => void
-}> = ({ level, onSuccess }) => {
+	onEditorXmlChange: (xml: EditorXml) => void
+}> = ({ level, onSuccess, onEditorXmlChange, initialEditorXml }) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
 	const [xml, setXml] = useState<EditorXml>(makeEditorXml(''))
@@ -57,9 +59,10 @@ export const Playground: FunctionComponent<{
 						setCode(code)
 					}}
 					onXmlChange={(xml) => {
-						// @TODO: save this xml to database to remember last state so user can continue later
 						setXml(xml)
+						onEditorXmlChange(xml)
 					}}
+					initialXml={initialEditorXml}
 					onResetToInitialStateChange={(reset) => {
 						setResetEditorToInitialState(reset ? { reset } : null)
 					}}
