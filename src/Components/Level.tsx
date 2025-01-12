@@ -73,9 +73,9 @@ const InHasLevel: FunctionComponent<{
 			if (newRating >= rating) {
 				createOrUpdate('finishedLevel', {
 					id: getLevelIdentifier(level.group.key, level.key),
-					rating: PositiveInt.make(rating),
+					rating: PositiveInt.make(newRating),
 					blocklyWorkspaceXml: NonEmptyString1000.make(xml),
-				}) // @TODO: figure out why this doesn't update
+				})
 			}
 			setSuccessDialog({
 				rating: newRating,
