@@ -14,7 +14,14 @@ export const Playground: FunctionComponent<{
 	initialEditorXml: EditorXml | null
 	onSuccess: (rating: 1 | 2 | 3, xml: EditorXml) => void
 	onEditorXmlChange: (xml: EditorXml) => void
-}> = ({ level, onSuccess, onEditorXmlChange, initialEditorXml }) => {
+	loadBestEditorXml: (() => void) | null
+}> = ({
+	level,
+	onSuccess,
+	onEditorXmlChange,
+	initialEditorXml,
+	loadBestEditorXml,
+}) => {
 	const [runningPlan, setRunningPlan] = useState<null | Plan>(null)
 	const [code, setCode] = useState('')
 	const [xml, setXml] = useState<EditorXml>(makeEditorXml(''))
@@ -116,8 +123,9 @@ export const Playground: FunctionComponent<{
 					variant="contained"
 					color="secondary"
 					onClick={() => {
-						alert('Zatím neimplementováno.')
+						loadBestEditorXml?.()
 					}}
+					disabled={loadBestEditorXml === null}
 				>
 					Načíst nejlepší pokus
 				</Button>

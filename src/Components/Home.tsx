@@ -54,7 +54,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 	groupKey,
 }) => {
 	const isUnlocked = useIsLevelUnlocked(groupKey, level.key)
-	const rating = useLevelRating(groupKey, level.key)
+	const { rating } = useLevelRating(groupKey, level.key)
 
 	return (
 		<Card className={clsx(styles.card, isUnlocked && styles.is_unlocked)}>

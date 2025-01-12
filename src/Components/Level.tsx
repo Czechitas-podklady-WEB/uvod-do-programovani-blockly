@@ -4,7 +4,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Button, ButtonGroup, Container, Typography } from '@mui/material'
-import { FunctionComponent, useCallback, useState } from 'react'
+import { FunctionComponent, useCallback, useMemo, useState } from 'react'
 import { NavLink, useParams } from 'react-router'
 import {
 	GroupKey,
@@ -64,9 +64,30 @@ const InHasLevel: FunctionComponent<{
 		rating: 1 | 2 | 3
 		nextLevelLink: LevelLink | null
 	}>(null)
-	const rating = useLevelRating(level.group.key, level.key)
+	const { rating, xml: bestEditorXml } = useLevelRating(
+		level.group.key,
+		level.key,
+	)
 	const draftXml = useLevelDraft(level.group.key, level.key)
-	const [initialEditorXml] = useState(draftXml)
+	const [initialEditorXml, setInitialEditorXml] = useState<{
+		key: number
+		xml: EditorXml | null
+	}>(() => ({
+		key: 0,
+		xml: draftXml,
+	}))
+
+	const loadBestEditorXml = useMemo(() => {
+		if (bestEditorXml === null) {
+			return null
+		}
+		return () => {
+			setInitialEditorXml((previous) => ({
+				key: previous.key + 1,
+				xml: bestEditorXml,
+			}))
+		}
+	}, [bestEditorXml])
 
 	const handleSuccess = useCallback(
 		(newRating: 1 | 2 | 3, xml: EditorXml) => {
@@ -139,10 +160,12 @@ const InHasLevel: FunctionComponent<{
 			</Typography>
 			{isUnlocked ? (
 				<Playground
+					key={initialEditorXml.key}
 					level={level}
 					onSuccess={handleSuccess}
-					initialEditorXml={initialEditorXml}
+					initialEditorXml={initialEditorXml.xml}
 					onEditorXmlChange={handleEditorXmlChange}
+					loadBestEditorXml={loadBestEditorXml}
 				/>
 			) : (
 				<div className={styles.locked}>
