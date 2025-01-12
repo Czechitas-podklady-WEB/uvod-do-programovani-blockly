@@ -22,6 +22,7 @@ import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
+import { Rating } from './Rating'
 import { SuccessDialog } from './SuccessDialog'
 
 export const Level: FunctionComponent = () => {
@@ -92,7 +93,8 @@ const InHasLevel: FunctionComponent<{
 			<Typography variant="h4" component="h1" gutterBottom>
 				<div className={styles.header}>
 					<div className={styles.header_label}>
-						{level.group.label}: {level.label}
+						{level.group.label}: {level.label}{' '}
+						<Rating value={rating} size="large" />
 					</div>
 					<div className={styles.header_navigation}>
 						<Button startIcon={<HomeIcon />} component={NavLink} to="/">

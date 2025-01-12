@@ -17,5 +17,14 @@ export const useLevelRating = (groupKey: GroupKey, levelKey: LevelKey) => {
 		)
 	}, [groupKey, levelKey])
 	const { row } = useQuery(query)
-	return row?.rating ?? 0
+	if (row?.rating === 1) {
+		return 1
+	}
+	if (row?.rating === 2) {
+		return 2
+	}
+	if (row?.rating === 3) {
+		return 3
+	}
+	return 0
 }

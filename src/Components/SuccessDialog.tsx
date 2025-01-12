@@ -5,11 +5,11 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
-	Rating,
 } from '@mui/material'
 import { useRef, type FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import { LevelLink } from '../utilities/levelLink'
+import { Rating } from './Rating'
 
 type Details = {
 	rating: 1 | 2 | 3
@@ -45,7 +45,7 @@ const In: FunctionComponent<
 					Máš to správně. Skvělá práce. Jen tak dál.
 				</DialogContentText>
 				<DialogContentText align="center">
-					<Rating value={rating} readOnly max={3} size="large" />
+					<Rating value={rating} size="large" />
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

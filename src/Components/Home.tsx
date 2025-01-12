@@ -1,5 +1,5 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { Container, Rating } from '@mui/material'
+import { Container } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
 import CardContent from '@mui/material/CardContent'
@@ -14,6 +14,7 @@ import { levelLink } from '../utilities/levelLink'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
 import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Home.module.css'
+import { Rating } from './Rating'
 
 export const Home: FunctionComponent = () => {
 	return (
@@ -81,7 +82,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 					<Typography gutterBottom variant="h5" component="div">
 						<div className={styles.card_header}>
 							<div className={styles.card_label}>{level.label}</div>
-							{isUnlocked && <Rating value={rating} readOnly max={3} />}
+							{isUnlocked && <Rating value={rating} />}
 						</div>
 					</Typography>
 					<Typography variant="body2" sx={{ color: 'text.secondary' }}>
