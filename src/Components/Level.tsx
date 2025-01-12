@@ -18,6 +18,7 @@ import { EditorXml } from '../utilities/editorXml'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import type { LevelLink } from '../utilities/levelLink'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
+import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
@@ -61,18 +62,23 @@ const InHasLevel: FunctionComponent<{
 		rating: 1 | 2 | 3
 		nextLevelLink: LevelLink | null
 	}>(null)
+	const rating = useLevelRating(level.group.key, level.key)
 
 	const handleSuccess = useCallback(
-		(rating: 1 | 2 | 3, xml: EditorXml) => {
-			// @TODO: update only if better rating
-			createOrUpdate('finishedLevel', {
-				id: getLevelIdentifier(level.group.key, level.key),
-				rating: PositiveInt.make(rating),
-				blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+		(newRating: 1 | 2 | 3, xml: EditorXml) => {
+			if (newRating >= rating) {
+				createOrUpdate('finishedLevel', {
+					id: getLevelIdentifier(level.group.key, level.key),
+					rating: PositiveInt.make(rating),
+					blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+				})
+			}
+			setSuccessDialog({
+				rating: newRating,
+				nextLevelLink: level.nextLevel?.link ?? null,
 			})
-			setSuccessDialog({ rating, nextLevelLink: level.nextLevel?.link ?? null })
 		},
-		[createOrUpdate, level.group.key, level.key, level.nextLevel],
+		[createOrUpdate, level.group.key, level.key, level.nextLevel?.link, rating],
 	)
 
 	return (
