@@ -110,17 +110,16 @@ const InHasLevel: FunctionComponent<{
 						<Rating value={rating} size="large" />
 					</div>
 					<div className={styles.header_navigation}>
-						<Button startIcon={<HomeIcon />} component={NavLink} to="/">
-							Domů
-						</Button>{' '}
 						<ButtonGroup>
 							<Button
 								startIcon={<ArrowBackIosIcon />}
 								component={NavLink}
 								disabled={!level.previousLevel}
 								to={level.previousLevel?.link ?? '/'}
-							>
-								Předchozí
+								aria-label="předchozí"
+							/>
+							<Button startIcon={<HomeIcon />} component={NavLink} to="/">
+								Domů
 							</Button>
 							<Button
 								endIcon={<ArrowForwardIosIcon />}
@@ -129,9 +128,8 @@ const InHasLevel: FunctionComponent<{
 									!level.nextLevel /* @TODO: disable if next is locked too */
 								}
 								to={level.nextLevel?.link ?? '/'}
-							>
-								Další
-							</Button>
+								aria-label="další"
+							/>
 						</ButtonGroup>
 					</div>
 				</div>
