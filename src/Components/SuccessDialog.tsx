@@ -6,7 +6,6 @@ import {
 	DialogContentText,
 	DialogTitle,
 	Rating,
-	Typography,
 } from '@mui/material'
 import { useRef, type FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
@@ -42,10 +41,10 @@ const In: FunctionComponent<
 		<>
 			<DialogTitle>Hurá!</DialogTitle>
 			<DialogContent>
+				<DialogContentText align="center" gutterBottom>
+					Máš to správně. Skvělá práce. Jen tak dál.
+				</DialogContentText>
 				<DialogContentText align="center">
-					<Typography variant="body1" gutterBottom>
-						Máš to správně. Skvělá práce. Jen tak dál.
-					</Typography>
 					<Rating value={rating} readOnly max={3} size="large" />
 				</DialogContentText>
 			</DialogContent>
