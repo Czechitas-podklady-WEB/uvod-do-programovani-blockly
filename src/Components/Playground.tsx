@@ -1,5 +1,13 @@
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
-import { Button } from '@mui/material'
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+} from '@mui/material'
 import { useCallback, useState, type FunctionComponent } from 'react'
 import { useLevel } from '../data/levels'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
@@ -27,6 +35,7 @@ export const Playground: FunctionComponent<{
 	const [xml, setXml] = useState<EditorXml>(makeEditorXml(''))
 	const [resetEditorToInitialState, setResetEditorToInitialState] =
 		useState<null | { reset: () => void }>(null)
+	const [isFailDialogShown, setIsFailDialogShown] = useState(false)
 
 	const handleSuccess = useCallback(
 		(plan: Plan) => {
@@ -46,11 +55,40 @@ export const Playground: FunctionComponent<{
 	)
 
 	const handleFail = useCallback(() => {
-		alert('Tak tohle se nepovedlo. Zkus to znovu.') // @TODO: show maybe some dialog
+		setIsFailDialogShown(true)
+	}, [])
+
+	const handleCloseFailDialog = useCallback(() => {
+		setIsFailDialogShown(false)
 	}, [])
 
 	return (
 		<div className={styles.wrapper}>
+			<Dialog open={isFailDialogShown} onClose={handleCloseFailDialog}>
+				<DialogTitle>Jejda</DialogTitle>
+				<DialogContent>
+					<DialogContentText align="center" gutterBottom>
+						Tak tenhle příběh šťastně neskončil. Zkus to znovu.
+					</DialogContentText>
+					<DialogContentText align="center">
+						<SentimentVeryDissatisfiedIcon fontSize="large" />
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseFailDialog}>Zavřít</Button>
+					<Button
+						autoFocus
+						variant="contained"
+						color="warning"
+						onClick={() => {
+							setRunningPlan(null)
+							handleCloseFailDialog()
+						}}
+					>
+						Restartovat
+					</Button>
+				</DialogActions>
+			</Dialog>
 			<div className={styles.environment}>
 				<Environment
 					segments={level.environment}
