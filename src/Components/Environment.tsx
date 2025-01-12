@@ -1,10 +1,18 @@
-import { CircularProgress } from '@mui/material'
-import { useEffect, useState, type FunctionComponent } from 'react'
+import {
+	useEffect,
+	useRef,
+	useState,
+	type ComponentProps,
+	type CSSProperties,
+	type FunctionComponent,
+} from 'react'
+import { useMirrorLoading } from 'shared-loading-indicator'
 import frog from '../assets/frog.png'
 import grass from '../assets/grass.png'
 import hole from '../assets/hole.png'
 import princess from '../assets/princess.png'
 import sword from '../assets/sword.png'
+import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
 import type { EnvironmentSegment } from '../data/levels'
 import type { EditorXml } from '../utilities/editorXml'
@@ -16,40 +24,130 @@ export const Environment: FunctionComponent<{
 	instructions: null | { instructions: Instructions; xml: EditorXml }
 	onSuccess: (xml: EditorXml) => void
 	onFail: () => void
-}> = ({ segments, instructions, onSuccess, onFail }) => {
+}> = (props) => {
+	const lastInstructionsRef = useRef({
+		key: 0,
+		instructions: props.instructions,
+	}) // This helps to reset state when instructions change
+	if (props.instructions !== lastInstructionsRef.current.instructions) {
+		lastInstructionsRef.current = {
+			key: lastInstructionsRef.current.key + 1,
+			instructions: props.instructions,
+		}
+	}
+
+	return <In {...props} key={lastInstructionsRef.current.key} />
+}
+
+const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
+	segments,
+	instructions,
+	onSuccess,
+	onFail,
+}) => {
 	const [isRunning, setIsRunning] = useState(false)
+	const [princessStep, setPrincessStep] = useState(0)
+	const [isSwordPicked, setIsSwordPicked] = useState(false) // @TODO: handle more than one
+	const [isThicketHit, setIsThicketHit] = useState(false) // @TODO: handle more than one
 
 	useEffect(() => {
 		if (instructions === null) {
 			setIsRunning(false)
 			return
 		}
-		setIsRunning(true)
-		const timer = setTimeout(() => {
-			if (instructions.instructions.includes('kiss') /* @TODO */) {
-				onSuccess(instructions.xml)
-			} else {
-				onFail()
-			}
+		const fail = () => {
+			onFail()
 			setIsRunning(false)
-		}, 1000)
+		}
+		const success = () => {
+			onSuccess(instructions.xml)
+			setIsRunning(false)
+		}
+		let currentInstructionIndex = 0
+		let princessStep = 0
+		let isSwordPicked = false
+		let isThicketHit = false
+		const loop = () => {
+			const instruction = instructions.instructions.at(currentInstructionIndex)
+			const currentSegment =
+				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
+			const nextSegment = segments.at(princessStep) ?? 'frog'
+			if (instruction === undefined || currentSegment === undefined) {
+				fail()
+				return
+			}
+			if (instruction === 'go_forward') {
+				if (
+					nextSegment === 'grass' ||
+					nextSegment === 'sword' ||
+					(isThicketHit && nextSegment === 'thicket')
+				) {
+					princessStep++
+				} else {
+					fail()
+					return
+				}
+			} else if (instruction === 'jump') {
+				if (nextSegment === 'hole') {
+					princessStep += 2
+				} else {
+					fail()
+					return
+				}
+			} else if (instruction === 'pick') {
+				if (currentSegment === 'sword') {
+					isSwordPicked = true
+					setIsSwordPicked(true)
+				} else {
+					fail()
+					return
+				}
+			} else if (instruction === 'hit') {
+				if (nextSegment === 'thicket' && isSwordPicked) {
+					isThicketHit = true
+					setIsThicketHit(true)
+				} else {
+					fail()
+					return
+				}
+			} else if (instruction === 'kiss') {
+				if (nextSegment === 'frog') {
+					success()
+				} else {
+					fail()
+				}
+				return
+			} else {
+				instruction satisfies 'start'
+			}
+			currentInstructionIndex++
+			setPrincessStep(princessStep)
+			timer = setTimeout(loop, 700)
+		}
+		let timer: ReturnType<typeof setTimeout> = setTimeout(loop, 200) // I feel very stupid writing this and I expect React.StrictMode will punish me.
+		setIsRunning(true)
 
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [instructions, onSuccess, onFail])
+	}, [instructions, onSuccess, onFail, segments])
+
+	useMirrorLoading(isRunning)
 
 	return (
-		<div className={styles.wrapper}>
-			{isRunning && (
-				<div
-					className={styles.fakeAnimationOfSteps /* @TODO: animate all steps */}
-				>
-					<CircularProgress />
-				</div>
-			)}
+		<div
+			className={styles.wrapper}
+			style={
+				{
+					'--Environment-princess-step': princessStep,
+				} as CSSProperties
+			}
+		>
 			<div className={styles.segment}>
 				<img src={princess} className={styles.princess} />
+				{isSwordPicked && (
+					<img src={swordPicked} className={styles.swordPicked} />
+				)}
 				<img src={grass} />
 			</div>
 			{segments.map((segment, index) => (
@@ -61,9 +159,13 @@ export const Environment: FunctionComponent<{
 								: segment === 'hole'
 									? hole
 									: segment === 'sword'
-										? sword
+										? isSwordPicked
+											? grass
+											: sword
 										: segment === 'thicket'
-											? thicket
+											? isThicketHit
+												? grass
+												: thicket
 											: (segment satisfies never)
 						}
 					/>

@@ -4,6 +4,7 @@
 	justify-content: center;
 	column-gap: 0.125rem;
 	position: relative;
+	isolation: isolate;
 }
 .segment {
 	position: relative;
@@ -18,18 +19,13 @@
 	object-fit: cover;
 }
 
-.fakeAnimationOfSteps {
+.princess,
+.swordPicked {
 	position: absolute;
 	inset: 0;
-	display: grid;
-	place-items: center;
-}
-
-.fakeAnimationOfSteps ~ .segment {
-	opacity: 0.1;
-}
-
-.princess {
-	position: absolute;
-	inset: 0;
+	width: 100%;
+	z-index: 1;
+	transition-property: translate;
+	transition-duration: 0.5s;
+	translate: calc(var(--Environment-princess-step) * 100%) 0;
 }
