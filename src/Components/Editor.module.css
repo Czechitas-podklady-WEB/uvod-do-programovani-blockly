@@ -2,3 +2,7 @@
 	width: 100%;
 	aspect-ratio: 16 / 9;
 }
+
+:global(.blocklyMainBackground) {
+	stroke: light-dark(#c6c6c6, #292929);
+}

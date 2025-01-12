@@ -22,7 +22,6 @@ const configuration = {
 	grid: {
 		spacing: 22,
 		length: 3,
-		colour: '#cccccc',
 		snap: true,
 	},
 }
