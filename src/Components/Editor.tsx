@@ -1,3 +1,4 @@
+import { DisableTopBlocks } from '@blockly/disable-top-blocks'
 import DarkTheme from '@blockly/theme-dark'
 import ModernTheme from '@blockly/theme-modern'
 import * as Blockly from 'blockly/core'
@@ -104,6 +105,11 @@ export const Editor: FunctionComponent<{
 					setWorkspace(workspace)
 					setTheme(workspace)
 					workspace.addTrashcan() // @TODO: improve styling
+
+					workspace.addChangeListener(Blockly.Events.disableOrphans)
+					new DisableTopBlocks().init()
+
+					// Set base XML
 					Blockly.Events.setRecordUndo(false)
 					Blockly.Xml.clearWorkspaceAndLoadFromXml(
 						new window.DOMParser().parseFromString(baseXml, 'text/xml')
@@ -111,6 +117,7 @@ export const Editor: FunctionComponent<{
 						workspace,
 					)
 					Blockly.Events.setRecordUndo(true)
+
 					if (initialXml) {
 						Blockly.Xml.clearWorkspaceAndLoadFromXml(
 							new window.DOMParser().parseFromString(initialXml, 'text/xml')
