@@ -32,8 +32,8 @@ const developmentGroup = {
 			description:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
-			allowedBlocks: ['go_forward', 'kiss'],
-			environment: ['grass', 'grass', 'grass'],
+			allowedBlocks: ['go_forward', 'repeat', 'kiss'],
+			environment: ['grass', 'grass', 'grass', 'grass', 'grass'],
 		},
 	],
 } satisfies LevelGroup

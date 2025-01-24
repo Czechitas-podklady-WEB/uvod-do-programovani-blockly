@@ -34,6 +34,31 @@ export const blocks = [
 		nextStatement: 'Action',
 	},
 	{
+		type: 'repeat',
+		message0: 'Zopakuj %1 krát %2 %3',
+		colour: 120,
+		previousStatement: 'Action',
+		nextStatement: 'Action',
+		args0: [
+			{
+				type: 'field_number',
+				name: 'TIMES',
+				check: 'Number',
+				value: 3,
+				min: 1,
+				max: 100,
+				precision: 1,
+			},
+			{
+				type: 'input_dummy',
+			},
+			{
+				type: 'input_statement',
+				name: 'DO',
+			},
+		],
+	},
+	{
 		type: 'kiss',
 		message0: 'Políbit',
 		colour: 800,
