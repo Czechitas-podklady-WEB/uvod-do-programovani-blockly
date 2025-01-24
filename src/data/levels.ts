@@ -11,7 +11,9 @@ import story6 from '../assets/story-6.png'
 import story7 from '../assets/story-7.png'
 import story8 from '../assets/story-8.png'
 import story9 from '../assets/story-9.png'
+import tester from '../assets/tester.png'
 import type { BlockType } from '../utilities/blocks'
+import { isDevelopmentMode } from '../utilities/isDevelopmentMode'
 
 export type GroupKey = string & Brand.Brand<'GroupKey'>
 export type LevelKey = string & Brand.Brand<'LevelKey'>
@@ -20,7 +22,24 @@ export const makeLevelKey = Brand.nominal<LevelKey>()
 
 export type EnvironmentSegment = 'grass' | 'hole' | 'thicket' | 'sword'
 
+const developmentGroup = {
+	key: makeGroupKey('development'),
+	label: 'Testovací prostředí',
+	levels: [
+		{
+			label: 'Test',
+			key: makeLevelKey('1'),
+			description:
+				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
+			image: tester,
+			allowedBlocks: ['go_forward', 'kiss'],
+			environment: ['grass', 'grass', 'grass'],
+		},
+	],
+} satisfies LevelGroup
+
 export const levelGroups = [
+	...(isDevelopmentMode ? [developmentGroup] : []),
 	{
 		label: 'Základní',
 		key: makeGroupKey('basics'),
@@ -169,7 +188,9 @@ export const levelGroups = [
 			},
 		],
 	},
-] as const satisfies Array<{
+] as const satisfies Array<LevelGroup>
+
+type LevelGroup = {
 	label: string
 	key: GroupKey
 	levels: Array<{
@@ -180,7 +201,7 @@ export const levelGroups = [
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
 		environment: Array<EnvironmentSegment>
 	}>
-}>
+}
 
 export type Level = (typeof levelGroups)[number]['levels'][number]
 
