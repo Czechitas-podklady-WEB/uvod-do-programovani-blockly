@@ -72,12 +72,19 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
-		type State = Array<{ index: number }>
-		const state: State = [{ index: 0 }]
+		type State = Array<
+			{ index: number } & (
+				| { type: 'basic' }
+				| { type: 'repeat'; remainingIterations: number }
+			)
+		>
+		const state: State = [{ type: 'basic', index: 0 }]
 		let princessStep = 0
 		let isSwordPicked = false
 		let isThicketHit = false
+		// console.log(instructions.instructions) // @TODO: remove
 		const loop = () => {
+			console.log(JSON.stringify(state))
 			const instruction = (() => {
 				const getBlockAtIndex = (
 					blocks: InstructionBlock[],
@@ -99,6 +106,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
+			// console.log(instruction) // @TODO: remove
+			// console.log('') // @TODO: remove
 			const currentSegment =
 				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
 			const nextSegment = segments.at(princessStep) ?? 'frog'
@@ -155,11 +164,23 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 				return
 			} else if (instruction.type === 'repeat') {
-				state.push({ index: -1 })
+				state.push({
+					type: 'repeat',
+					index: -1,
+					remainingIterations: instruction.times,
+				})
 			} else {
 				instruction.type satisfies 'start'
 			}
-			state[state.length - 1].index++
+			const currentSubState = state[state.length - 1]
+			if (currentSubState.type === 'basic') {
+				currentSubState.index++
+			} else if (currentSubState.type === 'repeat') {
+				currentSubState.remainingIterations--
+				if (currentSubState.remainingIterations === 0) {
+					currentSubState.index++
+				}
+			}
 			setPrincessStep(princessStep)
 			timer = setTimeout(
 				loop,

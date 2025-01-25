@@ -15,6 +15,7 @@ export type InstructionBlock =
 	  }
 	| {
 			type: 'repeat'
+			times: number
 			blocks: Array<InstructionBlock>
 	  }
 
@@ -40,7 +41,15 @@ const parseInstructionBlock = (block: UnknownObject) => {
 		return { type: type as BasicBlockType }
 	}
 	if (type === 'repeat') {
-		return { type: 'repeat' as const, blocks: parseInstructionBlocks(block) }
+		const times = block['times']
+		if (typeof times !== 'number') {
+			return null
+		}
+		return {
+			type: 'repeat' as const,
+			times,
+			blocks: parseInstructionBlocks(block),
+		}
 	}
 	return null
 }
