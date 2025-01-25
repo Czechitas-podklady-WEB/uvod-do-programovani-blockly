@@ -89,7 +89,7 @@ export const levelGroups = [
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					segments: [['sword', 'grass', 'thicket', 'grass', 'frog']],
+					segments: [['grass', 'sword', 'grass', 'thicket', 'grass', 'frog']],
 				},
 			},
 			{
