@@ -16,6 +16,7 @@ import { Home } from './Components/Home'
 import { Layout } from './Components/Layout'
 import { Level } from './Components/Level'
 import { NotFound } from './Components/NotFound'
+import { Reset } from './Components/Reset'
 import './index.css'
 import { levelLinkPattern } from './utilities/levelLink'
 
@@ -38,6 +39,7 @@ export const App: FunctionComponent = () => {
 								<SharedProgressLoadingIndicator />
 								<Routes>
 									<Route index element={<Home />} />
+									<Route path="/reset" element={<Reset />} />
 									<Route path={levelLinkPattern} element={<Level />} />
 									<Route path="*" element={<NotFound />} />
 								</Routes>
