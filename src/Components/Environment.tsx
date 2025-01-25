@@ -183,7 +183,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 			} else if (instruction.type === 'jump') {
 				if (nextSegment === 'hole' || nextSegment === 'grass') {
-					playerPosition.x += 1
+					playerPosition.x += 2 // @TODO: don't jump that far
 					animation = 'jump'
 					if (nextSegment !== 'hole') {
 						warnAboutImpossibleMove()
