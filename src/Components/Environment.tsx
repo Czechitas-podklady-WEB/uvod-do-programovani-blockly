@@ -82,7 +82,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				fail()
 				return
 			}
-			if (instruction === 'go_forward') {
+			if (instruction.type === 'go_forward') {
 				if (
 					nextSegment === 'grass' ||
 					nextSegment === 'sword' ||
@@ -93,14 +93,14 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					fail()
 					return
 				}
-			} else if (instruction === 'jump') {
+			} else if (instruction.type === 'jump') {
 				if (nextSegment === 'hole') {
 					princessStep += 2
 				} else {
 					fail()
 					return
 				}
-			} else if (instruction === 'pick') {
+			} else if (instruction.type === 'pick') {
 				if (currentSegment === 'sword') {
 					isSwordPicked = true
 					setIsSwordPicked(true)
@@ -108,7 +108,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					fail()
 					return
 				}
-			} else if (instruction === 'hit') {
+			} else if (instruction.type === 'hit') {
 				if (nextSegment === 'thicket' && isSwordPicked) {
 					isThicketHit = true
 					setIsThicketHit(true)
@@ -116,15 +116,17 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					fail()
 					return
 				}
-			} else if (instruction === 'kiss') {
+			} else if (instruction.type === 'kiss') {
 				if (nextSegment === 'frog') {
 					success()
 				} else {
 					fail()
 				}
 				return
+			} else if (instruction.type === 'repeat') {
+				// @TODO: implement
 			} else {
-				instruction satisfies 'start'
+				instruction.type satisfies 'start'
 			}
 			currentInstructionIndex++
 			setPrincessStep(princessStep)

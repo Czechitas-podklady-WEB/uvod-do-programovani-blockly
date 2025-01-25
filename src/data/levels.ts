@@ -36,7 +36,7 @@ const developmentGroup = {
 			environment: ['grass', 'grass', 'grass', 'grass', 'grass'],
 		},
 	],
-} satisfies LevelGroup
+} as const satisfies LevelGroup
 
 export const levelGroups = [
 	...(isDevelopmentMode ? [developmentGroup] : []),

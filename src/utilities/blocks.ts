@@ -42,7 +42,7 @@ export const blocks = [
 		args0: [
 			{
 				type: 'field_number',
-				name: 'TIMES',
+				name: 'times',
 				check: 'Number',
 				value: 3,
 				min: 1,
@@ -54,7 +54,7 @@ export const blocks = [
 			},
 			{
 				type: 'input_statement',
-				name: 'DO',
+				name: 'do',
 			},
 		],
 	},
@@ -67,5 +67,7 @@ export const blocks = [
 ] as const
 
 export const blockTypes = blocks.map(({ type }) => type)
+export const basicBlockTypes = blockTypes.filter((type) => type !== 'repeat')
 
 export type BlockType = (typeof blockTypes)[number]
+export type BasicBlockType = (typeof basicBlockTypes)[number]
