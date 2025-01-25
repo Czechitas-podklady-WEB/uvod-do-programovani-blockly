@@ -32,7 +32,7 @@ const developmentGroup = {
 			description:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
-			allowedBlocks: ['go_forward', 'repeat', 'kiss'],
+			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
 			environment: ['grass', 'grass', 'grass', 'grass', 'grass'],
 		},
 	],
