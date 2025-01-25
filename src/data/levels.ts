@@ -40,12 +40,14 @@ const developmentGroup = {
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
 			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
-			startRowIndex: 1,
-			environment: [
-				['sky'],
-				['grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
-				['soil'],
-			],
+			environment: {
+				startRowIndex: 1,
+				segments: [
+					['sky'],
+					['grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
+					['soil'],
+				],
+			},
 		},
 	],
 } as const satisfies LevelGroup
@@ -63,8 +65,10 @@ export const levelGroups = [
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
 				allowedBlocks: ['go_forward', 'kiss'],
-				startRowIndex: 0,
-				environment: [['grass', 'grass', 'frog']],
+				environment: {
+					startRowIndex: 0,
+					segments: [['grass', 'grass', 'frog']],
+				},
 			},
 			{
 				label: 'Level 2',
@@ -72,8 +76,10 @@ export const levelGroups = [
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
-				startRowIndex: 0,
-				environment: [['grass', 'hole', 'grass', 'grass', 'frog']],
+				environment: {
+					startRowIndex: 0,
+					segments: [['grass', 'hole', 'grass', 'grass', 'frog']],
+				},
 			},
 			{
 				label: 'Level 3',
@@ -81,8 +87,10 @@ export const levelGroups = [
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
-				startRowIndex: 0,
-				environment: [['sword', 'grass', 'thicket', 'grass', 'frog']],
+				environment: {
+					startRowIndex: 0,
+					segments: [['sword', 'grass', 'thicket', 'grass', 'frog']],
+				},
 			},
 			{
 				label: 'Level 4',
@@ -90,8 +98,10 @@ export const levelGroups = [
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [['grass', 'grass', 'grass', 'frog']], // @TODO
+				environment: {
+					startRowIndex: 0,
+					segments: [['grass', 'grass', 'grass', 'frog']],
+				}, // @TODO
 			},
 			{
 				label: 'Level 5',
@@ -99,8 +109,10 @@ export const levelGroups = [
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [['grass', 'grass', 'grass', 'grass', 'frog']], // @TODO
+				environment: {
+					startRowIndex: 0,
+					segments: [['grass', 'grass', 'grass', 'grass', 'frog']],
+				}, // @TODO
 			},
 			{
 				label: 'Level 6',
@@ -109,8 +121,10 @@ export const levelGroups = [
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [['grass', 'grass', 'grass', 'grass', 'grass', 'frog']], // @TODO
+				environment: {
+					startRowIndex: 0,
+					segments: [['grass', 'grass', 'grass', 'grass', 'grass', 'frog']],
+				}, // @TODO
 			},
 		],
 	},
@@ -124,10 +138,12 @@ export const levelGroups = [
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [
-					['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
-				], // @TODO
+				environment: {
+					startRowIndex: 0,
+					segments: [
+						['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
+					],
+				}, // @TODO
 			},
 			{
 				label: 'Level 2',
@@ -135,10 +151,12 @@ export const levelGroups = [
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [
-					['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass'],
-				], // @TODO
+				environment: {
+					startRowIndex: 0,
+					segments: [
+						['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass'],
+					],
+				}, // @TODO
 			},
 			{
 				label: 'Level 3',
@@ -146,19 +164,21 @@ export const levelGroups = [
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [
-					[
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
+				environment: {
+					startRowIndex: 0,
+					segments: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
 					],
-				], // @TODO
+				}, // @TODO
 			},
 		],
 	},
@@ -173,20 +193,22 @@ export const levelGroups = [
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [
-					[
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
+				environment: {
+					startRowIndex: 0,
+					segments: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
 					],
-				], // @TODO
+				}, // @TODO
 			},
 			{
 				label: 'Level 2',
@@ -195,21 +217,23 @@ export const levelGroups = [
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
 				allowedBlocks: [], // @TODO
-				startRowIndex: 0,
-				environment: [
-					[
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
+				environment: {
+					startRowIndex: 0,
+					segments: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
 					],
-				], // @TODO
+				}, // @TODO
 			},
 		],
 	},
@@ -224,8 +248,10 @@ type LevelGroup = {
 		description: string
 		image: string
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
-		startRowIndex: number
-		environment: Array<Array<EnvironmentSegment>>
+		environment: {
+			startRowIndex: number
+			segments: Array<Array<EnvironmentSegment>>
+		}
 	}>
 }
 

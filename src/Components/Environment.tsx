@@ -17,7 +17,7 @@ import soil from '../assets/soil.png'
 import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
-import type { EnvironmentSegment } from '../data/levels'
+import { EnvironmentSegment, Level } from '../data/levels'
 import type { EditorXml } from '../utilities/editorXml'
 import {
 	InstructionBlock,
@@ -26,7 +26,7 @@ import {
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
-	segments: Array<Array<EnvironmentSegment>>
+	environment: Level['environment']
 	instructions: null | { instructions: Instructions; xml: EditorXml }
 	onSuccess: (xml: EditorXml, performedImpossibleMove: boolean) => void
 	onFail: () => void
@@ -46,23 +46,23 @@ export const Environment: FunctionComponent<{
 }
 
 const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
-	segments,
+	environment,
 	instructions,
 	onSuccess,
 	onFail,
 }) => {
 	const size = useMemo(
 		() => ({
-			width: Math.max(...segments.map((row) => row.length)),
-			height: segments.length,
+			width: Math.max(...environment.segments.map((row) => row.length)),
+			height: environment.segments.length,
 		}),
-		[segments],
+		[environment.segments],
 	)
 	const fullEnvironment = useMemo<Array<Array<EnvironmentSegment>>>(() => {
 		const base = new Array(size.height)
 			.fill(null)
 			.map(() => new Array(size.width).fill('sky'))
-		segments.forEach((row, rowIndex) => {
+		environment.segments.forEach((row, rowIndex) => {
 			row.forEach((segment, columnIndex) => {
 				base[rowIndex][columnIndex] = segment
 				for (let y = rowIndex + 1; y < size.height; y++) {
@@ -71,7 +71,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			})
 		})
 		return base
-	}, [size, segments])
+	}, [size, environment.segments])
 
 	const [isRunning, setIsRunning] = useState(false)
 	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
@@ -139,8 +139,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			})()
 
 			const currentSegment =
-				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
-			const nextSegment = segments.at(princessStep) ?? 'frog'
+				princessStep === 0 ? 'grass' : environment.segments.at(princessStep - 1)
+			const nextSegment = environment.segments.at(princessStep) ?? 'frog'
 			const currentSubState = state[state.length - 1]
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
@@ -232,7 +232,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [instructions, onSuccess, onFail, segments])
+	}, [instructions, onSuccess, onFail, environment.segments])
 
 	useMirrorLoading(isRunning)
 

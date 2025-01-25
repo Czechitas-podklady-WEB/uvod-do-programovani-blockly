@@ -29,7 +29,9 @@ export const getLevelIdentifier = (groupKey: GroupKey, levelKey: LevelKey) => {
 			if (!level) {
 				throw new Error(`Level not found: ${groupKey} ${levelKey}`)
 			}
-			return hashCode([...level.environment, ...level.allowedBlocks].join('')) // Combination of environment and allowed blocks make a unique level
+			return hashCode(
+				[JSON.stringify(level.environment), ...level.allowedBlocks].join(''),
+			) // Combination of environment and allowed blocks make a unique level
 		})(),
 	))
 	return levelIdentifier

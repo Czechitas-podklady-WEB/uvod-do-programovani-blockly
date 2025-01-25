@@ -95,7 +95,7 @@ export const Playground: FunctionComponent<{
 			</Dialog>
 			<div className={styles.environment}>
 				<Environment
-					segments={level.environment}
+					environment={level.environment}
 					instructions={runningInstructions ?? null}
 					onSuccess={handleSuccess}
 					onFail={handleFail}
