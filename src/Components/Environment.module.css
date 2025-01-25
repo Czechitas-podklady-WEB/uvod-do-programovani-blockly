@@ -1,7 +1,6 @@
 .wrapper {
 	margin-block: 2rem;
 	display: grid;
-	/* justify-content: center; */
 	max-width: calc(8rem * var(--Environment-size-width));
 	margin-inline: auto;
 	grid-template-columns: repeat(var(--Environment-size-width), 1fr);
@@ -10,27 +9,31 @@
 	position: relative;
 	isolation: isolate;
 }
-.row {
-	display: grid;
-	grid-column: 1 / -1;
-	grid-template-columns: subgrid;
-}
 .segment {
 	position: relative;
 	display: grid;
 	align-items: center;
+	grid-column: calc(var(--Environment-segment-position-x) + 1);
+	grid-row: calc(var(--Environment-segment-position-y) + 1);
+	aspect-ratio: 1;
 }
+.player img,
+.swordPicked img,
 .segment img {
 	width: 100%;
-	aspect-ratio: 1;
 	object-fit: cover;
-}
-
-.princess,
-.swordPicked {
 	position: absolute;
 	inset: 0;
-	width: 100%;
+}
+
+.player {
+	position: relative;
+	z-index: 2;
+	grid-column: calc(var(--Environment-player-position-x) + 1);
+	grid-row: calc(var(--Environment-player-position-y) + 1);
+}
+
+.swordPicked {
 	z-index: 1;
 	transition-property: translate;
 	transition-duration: 0.5s;

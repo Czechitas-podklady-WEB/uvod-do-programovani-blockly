@@ -1,4 +1,5 @@
 import {
+	Fragment,
 	useEffect,
 	useMemo,
 	useRef,
@@ -75,7 +76,11 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 
 	const [isRunning, setIsRunning] = useState(false)
 	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
-	const [princessStep, setPrincessStep] = useState(0)
+	const playerStartPosition = useMemo(
+		() => ({ x: 0, y: environment.startRowIndex }),
+		[environment.startRowIndex],
+	)
+	const [playerPosition, setPlayerPosition] = useState(playerStartPosition)
 	const [isSwordPicked, setIsSwordPicked] = useState(false) // @TODO: handle more than one
 	const [isThicketHit, setIsThicketHit] = useState(false) // @TODO: handle more than one
 
@@ -110,7 +115,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			)
 		>
 		const state: State = [{ type: 'basic', index: 0 }]
-		let princessStep = 0
+		const playerPosition = { ...playerStartPosition }
 		let isSwordPicked = false
 		let isThicketHit = false
 		let performedImpossibleMove = false
@@ -139,8 +144,10 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			})()
 
 			const currentSegment =
-				princessStep === 0 ? 'grass' : environment.segments.at(princessStep - 1)
-			const nextSegment = environment.segments.at(princessStep) ?? 'frog'
+				playerPosition.x === 0
+					? 'grass'
+					: environment.segments.at(playerPosition.x - 1)
+			const nextSegment = environment.segments.at(playerPosition.x) ?? 'frog'
 			const currentSubState = state[state.length - 1]
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
@@ -156,7 +163,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					nextSegment === 'sword' ||
 					(isThicketHit && nextSegment === 'thicket')
 				) {
-					princessStep++
+					playerPosition.x++
 				} else if (nextSegment === 'hole') {
 					fail()
 					return
@@ -165,7 +172,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 			} else if (instruction.type === 'jump') {
 				if (nextSegment === 'hole') {
-					princessStep += 2
+					playerPosition.x += 2
 				} else {
 					// @TODO: allow to jump on grass - it might be funny
 					warnAboutImpossibleMove()
@@ -216,7 +223,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			} else if (currentSubState === state[state.length - 1]) {
 				currentSubState.index++
 			}
-			setPrincessStep(princessStep)
+			setPlayerPosition(playerPosition)
 			timer = setTimeout(
 				loop,
 				instruction === undefined ||
@@ -232,7 +239,13 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [instructions, onSuccess, onFail, environment.segments])
+	}, [
+		instructions,
+		onSuccess,
+		onFail,
+		environment.segments,
+		playerStartPosition,
+	])
 
 	useMirrorLoading(isRunning)
 
@@ -241,25 +254,24 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			className={styles.wrapper}
 			style={
 				{
-					'--Environment-princess-step': princessStep,
 					'--Environment-size-width': size.width,
 					'--Environment-size-height': size.height,
 				} as CSSProperties
 			}
 		>
-			{false && (
-				<div className={styles.segment}>
-					<img src={princess} className={styles.princess} />
-					{isSwordPicked && (
-						<img src={swordPicked} className={styles.swordPicked} />
-					)}
-					<img src={grass} />
-				</div>
-			)}
-			{fullEnvironment.map((row, index) => (
-				<div className={styles.row} key={index}>
-					{row.map((segment, index) => (
-						<div className={styles.segment} key={index}>
+			{fullEnvironment.map((row, rowIndex) => (
+				<Fragment key={rowIndex}>
+					{row.map((segment, columnIndex) => (
+						<div
+							className={styles.segment}
+							key={columnIndex}
+							style={
+								{
+									'--Environment-segment-position-x': columnIndex,
+									'--Environment-segment-position-y': rowIndex,
+								} as CSSProperties
+							}
+						>
 							<img
 								src={
 									segment === 'frog'
@@ -285,8 +297,22 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 							/>
 						</div>
 					))}
-				</div>
+				</Fragment>
 			))}
+			<div
+				className={styles.player}
+				style={
+					{
+						'--Environment-player-position-x': playerPosition.x,
+						'--Environment-player-position-y': playerPosition.y,
+					} as CSSProperties
+				}
+			>
+				<img src={princess} className={styles.player} />
+				{isSwordPicked && (
+					<img src={swordPicked} className={styles.swordPicked} />
+				)}
+			</div>
 		</div>
 	)
 }
