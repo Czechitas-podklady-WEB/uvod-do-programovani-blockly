@@ -87,9 +87,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		let princessStep = 0
 		let isSwordPicked = false
 		let isThicketHit = false
-		// console.log(instructions.instructions) // @TODO: remove
+
 		const loop = () => {
-			// console.log(JSON.stringify(state)) // @TODO: remove
 			const instruction = (() => {
 				const getBlockAtIndex = (
 					blocks: InstructionBlock[],
@@ -105,17 +104,17 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 						return block
 					}
 					if (block.type !== 'repeat') {
-						throw new Error('Invalid instruction')
+						throw new Error(`Invalid instruction "${block.type}"`)
 					}
 					return getBlockAtIndex(block.blocks, localState)
 				}
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
-			// console.log(instruction) // @TODO: remove
-			// console.log('') // @TODO: remove
+
 			const currentSegment =
 				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
 			const nextSegment = segments.at(princessStep) ?? 'frog'
+			const currentSubState = state[state.length - 1]
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
 			}
@@ -123,8 +122,6 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				if (state.length === 1) {
 					fail()
 					return
-				} else {
-					state.pop()
 				}
 			} else if (instruction.type === 'go_forward') {
 				if (
@@ -169,20 +166,27 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			} else if (instruction.type === 'repeat') {
 				state.push({
 					type: 'repeat',
-					index: -1,
+					index: 0,
 					remainingIterations: instruction.times,
 				})
 			} else {
 				instruction.type satisfies 'start'
 			}
-			const currentSubState = state[state.length - 1]
-			if (currentSubState.type === 'basic') {
-				currentSubState.index++
-			} else if (currentSubState.type === 'repeat') {
-				currentSubState.remainingIterations--
-				if (currentSubState.remainingIterations === 0) {
-					currentSubState.index++
+
+			if (instruction === undefined) {
+				if (currentSubState.type === 'repeat') {
+					currentSubState.remainingIterations--
+					if (currentSubState.remainingIterations === 0) {
+						state.pop()
+						const nextSubState = state[state.length - 1]
+						if (nextSubState !== undefined) {
+							nextSubState.index++
+						}
+					}
+					currentSubState.index = 0
 				}
+			} else if (currentSubState === state[state.length - 1]) {
+				currentSubState.index++
 			}
 			setPrincessStep(princessStep)
 			timer = setTimeout(
