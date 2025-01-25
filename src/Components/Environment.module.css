@@ -59,6 +59,15 @@
 .is_animating_jump {
 	animation-name: jump;
 }
+@keyframes kiss {
+	50% {
+		transform: rotate(40deg);
+	}
+}
+.is_animating_kiss {
+	transform-origin: 50% 80%;
+	animation-name: kiss;
+}
 @keyframes invalidMove {
 	0% {
 		transform: translate(1px, 1px) rotate(0deg);

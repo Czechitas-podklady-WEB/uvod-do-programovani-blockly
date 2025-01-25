@@ -84,7 +84,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	const [playerRenderState, setPlayerRenderState] = useState<{
 		x: number
 		y: number
-		animation: null | 'goForward' | 'invalidMove' | 'jump'
+		animation: null | 'goForward' | 'invalidMove' | 'jump' | 'kiss'
 	}>({
 		...playerStartPosition,
 		animation: null,
@@ -211,6 +211,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 			} else if (instruction.type === 'kiss') {
 				if (nextSegment === 'frog') {
+					setPlayerRenderState((state) => ({ ...state, animation: 'kiss' }))
 					success()
 					return
 				} else {
