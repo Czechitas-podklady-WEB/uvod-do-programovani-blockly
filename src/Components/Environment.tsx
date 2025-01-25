@@ -59,7 +59,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		}),
 		[environment.segments],
 	)
-	const fullEnvironment = useMemo<Array<Array<EnvironmentSegment>>>(() => {
+	const completeSegments = useMemo<Array<Array<EnvironmentSegment>>>(() => {
 		const base = new Array(size.height)
 			.fill(null)
 			.map(() => new Array(size.width).fill('sky'))
@@ -143,11 +143,12 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
 
-			const currentSegment =
-				playerPosition.x === 0
-					? 'grass'
-					: environment.segments.at(playerPosition.x - 1)
-			const nextSegment = environment.segments.at(playerPosition.x) ?? 'frog'
+			const currentSegment = completeSegments
+				.at(playerPosition.y)
+				?.at(playerPosition.x)
+			const nextSegment = completeSegments
+				.at(playerPosition.y)
+				?.at(playerPosition.x + 1)
 			const currentSubState = state[state.length - 1]
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
@@ -239,13 +240,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [
-		instructions,
-		onSuccess,
-		onFail,
-		environment.segments,
-		playerStartPosition,
-	])
+	}, [instructions, onSuccess, onFail, playerStartPosition, completeSegments])
 
 	useMirrorLoading(isRunning)
 
@@ -259,7 +254,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				} as CSSProperties
 			}
 		>
-			{fullEnvironment.map((row, rowIndex) => (
+			{completeSegments.map((row, rowIndex) => (
 				<Fragment key={rowIndex}>
 					{row.map((segment, columnIndex) => (
 						<div
