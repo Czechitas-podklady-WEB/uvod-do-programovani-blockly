@@ -102,16 +102,6 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			setIsRunning(false)
 			return
 		}
-		const fail = () => {
-			onFail()
-			isDoneRunningRef.current = true
-			setIsRunning(false)
-		}
-		const success = () => {
-			onSuccess(instructions.xml, performedImpossibleMove)
-			isDoneRunningRef.current = true
-			setIsRunning(false)
-		}
 		const warnAboutImpossibleMove = () => {
 			console.warn('Invalid move') // @TODO: visualize to user
 			performedImpossibleMove = true
@@ -127,8 +117,19 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		let isSwordPicked = false
 		let isThicketHit = false
 		let performedImpossibleMove = false
+		let success: null | boolean = null
 
-		const loop = () => {
+		const loop = (lastRunSuccess: null | boolean) => {
+			if (lastRunSuccess !== null) {
+				if (lastRunSuccess) {
+					onSuccess(instructions.xml, performedImpossibleMove)
+				} else {
+					onFail()
+				}
+				isDoneRunningRef.current = true
+				setIsRunning(false)
+				return
+			}
 			const instruction = (() => {
 				const getBlockAtIndex = (
 					blocks: InstructionBlock[],
@@ -164,8 +165,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			}
 			if (instruction === undefined) {
 				if (state.length === 1) {
-					fail()
-					return
+					success = false
 				}
 			} else if (instruction.type === 'go_forward') {
 				if (
@@ -176,8 +176,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					playerPosition.x++
 					animation = 'goForward'
 				} else if (nextSegment === 'hole') {
-					fail()
-					return
+					success = false
 				} else {
 					animation = 'invalidMove'
 					warnAboutImpossibleMove()
@@ -211,9 +210,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 			} else if (instruction.type === 'kiss') {
 				if (nextSegment === 'frog') {
-					setPlayerRenderState((state) => ({ ...state, animation: 'kiss' }))
-					success()
-					return
+					animation = 'kiss'
+					success = true
 				} else {
 					animation = 'invalidMove'
 					warnAboutImpossibleMove()
@@ -245,7 +243,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			}
 			setPlayerRenderState({ ...playerPosition, animation })
 			timer = setTimeout(
-				loop,
+				() => {
+					loop(success)
+				},
 				instruction === undefined ||
 					instruction.type === 'start' ||
 					instruction.type === 'repeat'
@@ -253,7 +253,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					: 700,
 			)
 		}
-		let timer: ReturnType<typeof setTimeout> = setTimeout(loop, 1000) // I feel very stupid writing this and I expect React.StrictMode will punish me.
+		let timer: ReturnType<typeof setTimeout> = setTimeout(() => {
+			loop(null)
+		}, 1000) // I feel very stupid writing this and I expect React.StrictMode will punish me.
 		setIsRunning(true)
 
 		return () => {
