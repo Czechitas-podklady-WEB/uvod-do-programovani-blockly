@@ -25,7 +25,7 @@ import styles from './Environment.module.css'
 export const Environment: FunctionComponent<{
 	segments: Array<EnvironmentSegment>
 	instructions: null | { instructions: Instructions; xml: EditorXml }
-	onSuccess: (xml: EditorXml) => void
+	onSuccess: (xml: EditorXml, performedImpossibleMove: boolean) => void
 	onFail: () => void
 }> = (props) => {
 	const lastInstructionsRef = useRef({
@@ -70,12 +70,13 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			setIsRunning(false)
 		}
 		const success = () => {
-			onSuccess(instructions.xml)
+			onSuccess(instructions.xml, performedImpossibleMove)
 			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
-		const warn = () => {
+		const warnAboutImpossibleMove = () => {
 			console.warn('Invalid move') // @TODO: visualize to user
+			performedImpossibleMove = true
 		}
 		type State = Array<
 			{ index: number } & (
@@ -87,6 +88,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		let princessStep = 0
 		let isSwordPicked = false
 		let isThicketHit = false
+		let performedImpossibleMove = false
 
 		const loop = () => {
 			const instruction = (() => {
@@ -130,38 +132,39 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					(isThicketHit && nextSegment === 'thicket')
 				) {
 					princessStep++
-				} else {
-					// @TODO: check if died otherwise just warn
+				} else if (nextSegment === 'hole') {
 					fail()
 					return
+				} else {
+					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'jump') {
 				if (nextSegment === 'hole') {
 					princessStep += 2
 				} else {
 					// @TODO: allow to jump on grass - it might be funny
-					warn()
+					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'pick') {
 				if (currentSegment === 'sword') {
 					isSwordPicked = true
 					setIsSwordPicked(true)
 				} else {
-					warn()
+					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'hit') {
 				if (nextSegment === 'thicket' && isSwordPicked) {
 					isThicketHit = true
 					setIsThicketHit(true)
 				} else {
-					warn()
+					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'kiss') {
 				if (nextSegment === 'frog') {
 					success()
 					return
 				} else {
-					warn()
+					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'repeat') {
 				state.push({
