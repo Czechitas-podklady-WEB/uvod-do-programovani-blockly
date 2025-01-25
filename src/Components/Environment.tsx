@@ -72,7 +72,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
-		const currentInstructionIndexes = [0]
+		type State = Array<{ index: number }>
+		const state: State = [{ index: 0 }]
 		let princessStep = 0
 		let isSwordPicked = false
 		let isThicketHit = false
@@ -80,26 +81,23 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			const instruction = (() => {
 				const getBlockAtIndex = (
 					blocks: InstructionBlock[],
-					indexes: Array<number>,
+					indexes: State,
 				) => {
-					const localIndexes = [...indexes]
-					const firstIndex = localIndexes.shift()
-					if (firstIndex === undefined) {
+					const localState = [...indexes]
+					const firstStateItem = localState.shift()
+					if (firstStateItem === undefined) {
 						return undefined
 					}
-					const block = blocks.at(firstIndex)
-					if (localIndexes.length === 0 || block === undefined) {
+					const block = blocks.at(firstStateItem.index)
+					if (localState.length === 0 || block === undefined) {
 						return block
 					}
 					if (block.type !== 'repeat') {
 						throw new Error('Invalid instruction')
 					}
-					return getBlockAtIndex(block.blocks, localIndexes)
+					return getBlockAtIndex(block.blocks, localState)
 				}
-				return getBlockAtIndex(
-					instructions.instructions,
-					currentInstructionIndexes,
-				)
+				return getBlockAtIndex(instructions.instructions, state)
 			})()
 			const currentSegment =
 				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
@@ -109,11 +107,11 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				return
 			}
 			if (instruction === undefined) {
-				if (currentInstructionIndexes.length === 1) {
+				if (state.length === 1) {
 					fail()
 					return
 				} else {
-					currentInstructionIndexes.pop()
+					state.pop()
 				}
 			} else if (instruction.type === 'go_forward') {
 				if (
@@ -157,15 +155,22 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 				return
 			} else if (instruction.type === 'repeat') {
-				currentInstructionIndexes.push(-1)
+				state.push({ index: -1 })
 			} else {
 				instruction.type satisfies 'start'
 			}
-			currentInstructionIndexes[currentInstructionIndexes.length - 1]++
+			state[state.length - 1].index++
 			setPrincessStep(princessStep)
-			timer = setTimeout(loop, 700)
+			timer = setTimeout(
+				loop,
+				instruction === undefined ||
+					instruction.type === 'start' ||
+					instruction.type === 'repeat'
+					? 0
+					: 700,
+			)
 		}
-		let timer: ReturnType<typeof setTimeout> = setTimeout(loop, 200) // I feel very stupid writing this and I expect React.StrictMode will punish me.
+		let timer: ReturnType<typeof setTimeout> = setTimeout(loop, 1000) // I feel very stupid writing this and I expect React.StrictMode will punish me.
 		setIsRunning(true)
 
 		return () => {
