@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import {
 	Fragment,
 	useEffect,
@@ -80,7 +81,14 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		() => ({ x: 0, y: environment.startRowIndex }),
 		[environment.startRowIndex],
 	)
-	const [playerPosition, setPlayerPosition] = useState(playerStartPosition)
+	const [playerRenderState, setPlayerRenderState] = useState<{
+		x: number
+		y: number
+		animation: null | 'goForward' | 'invalidMove' | 'jump'
+	}>({
+		...playerStartPosition,
+		animation: null,
+	})
 	const [isSwordPicked, setIsSwordPicked] = useState(false) // @TODO: handle more than one
 	const [isThicketHit, setIsThicketHit] = useState(false) // @TODO: handle more than one
 
@@ -150,6 +158,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				.at(playerPosition.y)
 				?.at(playerPosition.x + 1)
 			const currentSubState = state[state.length - 1]
+			let animation: (typeof playerRenderState)['animation'] = null
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
 			}
@@ -165,17 +174,23 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					(isThicketHit && nextSegment === 'thicket')
 				) {
 					playerPosition.x++
+					animation = 'goForward'
 				} else if (nextSegment === 'hole') {
 					fail()
 					return
 				} else {
+					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'jump') {
-				if (nextSegment === 'hole') {
-					playerPosition.x += 2
+				if (nextSegment === 'hole' || nextSegment === 'grass') {
+					playerPosition.x += 1
+					animation = 'jump'
+					if (nextSegment !== 'hole') {
+						warnAboutImpossibleMove()
+					}
 				} else {
-					// @TODO: allow to jump on grass - it might be funny
+					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'pick') {
@@ -183,6 +198,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					isSwordPicked = true
 					setIsSwordPicked(true)
 				} else {
+					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'hit') {
@@ -190,6 +206,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					isThicketHit = true
 					setIsThicketHit(true)
 				} else {
+					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'kiss') {
@@ -197,6 +214,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success()
 					return
 				} else {
+					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'repeat') {
@@ -224,7 +242,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			} else if (currentSubState === state[state.length - 1]) {
 				currentSubState.index++
 			}
-			setPlayerPosition(playerPosition)
+			setPlayerRenderState({ ...playerPosition, animation })
 			timer = setTimeout(
 				loop,
 				instruction === undefined ||
@@ -295,13 +313,22 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				</Fragment>
 			))}
 			<div
-				className={styles.player}
+				className={clsx(
+					styles.player,
+					styles[`is_animating_${playerRenderState.animation}`],
+				)}
 				style={
 					{
-						'--Environment-player-position-x': playerPosition.x,
-						'--Environment-player-position-y': playerPosition.y,
+						'--Environment-player-position-x': playerRenderState.x,
+						'--Environment-player-position-y': playerRenderState.y,
 					} as CSSProperties
 				}
+				onAnimationEnd={() => {
+					setPlayerRenderState((state) => ({
+						...state,
+						animation: null,
+					}))
+				}}
 			>
 				<img src={princess} className={styles.player} />
 				{isSwordPicked && (

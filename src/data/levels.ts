@@ -44,7 +44,7 @@ const developmentGroup = {
 				startRowIndex: 1,
 				segments: [
 					['sky'],
-					['grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
+					['grass', 'grass', 'grass', 'grass', 'hole', 'grass', 'frog'],
 					['soil'],
 				],
 			},
