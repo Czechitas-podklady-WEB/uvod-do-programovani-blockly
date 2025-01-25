@@ -1,17 +1,24 @@
 .wrapper {
 	margin-block: 2rem;
-	display: flex;
-	justify-content: center;
-	column-gap: 0.125rem;
+	display: grid;
+	/* justify-content: center; */
+	max-width: calc(8rem * var(--Environment-size-width));
+	margin-inline: auto;
+	grid-template-columns: repeat(var(--Environment-size-width), 1fr);
+	grid-template-rows: repeat(var(--Environment-size-height), 1fr);
+	gap: 0.125rem;
 	position: relative;
 	isolation: isolate;
+}
+.row {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
 }
 .segment {
 	position: relative;
 	display: grid;
 	align-items: center;
-	max-width: 8rem;
-	height: 8rem;
 }
 .segment img {
 	width: 100%;

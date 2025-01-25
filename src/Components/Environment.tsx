@@ -1,5 +1,6 @@
 import {
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 	type ComponentProps,
@@ -11,6 +12,8 @@ import frog from '../assets/frog.png'
 import grass from '../assets/grass.png'
 import hole from '../assets/hole.png'
 import princess from '../assets/princess.png'
+import sky from '../assets/sky.png'
+import soil from '../assets/soil.png'
 import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
@@ -23,7 +26,7 @@ import {
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
-	segments: Array<EnvironmentSegment>
+	segments: Array<Array<EnvironmentSegment>>
 	instructions: null | { instructions: Instructions; xml: EditorXml }
 	onSuccess: (xml: EditorXml, performedImpossibleMove: boolean) => void
 	onFail: () => void
@@ -48,6 +51,28 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	onSuccess,
 	onFail,
 }) => {
+	const size = useMemo(
+		() => ({
+			width: Math.max(...segments.map((row) => row.length)),
+			height: segments.length,
+		}),
+		[segments],
+	)
+	const fullEnvironment = useMemo<Array<Array<EnvironmentSegment>>>(() => {
+		const base = new Array(size.height)
+			.fill(null)
+			.map(() => new Array(size.width).fill('sky'))
+		segments.forEach((row, rowIndex) => {
+			row.forEach((segment, columnIndex) => {
+				base[rowIndex][columnIndex] = segment
+				for (let y = rowIndex + 1; y < size.height; y++) {
+					base[y][columnIndex] = 'soil'
+				}
+			})
+		})
+		return base
+	}, [size, segments])
+
 	const [isRunning, setIsRunning] = useState(false)
 	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
 	const [princessStep, setPrincessStep] = useState(0)
@@ -217,40 +242,51 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			style={
 				{
 					'--Environment-princess-step': princessStep,
+					'--Environment-size-width': size.width,
+					'--Environment-size-height': size.height,
 				} as CSSProperties
 			}
 		>
-			<div className={styles.segment}>
-				<img src={princess} className={styles.princess} />
-				{isSwordPicked && (
-					<img src={swordPicked} className={styles.swordPicked} />
-				)}
-				<img src={grass} />
-			</div>
-			{segments.map((segment, index) => (
-				<div className={styles.segment} key={index}>
-					<img
-						src={
-							segment === 'grass'
-								? grass
-								: segment === 'hole'
-									? hole
-									: segment === 'sword'
-										? isSwordPicked
-											? grass
-											: sword
-										: segment === 'thicket'
-											? isThicketHit
-												? grass
-												: thicket
-											: (segment satisfies never)
-						}
-					/>
+			{false && (
+				<div className={styles.segment}>
+					<img src={princess} className={styles.princess} />
+					{isSwordPicked && (
+						<img src={swordPicked} className={styles.swordPicked} />
+					)}
+					<img src={grass} />
+				</div>
+			)}
+			{fullEnvironment.map((row, index) => (
+				<div className={styles.row} key={index}>
+					{row.map((segment, index) => (
+						<div className={styles.segment} key={index}>
+							<img
+								src={
+									segment === 'frog'
+										? frog
+										: segment === 'sky'
+											? sky
+											: segment === 'soil'
+												? soil
+												: segment === 'grass'
+													? grass
+													: segment === 'hole'
+														? hole
+														: segment === 'sword'
+															? isSwordPicked
+																? grass
+																: sword
+															: segment === 'thicket'
+																? isThicketHit
+																	? grass
+																	: thicket
+																: (segment satisfies never)
+								}
+							/>
+						</div>
+					))}
 				</div>
 			))}
-			<div className={styles.segment}>
-				<img src={frog} />
-			</div>
 		</div>
 	)
 }
