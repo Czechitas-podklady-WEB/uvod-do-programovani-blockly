@@ -9,27 +9,29 @@ const isUnknownObject = (value: unknown): value is UnknownObject => {
 	return typeof value === 'object' && value !== null
 }
 
-type Block =
+export type InstructionBlock =
 	| {
 			type: BasicBlockType
 	  }
 	| {
 			type: 'repeat'
-			blocks: Array<Block>
+			blocks: Array<InstructionBlock>
 	  }
 
-const parseBlocks = (parent: UnknownObject): Array<Block> => {
+const parseInstructionBlocks = (
+	parent: UnknownObject,
+): Array<InstructionBlock> => {
 	if (!('blocks' in parent) || !Array.isArray(parent['blocks'])) {
 		return []
 	}
 	const blocks = parent['blocks']
 		.filter(isUnknownObject)
-		.map(parseBlock)
+		.map(parseInstructionBlock)
 		.filter(isDefined)
 	return blocks
 }
 
-const parseBlock = (block: UnknownObject) => {
+const parseInstructionBlock = (block: UnknownObject) => {
 	if (!('type' in block) || typeof block['type'] !== 'string') {
 		return null
 	}
@@ -38,7 +40,7 @@ const parseBlock = (block: UnknownObject) => {
 		return { type: type as BasicBlockType }
 	}
 	if (type === 'repeat') {
-		return { type: 'repeat' as const, blocks: parseBlocks(block) }
+		return { type: 'repeat' as const, blocks: parseInstructionBlocks(block) }
 	}
 	return null
 }
@@ -48,7 +50,7 @@ export const parseCodeToInstructions = (code: string) => {
 	if (!isUnknownObject(data)) {
 		throw new Error('Invalid data')
 	}
-	return parseBlocks(data)
+	return parseInstructionBlocks(data)
 }
 
 export type Instructions = ReturnType<typeof parseCodeToInstructions>

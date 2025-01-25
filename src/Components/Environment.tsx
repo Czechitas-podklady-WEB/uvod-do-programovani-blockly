@@ -16,7 +16,10 @@ import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
 import type { EnvironmentSegment } from '../data/levels'
 import type { EditorXml } from '../utilities/editorXml'
-import { Instructions } from '../utilities/parseCodeToInstructions'
+import {
+	InstructionBlock,
+	Instructions,
+} from '../utilities/parseCodeToInstructions'
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
@@ -69,20 +72,50 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			isDoneRunningRef.current = true
 			setIsRunning(false)
 		}
-		let currentInstructionIndex = 0
+		const currentInstructionIndexes = [0]
 		let princessStep = 0
 		let isSwordPicked = false
 		let isThicketHit = false
 		const loop = () => {
-			const instruction = instructions.instructions.at(currentInstructionIndex)
+			const instruction = (() => {
+				const getBlockAtIndex = (
+					blocks: InstructionBlock[],
+					indexes: Array<number>,
+				) => {
+					const localIndexes = [...indexes]
+					const firstIndex = localIndexes.shift()
+					if (firstIndex === undefined) {
+						return undefined
+					}
+					const block = blocks.at(firstIndex)
+					if (localIndexes.length === 0 || block === undefined) {
+						return block
+					}
+					if (block.type !== 'repeat') {
+						throw new Error('Invalid instruction')
+					}
+					return getBlockAtIndex(block.blocks, localIndexes)
+				}
+				return getBlockAtIndex(
+					instructions.instructions,
+					currentInstructionIndexes,
+				)
+			})()
 			const currentSegment =
 				princessStep === 0 ? 'grass' : segments.at(princessStep - 1)
 			const nextSegment = segments.at(princessStep) ?? 'frog'
-			if (instruction === undefined || currentSegment === undefined) {
+			if (currentSegment === undefined) {
 				fail()
 				return
 			}
-			if (instruction.type === 'go_forward') {
+			if (instruction === undefined) {
+				if (currentInstructionIndexes.length === 1) {
+					fail()
+					return
+				} else {
+					currentInstructionIndexes.pop()
+				}
+			} else if (instruction.type === 'go_forward') {
 				if (
 					nextSegment === 'grass' ||
 					nextSegment === 'sword' ||
@@ -124,11 +157,11 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}
 				return
 			} else if (instruction.type === 'repeat') {
-				// @TODO: implement
+				currentInstructionIndexes.push(-1)
 			} else {
 				instruction.type satisfies 'start'
 			}
-			currentInstructionIndex++
+			currentInstructionIndexes[currentInstructionIndexes.length - 1]++
 			setPrincessStep(princessStep)
 			timer = setTimeout(loop, 700)
 		}
