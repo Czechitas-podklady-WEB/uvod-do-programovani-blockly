@@ -16,6 +16,8 @@
 	grid-column: calc(var(--Environment-segment-position-x) + 1);
 	grid-row: calc(var(--Environment-segment-position-y) + 1);
 	aspect-ratio: 1;
+	border-radius: 0.25rem;
+	overflow: hidden;
 }
 .player img,
 .swordPicked img,
