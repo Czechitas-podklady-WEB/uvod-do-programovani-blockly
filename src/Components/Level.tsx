@@ -1,4 +1,4 @@
-import { NonEmptyString1000, PositiveInt, useEvolu } from '@evolu/react'
+import { PositiveInt, String, useEvolu } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
@@ -95,7 +95,7 @@ const InHasLevel: FunctionComponent<{
 				createOrUpdate('finishedLevel', {
 					id: getLevelIdentifier(level.group.key, level.key),
 					rating: PositiveInt.make(newRating),
-					blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+					blocklyWorkspaceXml: String.make(xml),
 				})
 			}
 			setSuccessDialog({
@@ -112,7 +112,7 @@ const InHasLevel: FunctionComponent<{
 		(xml: EditorXml) => {
 			createOrUpdate('levelDraft', {
 				id: getLevelIdentifier(level.group.key, level.key),
-				blocklyWorkspaceXml: NonEmptyString1000.make(xml),
+				blocklyWorkspaceXml: String.make(xml),
 			})
 		},
 		[createOrUpdate, level.group.key, level.key],
