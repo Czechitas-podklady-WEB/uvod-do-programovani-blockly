@@ -279,7 +279,13 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				<Fragment key={rowIndex}>
 					{row.map((segment, columnIndex) => (
 						<div
-							className={styles.segment}
+							className={clsx(
+								styles.segment,
+								rowIndex === 0 && styles.is_top,
+								rowIndex === size.height - 1 && styles.is_bottom,
+								columnIndex === 0 && styles.is_left,
+								columnIndex === size.width - 1 && styles.is_right,
+							)}
 							key={columnIndex}
 							style={
 								{

@@ -5,19 +5,37 @@
 	margin-inline: auto;
 	grid-template-columns: repeat(var(--Environment-size-width), 1fr);
 	grid-template-rows: repeat(var(--Environment-size-height), 1fr);
-	gap: 0.125rem;
 	position: relative;
 	isolation: isolate;
 }
 .segment {
+	isolation: isolate;
 	position: relative;
 	display: grid;
 	align-items: center;
 	grid-column: calc(var(--Environment-segment-position-x) + 1);
 	grid-row: calc(var(--Environment-segment-position-y) + 1);
 	aspect-ratio: 1;
-	border-radius: 0.25rem;
-	overflow: hidden;
+}
+.segment::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border: 0.0625rem solid #333333;
+	mix-blend-mode: difference;
+	opacity: 0.3;
+}
+.segment.is_top::after {
+	border-top: none;
+}
+.segment.is_bottom::after {
+	border-bottom: none;
+}
+.segment.is_left::after {
+	border-left: none;
+}
+.segment.is_right::after {
+	border-right: none;
 }
 .player img,
 .swordPicked img,
