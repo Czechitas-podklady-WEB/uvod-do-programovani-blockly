@@ -1,5 +1,4 @@
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 import {
 	Button,
 	Dialog,
@@ -9,6 +8,7 @@ import {
 	DialogTitle,
 } from '@mui/material'
 import { useCallback, useState, type FunctionComponent } from 'react'
+import fail from '../assets/fail.png'
 import { useLevel } from '../data/levels'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import {
@@ -75,9 +75,13 @@ export const Playground: FunctionComponent<{
 					<DialogContentText align="center" gutterBottom>
 						Tak tenhle příběh šťastně neskončil. Zkus to znovu.
 					</DialogContentText>
-					<DialogContentText align="center">
-						<SentimentVeryDissatisfiedIcon fontSize="large" />
-					</DialogContentText>
+					<img
+						className={styles.image}
+						src={fail}
+						alt=""
+						width={1024}
+						height={1024}
+					/>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleCloseFailDialog}>Zavřít</Button>
