@@ -34,6 +34,7 @@ const developmentGroup = {
 			description:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
+			maximumInstructionsCountForBestRating: 0, // @TODO
 			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
 			environment: {
 				startRowIndex: 1,
@@ -76,6 +77,7 @@ export const levelGroups = [
 				description:
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
+				maximumInstructionsCountForBestRating: 3,
 				allowedBlocks: ['go_forward', 'kiss'],
 				environment: {
 					startRowIndex: 0,
@@ -94,6 +96,7 @@ export const levelGroups = [
 				key: makeLevelKey('2'),
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
+				maximumInstructionsCountForBestRating: 5,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 				environment: {
 					startRowIndex: 0,
@@ -117,6 +120,7 @@ export const levelGroups = [
 				key: makeLevelKey('3'),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
+				maximumInstructionsCountForBestRating: 8,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
@@ -145,6 +149,7 @@ export const levelGroups = [
 				key: makeLevelKey('4'),
 				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
 				image: story4,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -157,6 +162,7 @@ export const levelGroups = [
 				key: makeLevelKey('5'),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -170,6 +176,7 @@ export const levelGroups = [
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -188,6 +195,7 @@ export const levelGroups = [
 				key: makeLevelKey('1'),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -200,6 +208,7 @@ export const levelGroups = [
 				key: makeLevelKey('2'),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -214,6 +223,7 @@ export const levelGroups = [
 				key: makeLevelKey('3'),
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -244,6 +254,7 @@ export const levelGroups = [
 				description:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -269,6 +280,7 @@ export const levelGroups = [
 				description:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
+				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
@@ -302,6 +314,7 @@ type LevelGroup = {
 		description: string
 		image: string
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
+		maximumInstructionsCountForBestRating: number
 		environment: {
 			startRowIndex: number
 			elements: Array<{ x: number; y: number; type: EnvironmentElement }>

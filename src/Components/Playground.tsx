@@ -43,20 +43,20 @@ export const Playground: FunctionComponent<{
 	const [isFailDialogShown, setIsFailDialogShown] = useState(false)
 
 	const handleSuccess = useCallback(
-		(xml: EditorXml, performedImpossibleMove: boolean) => {
-			const rating = (() => {
-				const penalty = performedImpossibleMove ? 1 : 0 // @TODO: add penalization for too many blocks
-				if (penalty === 0) {
-					return 3
-				}
-				if (penalty === 1) {
-					return 2
-				}
-				return 1
-			})()
+		(
+			xml: EditorXml,
+			performedImpossibleMove: boolean,
+			instructionsCount: number,
+		) => {
+			const penalty =
+				(performedImpossibleMove ? 1 : 0) +
+				(instructionsCount > level.maximumInstructionsCountForBestRating
+					? 1
+					: 0)
+			const rating = penalty === 0 ? 3 : penalty === 1 ? 2 : 1
 			onSuccess(rating, xml)
 		},
-		[onSuccess],
+		[onSuccess, level.maximumInstructionsCountForBestRating],
 	)
 
 	const handleFail = useCallback(() => {

@@ -34,7 +34,11 @@ import styles from './Environment.module.css'
 export const Environment: FunctionComponent<{
 	environment: Level['environment']
 	instructions: null | { instructions: Instructions; xml: EditorXml }
-	onSuccess: (xml: EditorXml, performedImpossibleMove: boolean) => void
+	onSuccess: (
+		xml: EditorXml,
+		performedImpossibleMove: boolean,
+		instructionsCount: number,
+	) => void
 	onFail: () => void
 }> = (props) => {
 	const lastInstructionsRef = useRef({
@@ -142,7 +146,24 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		const loop = (lastRunSuccess: null | boolean) => {
 			if (lastRunSuccess !== null) {
 				if (lastRunSuccess) {
-					onSuccess(instructions.xml, performedImpossibleMove)
+					const countInstructions = (
+						instructions: InstructionBlock[],
+					): number =>
+						instructions.reduce(
+							(count, instruction) =>
+								count +
+								1 +
+								('blocks' in instruction
+									? countInstructions(instruction.blocks)
+									: 0),
+							0,
+						)
+					const instructionsCount = countInstructions(instructions.instructions)
+					onSuccess(
+						instructions.xml,
+						performedImpossibleMove,
+						instructionsCount,
+					)
 				} else {
 					onFail()
 				}
