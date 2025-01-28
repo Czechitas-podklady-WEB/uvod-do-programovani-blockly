@@ -149,6 +149,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			)
 		}
 
+		const canStandOn = (type: EnvironmentFoundation | undefined) =>
+			type === 'grass' || type === 'floor'
+
 		const loop = (lastRunSuccess: null | boolean) => {
 			if (lastRunSuccess !== null) {
 				if (lastRunSuccess) {
@@ -223,7 +226,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success = false
 				}
 			} else if (instruction.type === 'go_forward') {
-				if (nextSegment === 'grass' && !nextElements.includes('thicket')) {
+				if (canStandOn(nextSegment) && !nextElements.includes('thicket')) {
 					playerPosition.x++
 					animation = 'goForward'
 				} else if (nextElements.includes('hole')) {
@@ -233,7 +236,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'jump') {
-				if (nextSegment === 'grass' && !nextElements.includes('thicket')) {
+				if (canStandOn(nextSegment) && !nextElements.includes('thicket')) {
 					playerPosition.x++
 					animation = 'jump'
 					if (!nextElements.includes('hole')) {
