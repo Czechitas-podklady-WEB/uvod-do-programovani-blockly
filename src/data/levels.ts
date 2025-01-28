@@ -20,14 +20,9 @@ export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
 
-export type EnvironmentSegment =
-	| 'sky'
-	| 'soil'
-	| 'grass'
-	| 'hole'
-	| 'thicket'
-	| 'sword'
-	| 'frog'
+export type EnvironmentFoundation = 'sky' | 'soil' | 'grass'
+
+export type EnvironmentElement = 'frog' | 'sword' | 'thicket' | 'hole'
 
 const developmentGroup = {
 	key: makeGroupKey('development'),
@@ -42,24 +37,25 @@ const developmentGroup = {
 			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
 			environment: {
 				startRowIndex: 1,
-				segments: [
+				elements: [
+					{ x: 2, y: 1, type: 'sword' },
+					{ x: 3, y: 1, type: 'thicket' },
+					{ x: 4, y: 1, type: 'hole' },
+					{ x: 9, y: 1, type: 'frog' },
+				],
+				foundations: [
 					['sky'],
 					[
 						'grass',
-						'sword',
-						'grass',
-						'hole',
-						'grass',
-						'thicket',
-						'grass',
-						'hole',
 						'grass',
 						'grass',
 						'grass',
 						'grass',
 						'grass',
 						'grass',
-						'frog',
+						'grass',
+						'grass',
+						'grass',
 					],
 					['soil'],
 				],
@@ -83,7 +79,14 @@ export const levelGroups = [
 				allowedBlocks: ['go_forward', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'grass', 'frog']],
+					elements: [
+						{
+							type: 'frog',
+							x: 2,
+							y: 0,
+						},
+					],
+					foundations: [['grass', 'grass', 'grass']],
 				},
 			},
 			{
@@ -94,7 +97,19 @@ export const levelGroups = [
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'hole', 'grass', 'grass', 'frog']],
+					elements: [
+						{
+							type: 'hole',
+							x: 2,
+							y: 0,
+						},
+						{
+							type: 'frog',
+							x: 4,
+							y: 0,
+						},
+					],
+					foundations: [['grass', 'grass', 'grass', 'grass', 'grass']],
 				},
 			},
 			{
@@ -105,7 +120,24 @@ export const levelGroups = [
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'sword', 'grass', 'thicket', 'grass', 'frog']],
+					elements: [
+						{
+							type: 'sword',
+							x: 1,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'frog',
+							x: 5,
+							y: 0,
+						},
+					],
+					foundations: [['grass', 'grass', 'grass', 'grass', 'grass', 'grass']],
 				},
 			},
 			{
@@ -116,7 +148,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'grass', 'grass', 'frog']],
+					elements: [],
+					foundations: [['grass', 'grass', 'grass']],
 				}, // @TODO
 			},
 			{
@@ -127,7 +160,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'grass', 'grass', 'grass', 'frog']],
+					elements: [],
+					foundations: [['grass', 'grass', 'grass', 'grass']],
 				}, // @TODO
 			},
 			{
@@ -139,7 +173,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [['grass', 'grass', 'grass', 'grass', 'grass', 'frog']],
+					elements: [],
+					foundations: [['grass', 'grass', 'grass', 'grass', 'grass']],
 				}, // @TODO
 			},
 		],
@@ -156,9 +191,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [
-						['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'frog'],
-					],
+					elements: [],
+					foundations: [['grass', 'grass', 'grass', 'grass', 'grass', 'grass']],
 				}, // @TODO
 			},
 			{
@@ -169,7 +203,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [
+					elements: [],
+					foundations: [
 						['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass'],
 					],
 				}, // @TODO
@@ -182,7 +217,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [
+					elements: [],
+					foundations: [
 						[
 							'grass',
 							'grass',
@@ -211,7 +247,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [
+					elements: [],
+					foundations: [
 						[
 							'grass',
 							'grass',
@@ -235,7 +272,8 @@ export const levelGroups = [
 				allowedBlocks: [], // @TODO
 				environment: {
 					startRowIndex: 0,
-					segments: [
+					elements: [],
+					foundations: [
 						[
 							'grass',
 							'grass',
@@ -266,12 +304,13 @@ type LevelGroup = {
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
 		environment: {
 			startRowIndex: number
-			segments: Array<Array<EnvironmentSegment>>
+			elements: Array<{ x: number; y: number; type: EnvironmentElement }>
+			foundations: Array<Array<EnvironmentFoundation>>
 		}
 	}>
 }
 
-export type Level = (typeof levelGroups)[number]['levels'][number]
+export type Level = LevelGroup['levels'][number]
 
 const allLevels = levelGroups.flatMap((group) =>
 	group.levels.map((level) => ({

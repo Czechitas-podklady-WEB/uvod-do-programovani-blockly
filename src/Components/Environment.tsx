@@ -19,7 +19,11 @@ import soil from '../assets/soil.png'
 import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
-import { EnvironmentSegment, Level } from '../data/levels'
+import {
+	EnvironmentElement,
+	EnvironmentFoundation,
+	Level,
+} from '../data/levels'
 import type { EditorXml } from '../utilities/editorXml'
 import {
 	InstructionBlock,
@@ -55,25 +59,33 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 }) => {
 	const size = useMemo(
 		() => ({
-			width: Math.max(...environment.segments.map((row) => row.length)),
-			height: environment.segments.length,
+			width: Math.max(
+				...environment.foundations.map((row) => row.length),
+				...environment.elements.map(({ x }) => x + 1),
+			),
+			height: Math.max(
+				environment.foundations.length,
+				...environment.elements.map(({ y }) => y + 1),
+			),
 		}),
-		[environment.segments],
+		[environment.foundations, environment.elements],
 	)
-	const completeSegments = useMemo<Array<Array<EnvironmentSegment>>>(() => {
-		const base = new Array(size.height)
+	const completeFoundations = useMemo<
+		Array<Array<EnvironmentFoundation>>
+	>(() => {
+		const foundations = new Array(size.height)
 			.fill(null)
 			.map(() => new Array(size.width).fill('sky'))
-		environment.segments.forEach((row, rowIndex) => {
-			row.forEach((segment, columnIndex) => {
-				base[rowIndex][columnIndex] = segment
+		environment.foundations.forEach((row, rowIndex) => {
+			row.forEach((foundation, columnIndex) => {
+				foundations[rowIndex][columnIndex] = foundation
 				for (let y = rowIndex + 1; y < size.height; y++) {
-					base[y][columnIndex] = 'soil'
+					foundations[y][columnIndex] = 'soil'
 				}
 			})
 		})
-		return base
-	}, [size, environment.segments])
+		return foundations
+	}, [size, environment.foundations])
 
 	const [isRunning, setIsRunning] = useState(false)
 	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
@@ -84,13 +96,14 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	const [playerRenderState, setPlayerRenderState] = useState<{
 		x: number
 		y: number
-		animation: null | 'goForward' | 'invalidMove' | 'jump' | 'kiss'
+		hasSword: boolean
+		animation: null | 'goForward' | 'invalidMove' | 'jump' | 'kiss' | 'hit'
 	}>({
 		...playerStartPosition,
 		animation: null,
+		hasSword: false,
 	})
-	const [isSwordPicked, setIsSwordPicked] = useState(false) // @TODO: handle more than one
-	const [isThicketHit, setIsThicketHit] = useState(false) // @TODO: handle more than one
+	const [elements, setElements] = useState(environment.elements)
 
 	// @TODO: penalize one star for invalid moves
 
@@ -112,12 +125,19 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				| { type: 'repeat'; remainingIterations: number }
 			)
 		>
+		let elements = environment.elements
 		const state: State = [{ type: 'basic', index: 0 }]
 		const playerPosition = { ...playerStartPosition }
-		let isSwordPicked = false
-		let isThicketHit = false
 		let performedImpossibleMove = false
 		let success: null | boolean = null
+		let hasSword = false
+
+		const removeElement = (x: number, y: number, type: EnvironmentElement) => {
+			elements = elements.filter(
+				(element) =>
+					element.x !== x || element.y !== y || element.type !== type,
+			)
+		}
 
 		const loop = (lastRunSuccess: null | boolean) => {
 			if (lastRunSuccess !== null) {
@@ -152,10 +172,18 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
 
-			const currentSegment = completeSegments
+			const currentSegment = completeFoundations
 				.at(playerPosition.y)
 				?.at(playerPosition.x)
-			const nextSegment = completeSegments
+			const currentElements = elements
+				.filter(({ x, y }) => x === playerPosition.x && y === playerPosition.y)
+				.map(({ type }) => type)
+			const nextElements = elements
+				.filter(
+					({ x, y }) => x === playerPosition.x + 1 && y === playerPosition.y,
+				)
+				.map(({ type }) => type)
+			const nextSegment = completeFoundations
 				.at(playerPosition.y)
 				?.at(playerPosition.x + 1)
 			const currentSubState = state[state.length - 1]
@@ -168,24 +196,20 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success = false
 				}
 			} else if (instruction.type === 'go_forward') {
-				if (
-					nextSegment === 'grass' ||
-					nextSegment === 'sword' ||
-					(isThicketHit && nextSegment === 'thicket')
-				) {
+				if (nextSegment === 'grass' && !nextElements.includes('thicket')) {
 					playerPosition.x++
 					animation = 'goForward'
-				} else if (nextSegment === 'hole') {
+				} else if (nextElements.includes('hole')) {
 					success = false
 				} else {
 					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'jump') {
-				if (nextSegment === 'hole' || nextSegment === 'grass') {
-					playerPosition.x += 2 // @TODO: don't jump that far
+				if (nextSegment === 'grass' && !nextElements.includes('thicket')) {
+					playerPosition.x++
 					animation = 'jump'
-					if (nextSegment !== 'hole') {
+					if (!nextElements.includes('hole')) {
 						warnAboutImpossibleMove()
 					}
 				} else {
@@ -193,23 +217,23 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'pick') {
-				if (currentSegment === 'sword') {
-					isSwordPicked = true
-					setIsSwordPicked(true)
+				if (currentElements.includes('sword')) {
+					hasSword = true
+					removeElement(playerPosition.x, playerPosition.y, 'sword')
 				} else {
 					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'hit') {
-				if (nextSegment === 'thicket' && isSwordPicked) {
-					isThicketHit = true
-					setIsThicketHit(true)
+				if (nextElements.includes('thicket') && hasSword) {
+					animation = 'hit'
+					removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
 				} else {
 					animation = 'invalidMove'
 					warnAboutImpossibleMove()
 				}
 			} else if (instruction.type === 'kiss') {
-				if (nextSegment === 'frog') {
+				if (nextElements.includes('frog')) {
 					animation = 'kiss'
 					success = true
 				} else {
@@ -241,7 +265,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			} else if (currentSubState === state[state.length - 1]) {
 				currentSubState.index++
 			}
-			setPlayerRenderState({ ...playerPosition, animation })
+			setElements(elements)
+			setPlayerRenderState({ ...playerPosition, animation, hasSword })
 			timer = setTimeout(
 				() => {
 					loop(success)
@@ -261,7 +286,14 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [instructions, onSuccess, onFail, playerStartPosition, completeSegments])
+	}, [
+		instructions,
+		onSuccess,
+		onFail,
+		playerStartPosition,
+		completeFoundations,
+		environment.elements,
+	])
 
 	useMirrorLoading(isRunning)
 
@@ -275,51 +307,68 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				} as CSSProperties
 			}
 		>
-			{completeSegments.map((row, rowIndex) => (
+			{completeFoundations.map((row, rowIndex) => (
 				<Fragment key={rowIndex}>
-					{row.map((segment, columnIndex) => (
+					{row.map((foundation, columnIndex) => (
 						<div
 							className={clsx(
-								styles.segment,
-								rowIndex === 0 && styles.is_top,
-								rowIndex === size.height - 1 && styles.is_bottom,
-								columnIndex === 0 && styles.is_left,
-								columnIndex === size.width - 1 && styles.is_right,
+								styles.foundation,
+								rowIndex === 0 && styles.is_edge_top,
+								rowIndex === size.height - 1 && styles.is_edge_bottom,
+								columnIndex === 0 && styles.is_edge_left,
+								columnIndex === size.width - 1 && styles.is_edge_right,
+								styles[`is_type_${foundation}`],
 							)}
 							key={columnIndex}
 							style={
 								{
-									'--Environment-segment-position-x': columnIndex,
-									'--Environment-segment-position-y': rowIndex,
+									'--Environment-position-x': columnIndex,
+									'--Environment-position-y': rowIndex,
 								} as CSSProperties
 							}
 						>
 							<img
 								src={
-									segment === 'frog'
-										? frog
-										: segment === 'sky'
-											? sky
-											: segment === 'soil'
-												? soil
-												: segment === 'grass'
-													? grass
-													: segment === 'hole'
-														? hole
-														: segment === 'sword'
-															? isSwordPicked
-																? grass
-																: sword
-															: segment === 'thicket'
-																? isThicketHit
-																	? grass
-																	: thicket
-																: (segment satisfies never)
+									foundation === 'sky'
+										? sky
+										: foundation === 'soil'
+											? soil
+											: foundation === 'grass'
+												? grass
+												: foundation === 'hole'
+													? hole
+													: (foundation satisfies never)
 								}
 							/>
 						</div>
 					))}
 				</Fragment>
+			))}
+			{elements.map(({ x, y, type }, index) => (
+				<div
+					key={index}
+					className={clsx(styles.element, styles[`is_type_${type}`])}
+					style={
+						{
+							'--Environment-position-x': x,
+							'--Environment-position-y': y,
+						} as CSSProperties
+					}
+				>
+					<img
+						src={
+							type === 'frog'
+								? frog
+								: type === 'hole'
+									? hole
+									: type === 'sword'
+										? sword
+										: type === 'thicket'
+											? thicket
+											: (type satisfies never)
+						}
+					/>
+				</div>
 			))}
 			<div
 				className={clsx(
@@ -328,8 +377,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				)}
 				style={
 					{
-						'--Environment-player-position-x': playerRenderState.x,
-						'--Environment-player-position-y': playerRenderState.y,
+						'--Environment-position-x': playerRenderState.x,
+						'--Environment-position-y': playerRenderState.y,
 					} as CSSProperties
 				}
 				onAnimationEnd={() => {
@@ -340,7 +389,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				}}
 			>
 				<img src={princess} className={styles.player} />
-				{isSwordPicked && (
+				{playerRenderState.hasSword && (
 					<img src={swordPicked} className={styles.swordPicked} />
 				)}
 			</div>

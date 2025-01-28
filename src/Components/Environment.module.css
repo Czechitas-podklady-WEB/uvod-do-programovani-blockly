@@ -8,16 +8,17 @@
 	position: relative;
 	isolation: isolate;
 }
-.segment {
+.foundation,
+.element {
 	isolation: isolate;
 	position: relative;
 	display: grid;
 	align-items: center;
-	grid-column: calc(var(--Environment-segment-position-x) + 1);
-	grid-row: calc(var(--Environment-segment-position-y) + 1);
+	grid-column: calc(var(--Environment-position-x) + 1);
+	grid-row: calc(var(--Environment-position-y) + 1);
 	aspect-ratio: 1;
 }
-.segment::after {
+.foundation::after {
 	content: '';
 	position: absolute;
 	inset: 0;
@@ -25,32 +26,38 @@
 	mix-blend-mode: difference;
 	opacity: 0.3;
 }
-.segment.is_top::after {
+.foundation.is_edge_top::after {
 	border-top: none;
 }
-.segment.is_bottom::after {
+.foundation.is_edge_bottom::after {
 	border-bottom: none;
 }
-.segment.is_left::after {
+.foundation.is_edge_left::after {
 	border-left: none;
 }
-.segment.is_right::after {
+.foundation.is_edge_right::after {
 	border-right: none;
 }
 .player img,
 .swordPicked img,
-.segment img {
+.foundation img,
+.element img {
 	width: 100%;
 	object-fit: cover;
 	position: absolute;
 	inset: 0;
 }
+.element.is_type_frog,
+.element.is_type_hole,
+.element.is_type_thicket {
+	translate: -50% 0;
+}
 
 .player {
 	position: relative;
 	z-index: 2;
-	grid-column: calc(var(--Environment-player-position-x) + 1);
-	grid-row: calc(var(--Environment-player-position-y) + 1);
+	grid-column: calc(var(--Environment-position-x) + 1);
+	grid-row: calc(var(--Environment-position-y) + 1);
 	animation-duration: 0.5s;
 }
 
@@ -67,10 +74,10 @@
 }
 @keyframes jump {
 	0% {
-		transform: translateX(-200%);
+		transform: translateX(-100%);
 	}
 	50% {
-		transform: translate(-100%, -30%);
+		transform: translate(-50%, -30%);
 	}
 	100% {
 		transform: none;
@@ -87,6 +94,18 @@
 .is_animating_kiss {
 	transform-origin: 50% 80%;
 	animation-name: kiss;
+}
+@keyframes hit {
+	50% {
+		transform: rotateY(180deg) scaleY(0.95);
+	}
+	100% {
+		transform: rotateY(360deg);
+	}
+}
+.is_animating_hit {
+	transform-origin: 50% 80%;
+	animation-name: hit;
 }
 @keyframes invalidMove {
 	0% {
@@ -128,5 +147,5 @@
 }
 
 .swordPicked {
-	z-index: 1;
+	z-index: 3;
 }
