@@ -20,9 +20,14 @@ export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
 
-export type EnvironmentFoundation = 'sky' | 'soil' | 'grass'
+export type EnvironmentFoundation = 'sky' | 'soil' | 'grass' | 'floor' | 'wall'
 
-export type EnvironmentElement = 'frog' | 'sword' | 'thicket' | 'hole'
+export type EnvironmentElement =
+	| 'frog'
+	| 'sword'
+	| 'thicket'
+	| 'hole'
+	| 'leader'
 
 const developmentGroup = {
 	key: makeGroupKey('development'),
@@ -37,15 +42,41 @@ const developmentGroup = {
 			maximumInstructionsCountForBestRating: 0, // @TODO
 			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
 			environment: {
-				startRowIndex: 1,
+				startRowIndex: 2,
 				elements: [
-					{ x: 2, y: 1, type: 'sword' },
-					{ x: 3, y: 1, type: 'thicket' },
-					{ x: 4, y: 1, type: 'hole' },
-					{ x: 9, y: 1, type: 'frog' },
+					{ x: 2, y: 2, type: 'sword' },
+					{ x: 3, y: 2, type: 'thicket' },
+					{ x: 4, y: 2, type: 'hole' },
+					{ x: 7, y: 0, type: 'leader' },
+					{ x: 7, y: 1, type: 'leader' },
+					{ x: 7, y: 2, type: 'leader' },
+					{ x: 9, y: 0, type: 'frog' },
 				],
 				foundations: [
-					['sky'],
+					[
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						'wall',
+						'floor',
+						'floor',
+						'floor',
+					],
+					[
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						undefined,
+						'wall',
+						'wall',
+						'wall',
+						'wall',
+					],
 					[
 						'grass',
 						'grass',
@@ -53,10 +84,10 @@ const developmentGroup = {
 						'grass',
 						'grass',
 						'grass',
-						'grass',
-						'grass',
-						'grass',
-						'grass',
+						'floor',
+						'floor',
+						'floor',
+						'floor',
 					],
 					['soil'],
 				],
@@ -318,7 +349,7 @@ type LevelGroup = {
 		environment: {
 			startRowIndex: number
 			elements: Array<{ x: number; y: number; type: EnvironmentElement }>
-			foundations: Array<Array<EnvironmentFoundation>>
+			foundations: Array<Array<EnvironmentFoundation | undefined>>
 		}
 	}>
 }

@@ -10,15 +10,18 @@ import {
 	type FunctionComponent,
 } from 'react'
 import { useMirrorLoading } from 'shared-loading-indicator'
+import floor from '../assets/floor.png'
 import frog from '../assets/frog.png'
 import grass from '../assets/grass.png'
 import hole from '../assets/hole.png'
+import leader from '../assets/leader.png'
 import princess from '../assets/princess.png'
 import sky from '../assets/sky.png'
 import soil from '../assets/soil.png'
 import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
+import wall from '../assets/wall.png'
 import {
 	EnvironmentElement,
 	EnvironmentFoundation,
@@ -82,6 +85,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			.map(() => new Array(size.width).fill('sky'))
 		environment.foundations.forEach((row, rowIndex) => {
 			row.forEach((foundation, columnIndex) => {
+				if (foundation === undefined) {
+					return
+				}
 				foundations[rowIndex][columnIndex] = foundation
 				for (let y = rowIndex + 1; y < size.height; y++) {
 					foundations[y][columnIndex] = 'soil'
@@ -356,9 +362,11 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 											? soil
 											: foundation === 'grass'
 												? grass
-												: foundation === 'hole'
-													? hole
-													: (foundation satisfies never)
+												: foundation === 'floor'
+													? floor
+													: foundation === 'wall'
+														? wall
+														: (foundation satisfies never)
 								}
 							/>
 						</div>
@@ -386,7 +394,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 										? sword
 										: type === 'thicket'
 											? thicket
-											: (type satisfies never)
+											: type === 'leader'
+												? leader
+												: (type satisfies never)
 						}
 					/>
 				</div>
