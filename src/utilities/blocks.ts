@@ -59,6 +59,30 @@ export const blocks = [
 		],
 	},
 	{
+		type: 'if',
+		message0: 'Pokud %1 %2',
+		args0: [
+			{
+				type: 'field_dropdown',
+				name: 'condition',
+				options: [
+					['před žábou', 'frog'],
+					['u meče', 'sword'],
+					['u žebříku', 'leader'],
+					['před dírou', 'hole'],
+					['před keřem', 'thicket'],
+				],
+			},
+			{
+				type: 'input_statement',
+				name: 'do',
+			},
+		],
+		previousStatement: 'Action',
+		nextStatement: 'Action',
+		colour: 250,
+	},
+	{
 		type: 'kiss',
 		message0: 'Políbit',
 		colour: 800,

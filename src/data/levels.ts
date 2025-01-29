@@ -40,7 +40,15 @@ const developmentGroup = {
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
 			maximumInstructionsCountForBestRating: 0, // @TODO
-			allowedBlocks: ['go_forward', 'hit', 'pick', 'jump', 'repeat', 'kiss'],
+			allowedBlocks: [
+				'go_forward',
+				'hit',
+				'pick',
+				'jump',
+				'repeat',
+				'if',
+				'kiss',
+			],
 			environment: {
 				startRowIndex: 2,
 				elements: [
