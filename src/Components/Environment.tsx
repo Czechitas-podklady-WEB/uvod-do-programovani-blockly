@@ -108,7 +108,15 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		x: number
 		y: number
 		hasSword: boolean
-		animation: null | 'goForward' | 'invalidMove' | 'jump' | 'kiss' | 'hit'
+		animation:
+			| null
+			| 'goForward'
+			| 'invalidMove'
+			| 'jump'
+			| 'kiss'
+			| 'hit'
+			| 'goUp'
+			| 'goDown'
 	}>({
 		...playerStartPosition,
 		animation: null,
@@ -204,17 +212,32 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
 
+			const elementsAtPosition = (x: number, y: number) =>
+				x < 0 || y < 0 || x >= size.width || y >= size.height
+					? []
+					: elements
+							.filter((element) => element.x === x && element.y === y)
+							.map(({ type }) => type)
+
 			const currentSegment = completeFoundations
 				.at(playerPosition.y)
 				?.at(playerPosition.x)
-			const currentElements = elements
-				.filter(({ x, y }) => x === playerPosition.x && y === playerPosition.y)
-				.map(({ type }) => type)
-			const nextElements = elements
-				.filter(
-					({ x, y }) => x === playerPosition.x + 1 && y === playerPosition.y,
-				)
-				.map(({ type }) => type)
+			const currentElements = elementsAtPosition(
+				playerPosition.x,
+				playerPosition.y,
+			)
+			const nextElements = elementsAtPosition(
+				playerPosition.x + 1,
+				playerPosition.y,
+			)
+			const aboveElements = elementsAtPosition(
+				playerPosition.x,
+				playerPosition.y - 1,
+			)
+			const belowElements = elementsAtPosition(
+				playerPosition.x,
+				playerPosition.y + 1,
+			)
 			const nextSegment = completeFoundations
 				.at(playerPosition.y)
 				?.at(playerPosition.x + 1)
@@ -259,6 +282,28 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				if (currentElements.includes('sword')) {
 					hasSword = true
 					removeElement(playerPosition.x, playerPosition.y, 'sword')
+				} else {
+					animation = 'invalidMove'
+					warnAboutNeedlessMove()
+				}
+			} else if (instruction.type === 'up') {
+				if (
+					currentElements.includes('leader') &&
+					aboveElements.includes('leader')
+				) {
+					playerPosition.y--
+					animation = 'goUp'
+				} else {
+					animation = 'invalidMove'
+					warnAboutNeedlessMove()
+				}
+			} else if (instruction.type === 'down') {
+				if (
+					currentElements.includes('leader') &&
+					belowElements.includes('leader')
+				) {
+					playerPosition.y++
+					animation = 'goDown'
 				} else {
 					animation = 'invalidMove'
 					warnAboutNeedlessMove()
@@ -360,6 +405,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		playerStartPosition,
 		completeFoundations,
 		environment.elements,
+		size,
 	])
 
 	useMirrorLoading(isRunning)

@@ -45,6 +45,20 @@ export const blocks = [
 		nextStatement: 'Action',
 	},
 	{
+		type: 'up',
+		message0: 'Lézt nahoru',
+		colour: 620,
+		previousStatement: 'Action',
+		nextStatement: 'Action',
+	},
+	{
+		type: 'down',
+		message0: 'Lézt dolů',
+		colour: 630,
+		previousStatement: 'Action',
+		nextStatement: 'Action',
+	},
+	{
 		type: 'repeat',
 		message0: 'Zopakuj %1 krát %2 %3',
 		colour: 120,

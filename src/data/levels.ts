@@ -45,6 +45,8 @@ const developmentGroup = {
 				'hit',
 				'pick',
 				'jump',
+				'up',
+				'down',
 				'repeat',
 				'if',
 				'until',
