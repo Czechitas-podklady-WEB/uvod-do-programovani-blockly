@@ -57,7 +57,6 @@ const parseInstructionBlock = (
 		return null
 	}
 	const blockType = blockTypes.find((type) => type === block['type'])
-	console.log({ blockType })
 	if (!blockType) {
 		return null
 	}
