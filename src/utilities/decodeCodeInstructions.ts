@@ -51,10 +51,13 @@ const parseInstructionBlock = (block: UnknownObject) => {
 			blocks: parseInstructionBlocks(block),
 		}
 	}
+	if (type === 'if') {
+		console.log(block)
+	}
 	return null
 }
 
-export const parseCodeToInstructions = (code: string) => {
+export const decodeCodeInstructions = (code: string) => {
 	const data = JSON.parse(code)
 	if (!isUnknownObject(data)) {
 		throw new Error('Invalid data')
@@ -62,4 +65,4 @@ export const parseCodeToInstructions = (code: string) => {
 	return parseInstructionBlocks(data)
 }
 
-export type Instructions = ReturnType<typeof parseCodeToInstructions>
+export type Instructions = ReturnType<typeof decodeCodeInstructions>

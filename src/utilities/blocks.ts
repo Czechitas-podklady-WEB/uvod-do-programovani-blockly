@@ -91,7 +91,9 @@ export const blocks = [
 ] as const
 
 export const blockTypes = blocks.map(({ type }) => type)
-export const basicBlockTypes = blockTypes.filter((type) => type !== 'repeat')
+export const basicBlockTypes = blockTypes.filter(
+	(type) => type !== 'repeat' && type !== 'if',
+)
 
 export type BlockType = (typeof blockTypes)[number]
 export type BasicBlockType = (typeof basicBlockTypes)[number]

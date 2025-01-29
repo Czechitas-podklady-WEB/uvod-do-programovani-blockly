@@ -27,11 +27,11 @@ import {
 	EnvironmentFoundation,
 	Level,
 } from '../data/levels'
-import type { EditorXml } from '../utilities/editorXml'
 import {
 	InstructionBlock,
 	Instructions,
-} from '../utilities/parseCodeToInstructions'
+} from '../utilities/decodeCodeInstructions'
+import type { EditorXml } from '../utilities/editorXml'
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{

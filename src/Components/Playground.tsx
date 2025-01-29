@@ -10,11 +10,11 @@ import {
 import { useCallback, useState, type FunctionComponent } from 'react'
 import fail from '../assets/fail.png'
 import { useLevel } from '../data/levels'
-import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import {
 	Instructions,
-	parseCodeToInstructions,
-} from '../utilities/parseCodeToInstructions'
+	decodeCodeInstructions,
+} from '../utilities/decodeCodeInstructions'
+import { EditorXml, makeEditorXml } from '../utilities/editorXml'
 import { Editor } from './Editor'
 import { Environment } from './Environment'
 import styles from './Playground.module.css'
@@ -138,7 +138,7 @@ export const Playground: FunctionComponent<{
 						color="primary"
 						onClick={() => {
 							setRunningInstructions({
-								instructions: parseCodeToInstructions(code),
+								instructions: decodeCodeInstructions(code),
 								xml,
 							})
 						}}

@@ -7,36 +7,12 @@ import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { BlocklyWorkspace } from 'react-blockly'
 import { blocks, type BlockType } from '../utilities/blocks'
 import { EditorXml, makeEditorXml } from '../utilities/editorXml'
+import '../utilities/encodeCodeInstructionsDefinition'
 import styles from './Editor.module.css'
 
 const baseXml = makeEditorXml(
 	'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="start" x="70" y="30" deletable="false" movable="false" editable="false"></block></xml>',
 )
-
-const jsonPair = (key: string, value: string | number) => `"${key}": ${value}`
-
-for (const { type: blockType } of blocks) {
-	javascriptGenerator.forBlock[blockType] = (block) => {
-		let output = `\n{\n\t${jsonPair('type', `"${blockType}"`)}`
-		if (blockType === 'repeat') {
-			const times = Number(block.getField('times')?.getValue() || 1)
-			const branch = javascriptGenerator.statementToCode(block, 'do')
-			output += `,\n`
-			output += `${jsonPair('times', times)},\n`
-			output += `${jsonPair('blocks', `[${branch}]`)}\n`
-		} else {
-			output += `\n`
-		}
-
-		const hasPrevious = block.getPreviousBlock() !== null
-		const hasNext = block.getNextBlock() !== null
-		if (!hasPrevious) {
-			output = `"blocks": [${output}`
-		}
-		output += `}${hasNext ? ',' : ''}`
-		return output
-	}
-}
 
 Blockly.defineBlocksWithJsonArray([...blocks])
 
