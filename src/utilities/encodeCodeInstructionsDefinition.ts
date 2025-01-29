@@ -11,10 +11,15 @@ for (const { type: blockType } of blocks) {
 			const branch = javascriptGenerator.statementToCode(block, 'do')
 			output += `,\n`
 			output += `${jsonPair('times', times)},\n`
-			output += `${jsonPair('blocks', `[${branch}]`)}\n`
-		} else {
-			output += `\n`
+			output += `${jsonPair('blocks', `[${branch}]`)}`
+		} else if (blockType === 'if') {
+			const condition = block.getField('condition')?.getValue() || ''
+			const branch = javascriptGenerator.statementToCode(block, 'do')
+			output += `,\n`
+			output += `${jsonPair('condition', `"${condition}"`)},\n`
+			output += `${jsonPair('blocks', `[${branch}]`)}`
 		}
+		output += `\n`
 
 		const hasPrevious = block.getPreviousBlock() !== null
 		const hasNext = block.getNextBlock() !== null

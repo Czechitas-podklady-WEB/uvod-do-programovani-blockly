@@ -1,4 +1,9 @@
-import { BasicBlockType, basicBlockTypes } from './blocks'
+import {
+	BasicBlockType,
+	basicBlockTypes,
+	ConditionValue,
+	conditionValues,
+} from './blocks'
 import { isDefined } from './isDefined'
 
 type UnknownObject = {
@@ -16,6 +21,11 @@ export type InstructionBlock =
 	| {
 			type: 'repeat'
 			times: number
+			blocks: Array<InstructionBlock>
+	  }
+	| {
+			type: 'if'
+			condition: ConditionValue
 			blocks: Array<InstructionBlock>
 	  }
 
@@ -52,7 +62,17 @@ const parseInstructionBlock = (block: UnknownObject) => {
 		}
 	}
 	if (type === 'if') {
-		console.log(block)
+		const condition = conditionValues.find(
+			(value) => value === block['condition'],
+		) // Using find as a TypeScript workaround to keep correct type
+		if (!condition) {
+			return null
+		}
+		return {
+			type: 'if' as const,
+			condition,
+			blocks: parseInstructionBlocks(block),
+		}
 	}
 	return null
 }

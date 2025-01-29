@@ -52,9 +52,10 @@ const developmentGroup = {
 			environment: {
 				startRowIndex: 2,
 				elements: [
-					{ x: 2, y: 2, type: 'sword' },
-					{ x: 3, y: 2, type: 'thicket' },
-					{ x: 4, y: 2, type: 'hole' },
+					{ x: 2, y: 2, type: 'frog' },
+					{ x: 3, y: 2, type: 'sword' },
+					{ x: 4, y: 2, type: 'thicket' },
+					{ x: 5, y: 2, type: 'hole' },
 					{ x: 7, y: 0, type: 'leader' },
 					{ x: 7, y: 1, type: 'leader' },
 					{ x: 7, y: 2, type: 'leader' },

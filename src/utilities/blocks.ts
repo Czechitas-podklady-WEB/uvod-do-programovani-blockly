@@ -1,3 +1,14 @@
+const conditionOptions = [
+	['před žábou', 'frog'],
+	['u meče', 'sword'],
+	['u žebříku', 'leader'],
+	['před dírou', 'hole'],
+	['před keřem', 'thicket'],
+] as const
+
+export const conditionValues = conditionOptions.map(([, value]) => value)
+export type ConditionValue = (typeof conditionValues)[number]
+
 export const blocks = [
 	{
 		type: 'start',
@@ -65,13 +76,7 @@ export const blocks = [
 			{
 				type: 'field_dropdown',
 				name: 'condition',
-				options: [
-					['před žábou', 'frog'],
-					['u meče', 'sword'],
-					['u žebříku', 'leader'],
-					['před dírou', 'hole'],
-					['před keřem', 'thicket'],
-				],
+				options: conditionOptions,
 			},
 			{
 				type: 'input_statement',
