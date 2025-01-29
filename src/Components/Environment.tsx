@@ -320,6 +320,10 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					currentSubState.index = 0
 				} else if (currentSubState.type === 'if') {
 					state.pop()
+					const nextSubState = state[state.length - 1]
+					if (nextSubState !== undefined) {
+						nextSubState.index++
+					}
 				} else if (currentSubState.type === 'until') {
 					state.pop()
 				}
