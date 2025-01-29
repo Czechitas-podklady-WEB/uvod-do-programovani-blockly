@@ -47,6 +47,7 @@ const developmentGroup = {
 				'jump',
 				'repeat',
 				'if',
+				'until',
 				'kiss',
 			],
 			environment: {

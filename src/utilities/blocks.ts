@@ -71,12 +71,15 @@ export const blocks = [
 	},
 	{
 		type: 'if',
-		message0: 'Pokud %1 %2',
+		message0: 'Jestliže %1 %2 %3',
 		args0: [
 			{
 				type: 'field_dropdown',
 				name: 'condition',
 				options: conditionOptions,
+			},
+			{
+				type: 'input_dummy',
 			},
 			{
 				type: 'input_statement',
@@ -88,6 +91,27 @@ export const blocks = [
 		colour: 250,
 	},
 	{
+		type: 'until',
+		message0: 'Dokud není %1 %2 %3',
+		args0: [
+			{
+				type: 'field_dropdown',
+				name: 'condition',
+				options: conditionOptions,
+			},
+			{
+				type: 'input_dummy',
+			},
+			{
+				type: 'input_statement',
+				name: 'do',
+			},
+		],
+		previousStatement: 'Action',
+		nextStatement: 'Action',
+		colour: 950,
+	},
+	{
 		type: 'kiss',
 		message0: 'Políbit',
 		colour: 800,
@@ -97,7 +121,7 @@ export const blocks = [
 
 export const blockTypes = blocks.map(({ type }) => type)
 export const basicBlockTypes = blockTypes.filter(
-	(type) => type !== 'repeat' && type !== 'if',
+	(type) => type !== 'repeat' && type !== 'if' && type !== 'until',
 )
 
 export type BlockType = (typeof blockTypes)[number]

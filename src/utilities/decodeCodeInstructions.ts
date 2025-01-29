@@ -1,6 +1,6 @@
 import {
 	BasicBlockType,
-	basicBlockTypes,
+	blockTypes,
 	ConditionValue,
 	conditionValues,
 } from './blocks'
@@ -24,7 +24,7 @@ export type InstructionBlock =
 			blocks: Array<InstructionBlock>
 	  }
 	| {
-			type: 'if'
+			type: 'if' | 'until'
 			condition: ConditionValue
 			blocks: Array<InstructionBlock>
 	  }
@@ -42,39 +42,59 @@ const parseInstructionBlocks = (
 	return blocks
 }
 
-const parseInstructionBlock = (block: UnknownObject) => {
+const validateCondition = (value: unknown) => {
+	const condition = conditionValues.find((otherValue) => otherValue === value) // Using find as a TypeScript workaround to keep correct type
+	if (!condition) {
+		return null
+	}
+	return condition
+}
+
+const parseInstructionBlock = (
+	block: UnknownObject,
+): InstructionBlock | null => {
 	if (!('type' in block) || typeof block['type'] !== 'string') {
 		return null
 	}
-	const type = block['type']
-	if (basicBlockTypes.includes(type as BasicBlockType)) {
-		return { type: type as BasicBlockType }
+	const blockType = blockTypes.find((type) => type === block['type'])
+	console.log({ blockType })
+	if (!blockType) {
+		return null
 	}
-	if (type === 'repeat') {
+	if (blockType === 'repeat') {
 		const times = block['times']
 		if (typeof times !== 'number') {
 			return null
 		}
 		return {
-			type: 'repeat' as const,
+			type: blockType,
 			times,
 			blocks: parseInstructionBlocks(block),
 		}
 	}
-	if (type === 'if') {
-		const condition = conditionValues.find(
-			(value) => value === block['condition'],
-		) // Using find as a TypeScript workaround to keep correct type
+	if (blockType === 'if' || blockType === 'until') {
+		const condition = validateCondition(block['condition'])
 		if (!condition) {
 			return null
 		}
-		return {
-			type: 'if' as const,
-			condition,
-			blocks: parseInstructionBlocks(block),
+		if (blockType === 'if') {
+			return {
+				type: blockType,
+				condition,
+				blocks: parseInstructionBlocks(block),
+			}
 		}
+		if (blockType === 'until') {
+			return {
+				type: blockType,
+				condition,
+				blocks: parseInstructionBlocks(block),
+			}
+		}
+		blockType satisfies never
 	}
-	return null
+	blockType satisfies BasicBlockType
+	return { type: blockType }
 }
 
 export const decodeCodeInstructions = (code: string) => {

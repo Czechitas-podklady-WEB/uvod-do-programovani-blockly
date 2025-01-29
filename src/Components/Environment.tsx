@@ -135,6 +135,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				| { type: 'basic' }
 				| { type: 'repeat'; remainingIterations: number }
 				| { type: 'if' }
+				| { type: 'until' }
 			)
 		>
 		let elements = environment.elements
@@ -153,7 +154,6 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 
 		const canStandOn = (type: EnvironmentFoundation | undefined) =>
 			type === 'grass' || type === 'floor'
-
 		const loop = (lastRunSuccess: null | boolean) => {
 			if (lastRunSuccess !== null) {
 				if (lastRunSuccess) {
@@ -192,7 +192,11 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					if (localState.length === 0 || block === undefined) {
 						return block
 					}
-					if (block.type !== 'repeat' && block.type !== 'if') {
+					if (
+						block.type !== 'repeat' &&
+						block.type !== 'if' &&
+						block.type !== 'until'
+					) {
 						throw new Error(`Invalid instruction "${block.type}"`)
 					}
 					return getBlockAtIndex(block.blocks, localState)
@@ -219,6 +223,13 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			if (currentSegment === undefined) {
 				throw new Error('Player out of bounds')
 			}
+			const isConditionFulfilled = {
+				frog: nextElements.includes('frog'),
+				sword: currentElements.includes('sword'),
+				leader: currentElements.includes('leader'),
+				hole: nextElements.includes('hole'),
+				thicket: nextElements.includes('thicket'),
+			} satisfies { [key in ConditionValue]: boolean }
 			if (instruction === undefined) {
 				if (state.length === 1) {
 					success = false
@@ -279,16 +290,16 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					remainingIterations: instruction.times,
 				})
 			} else if (instruction.type === 'if') {
-				const isConditionFulfilled = {
-					frog: nextElements.includes('frog'),
-					sword: currentElements.includes('sword'),
-					leader: currentElements.includes('leader'),
-					hole: nextElements.includes('hole'),
-					thicket: nextElements.includes('thicket'),
-				} satisfies { [key in ConditionValue]: boolean }
 				if (isConditionFulfilled[instruction.condition]) {
 					state.push({
 						type: 'if',
+						index: 0,
+					})
+				}
+			} else if (instruction.type === 'until') {
+				if (!isConditionFulfilled[instruction.condition]) {
+					state.push({
+						type: 'until',
 						index: 0,
 					})
 				}
@@ -309,6 +320,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					currentSubState.index = 0
 				} else if (currentSubState.type === 'if') {
 					state.pop()
+				} else if (currentSubState.type === 'until') {
+					state.pop()
 				}
 			} else if (currentSubState === state[state.length - 1]) {
 				currentSubState.index++
@@ -322,7 +335,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				instruction === undefined ||
 					instruction.type === 'start' ||
 					instruction.type === 'repeat' ||
-					instruction.type === 'if'
+					instruction.type === 'if' ||
+					instruction.type === 'until'
 					? 0
 					: 700,
 			)

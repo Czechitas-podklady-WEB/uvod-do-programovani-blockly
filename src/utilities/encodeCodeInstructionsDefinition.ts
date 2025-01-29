@@ -12,7 +12,7 @@ for (const { type: blockType } of blocks) {
 			output += `,\n`
 			output += `${jsonPair('times', times)},\n`
 			output += `${jsonPair('blocks', `[${branch}]`)}`
-		} else if (blockType === 'if') {
+		} else if (blockType === 'if' || blockType === 'until') {
 			const condition = block.getField('condition')?.getValue() || ''
 			const branch = javascriptGenerator.statementToCode(block, 'do')
 			output += `,\n`
