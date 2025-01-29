@@ -45,11 +45,11 @@ export const Playground: FunctionComponent<{
 	const handleSuccess = useCallback(
 		(
 			xml: EditorXml,
-			performedImpossibleMove: boolean,
+			performedNeedlessMove: boolean,
 			instructionsCount: number,
 		) => {
 			const penalty =
-				(performedImpossibleMove ? 1 : 0) +
+				(performedNeedlessMove ? 1 : 0) +
 				(instructionsCount > level.maximumInstructionsCountForBestRating
 					? 1
 					: 0)

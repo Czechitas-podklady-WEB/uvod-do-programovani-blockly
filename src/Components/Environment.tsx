@@ -40,7 +40,7 @@ export const Environment: FunctionComponent<{
 	instructions: null | { instructions: Instructions; xml: EditorXml }
 	onSuccess: (
 		xml: EditorXml,
-		performedImpossibleMove: boolean,
+		performedNeedlessMove: boolean,
 		instructionsCount: number,
 	) => void
 	onFail: () => void
@@ -126,9 +126,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			setIsRunning(false)
 			return
 		}
-		const warnAboutImpossibleMove = () => {
-			console.warn('Invalid move') // @TODO: visualize to user
-			performedImpossibleMove = true
+		const warnAboutNeedlessMove = () => {
+			// @TODO: visualize to user
+			performedNeedlessMove = true
 		}
 		type State = Array<
 			{ index: number } & (
@@ -140,7 +140,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		let elements = environment.elements
 		const state: State = [{ type: 'basic', index: 0 }]
 		const playerPosition = { ...playerStartPosition }
-		let performedImpossibleMove = false
+		let performedNeedlessMove = false
 		let success: null | boolean = null
 		let hasSword = false
 
@@ -170,11 +170,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 							0,
 						)
 					const instructionsCount = countInstructions(instructions.instructions)
-					onSuccess(
-						instructions.xml,
-						performedImpossibleMove,
-						instructionsCount,
-					)
+					onSuccess(instructions.xml, performedNeedlessMove, instructionsCount)
 				} else {
 					onFail()
 				}
@@ -235,18 +231,18 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success = false
 				} else {
 					animation = 'invalidMove'
-					warnAboutImpossibleMove()
+					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'jump') {
 				if (canStandOn(nextSegment) && !nextElements.includes('thicket')) {
 					playerPosition.x++
 					animation = 'jump'
 					if (!nextElements.includes('hole')) {
-						warnAboutImpossibleMove()
+						warnAboutNeedlessMove()
 					}
 				} else {
 					animation = 'invalidMove'
-					warnAboutImpossibleMove()
+					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'pick') {
 				if (currentElements.includes('sword')) {
@@ -254,15 +250,19 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					removeElement(playerPosition.x, playerPosition.y, 'sword')
 				} else {
 					animation = 'invalidMove'
-					warnAboutImpossibleMove()
+					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'hit') {
-				if (nextElements.includes('thicket') && hasSword) {
+				if (hasSword) {
 					animation = 'hit'
-					removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
+					if (nextElements.includes('thicket')) {
+						removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
+					} else {
+						warnAboutNeedlessMove()
+					}
 				} else {
 					animation = 'invalidMove'
-					warnAboutImpossibleMove()
+					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'kiss') {
 				if (nextElements.includes('frog')) {
@@ -270,7 +270,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success = true
 				} else {
 					animation = 'invalidMove'
-					warnAboutImpossibleMove()
+					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'repeat') {
 				state.push({
