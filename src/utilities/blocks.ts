@@ -1,9 +1,11 @@
 const conditionOptions = [
 	['před žábou', 'frog'],
 	['u meče', 'sword'],
-	['u žebříku', 'leader'],
+	['u žebříku nahoru', 'leaderUp'],
+	['u žebříku dolů', 'leaderDown'],
 	['před dírou', 'hole'],
 	['před keřem', 'thicket'],
+	['před pavučinou', 'web'],
 ] as const
 
 export const conditionValues = conditionOptions.map(([, value]) => value)

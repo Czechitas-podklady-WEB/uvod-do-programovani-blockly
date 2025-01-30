@@ -254,9 +254,15 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			const isConditionFulfilled = {
 				frog: nextElements.includes('frog'),
 				sword: currentElements.includes('sword'),
-				leader: currentElements.includes('leader'),
+				leaderUp:
+					currentElements.includes('leader') &&
+					aboveElements.includes('leader'),
+				leaderDown:
+					currentElements.includes('leader') &&
+					belowElements.includes('leader'),
 				hole: nextElements.includes('hole'),
 				thicket: nextElements.includes('thicket'),
+				web: nextElements.includes('web'),
 			} satisfies { [key in ConditionValue]: boolean }
 			if (instruction === undefined) {
 				if (state.length === 1) {
@@ -284,7 +290,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'pick') {
-				if (currentElements.includes('sword')) {
+				if (isConditionFulfilled.sword) {
 					hasSword = true
 					removeElement(playerPosition.x, playerPosition.y, 'sword')
 				} else {
@@ -292,10 +298,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'up') {
-				if (
-					currentElements.includes('leader') &&
-					aboveElements.includes('leader')
-				) {
+				if (isConditionFulfilled.leaderUp) {
 					playerPosition.y--
 					animation = 'goUp'
 				} else {
@@ -303,10 +306,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'down') {
-				if (
-					currentElements.includes('leader') &&
-					belowElements.includes('leader')
-				) {
+				if (isConditionFulfilled.leaderDown) {
 					playerPosition.y++
 					animation = 'goDown'
 				} else {
@@ -316,9 +316,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			} else if (instruction.type === 'hit') {
 				if (hasSword) {
 					animation = 'hit'
-					if (nextElements.includes('thicket')) {
+					if (isConditionFulfilled.thicket) {
 						removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
-					} else if (nextElements.includes('web')) {
+					} else if (isConditionFulfilled.web) {
 						removeElement(playerPosition.x + 1, playerPosition.y, 'web')
 					} else {
 						warnAboutNeedlessMove()
