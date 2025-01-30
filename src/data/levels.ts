@@ -26,6 +26,7 @@ export type EnvironmentElement =
 	| 'frog'
 	| 'sword'
 	| 'thicket'
+	| 'web'
 	| 'hole'
 	| 'leader'
 
@@ -55,14 +56,16 @@ const developmentGroup = {
 			environment: {
 				startRowIndex: 2,
 				elements: [
-					{ x: 2, y: 2, type: 'frog' },
+					// { x: 2, y: 2, type: 'frog' },
 					{ x: 3, y: 2, type: 'sword' },
 					{ x: 4, y: 2, type: 'thicket' },
+					// { x: 5, y: 2, type: 'web' },
 					{ x: 5, y: 2, type: 'hole' },
 					{ x: 7, y: 0, type: 'leader' },
 					{ x: 7, y: 1, type: 'leader' },
 					{ x: 7, y: 2, type: 'leader' },
-					{ x: 9, y: 0, type: 'frog' },
+					{ x: 9, y: 0, type: 'web' },
+					{ x: 11, y: 0, type: 'frog' },
 				],
 				foundations: [
 					[
@@ -76,6 +79,8 @@ const developmentGroup = {
 						'floor',
 						'floor',
 						'floor',
+						'floor',
+						'floor',
 					],
 					[
 						undefined,
@@ -88,6 +93,8 @@ const developmentGroup = {
 						'wall',
 						'wall',
 						'wall',
+						'wall',
+						'wall',
 					],
 					[
 						'grass',
@@ -96,6 +103,8 @@ const developmentGroup = {
 						'grass',
 						'grass',
 						'grass',
+						'floor',
+						'floor',
 						'floor',
 						'floor',
 						'floor',

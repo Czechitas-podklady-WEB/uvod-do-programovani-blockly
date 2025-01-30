@@ -22,6 +22,7 @@ import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
 import wall from '../assets/wall.png'
+import web from '../assets/web.png'
 import {
 	EnvironmentElement,
 	EnvironmentFoundation,
@@ -159,9 +160,20 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					element.x !== x || element.y !== y || element.type !== type,
 			)
 		}
+		const elementsAtPosition = (x: number, y: number) =>
+			x < 0 || y < 0 || x >= size.width || y >= size.height
+				? []
+				: elements
+						.filter((element) => element.x === x && element.y === y)
+						.map(({ type }) => type)
 
-		const canStandOn = (type: EnvironmentFoundation | undefined) =>
-			type === 'grass' || type === 'floor'
+		const canStandOn = (
+			type: EnvironmentFoundation | undefined,
+			elements: EnvironmentElement[],
+		) =>
+			(type === 'grass' || type === 'floor') &&
+			!elements.includes('thicket') &&
+			!elements.includes('web')
 		const loop = (lastRunSuccess: null | boolean) => {
 			if (lastRunSuccess !== null) {
 				if (lastRunSuccess) {
@@ -212,13 +224,6 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				return getBlockAtIndex(instructions.instructions, state)
 			})()
 
-			const elementsAtPosition = (x: number, y: number) =>
-				x < 0 || y < 0 || x >= size.width || y >= size.height
-					? []
-					: elements
-							.filter((element) => element.x === x && element.y === y)
-							.map(({ type }) => type)
-
 			const currentSegment = completeFoundations
 				.at(playerPosition.y)
 				?.at(playerPosition.x)
@@ -258,7 +263,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					success = false
 				}
 			} else if (instruction.type === 'go_forward') {
-				if (canStandOn(nextSegment) && !nextElements.includes('thicket')) {
+				if (canStandOn(nextSegment, nextElements)) {
 					playerPosition.x++
 					animation = 'goForward'
 				} else if (nextElements.includes('hole')) {
@@ -268,7 +273,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					warnAboutNeedlessMove()
 				}
 			} else if (instruction.type === 'jump') {
-				if (canStandOn(nextSegment) && !nextElements.includes('thicket')) {
+				if (canStandOn(nextSegment, nextElements)) {
 					playerPosition.x++
 					animation = 'jump'
 					if (!nextElements.includes('hole')) {
@@ -313,6 +318,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					animation = 'hit'
 					if (nextElements.includes('thicket')) {
 						removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
+					} else if (nextElements.includes('web')) {
+						removeElement(playerPosition.x + 1, playerPosition.y, 'web')
 					} else {
 						warnAboutNeedlessMove()
 					}
@@ -482,7 +489,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 											? thicket
 											: type === 'leader'
 												? leader
-												: (type satisfies never)
+												: type === 'web'
+													? web
+													: (type satisfies never)
 						}
 					/>
 				</div>

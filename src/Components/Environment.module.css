@@ -49,6 +49,7 @@
 }
 .element.is_type_frog,
 .element.is_type_hole,
+.element.is_type_web,
 .element.is_type_thicket {
 	translate: -50% 0;
 }
