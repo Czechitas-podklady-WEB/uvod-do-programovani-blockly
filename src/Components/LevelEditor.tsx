@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Button, Container } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import {
 	useMemo,
@@ -6,6 +6,7 @@ import {
 	type ComponentProps,
 	type FunctionComponent,
 } from 'react'
+import type { Level } from '../data/levels'
 import { EnvironmentGrid } from './Environment'
 
 type EnvironmentGridProps = ComponentProps<typeof EnvironmentGrid>
@@ -60,6 +61,23 @@ export const LevelEditor: FunctionComponent = () => {
 				elements={elements}
 				playerState={playerState}
 			/>
+			<Button
+				onClick={() => {
+					navigator.clipboard.writeText(
+						JSON.stringify(
+							{
+								startRowIndex,
+								elements,
+								foundations,
+							} satisfies Level['environment'],
+							null,
+							2,
+						),
+					)
+				}}
+			>
+				Zkopírovat kód
+			</Button>
 		</Container>
 	)
 }
