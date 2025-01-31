@@ -61,7 +61,7 @@ export const LevelEditor: FunctionComponent = () => {
 	)
 
 	const [tool, setTool] = useState<
-		'erase' | EnvironmentFoundation | EnvironmentElement
+		'erase' | 'player' | EnvironmentFoundation | EnvironmentElement
 	>('erase')
 
 	return (
@@ -81,6 +81,10 @@ export const LevelEditor: FunctionComponent = () => {
 									x !== elementX || y !== elementY,
 							),
 						)
+						return
+					}
+					if (tool === 'player') {
+						setStartRowIndex(y)
 						return
 					}
 					const element = environmentElement.find(({ value }) => value === tool)
@@ -121,6 +125,7 @@ export const LevelEditor: FunctionComponent = () => {
 					}}
 				>
 					<MenuItem value="erase">Guma</MenuItem>
+					<MenuItem value="player">Princezna</MenuItem>
 					{environmentElement.map(({ value, label }) => (
 						<MenuItem key={value} value={value}>
 							{label}
