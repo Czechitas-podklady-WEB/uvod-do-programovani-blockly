@@ -15,6 +15,7 @@ import { DatabaseProvider } from './Components/DatabaseProvider'
 import { Home } from './Components/Home'
 import { Layout } from './Components/Layout'
 import { Level } from './Components/Level'
+import { LevelEditor } from './Components/LevelEditor'
 import { NotFound } from './Components/NotFound'
 import { Reset } from './Components/Reset'
 import { Unlock } from './Components/Unlock'
@@ -42,6 +43,7 @@ export const App: FunctionComponent = () => {
 									<Route index element={<Home />} />
 									<Route path="/reset" element={<Reset />} />
 									<Route path="/unlock" element={<Unlock />} />
+									<Route path="/editor" element={<LevelEditor />} />
 									<Route path={levelLinkPattern} element={<Level />} />
 									<Route path="*" element={<NotFound />} />
 								</Routes>

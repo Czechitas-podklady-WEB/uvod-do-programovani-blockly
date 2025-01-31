@@ -60,6 +60,21 @@ export const Environment: FunctionComponent<{
 	return <In {...props} key={lastInstructionsRef.current.key} />
 }
 
+type PlayerState = {
+	x: number
+	y: number
+	hasSword: boolean
+	animation:
+		| null
+		| 'goForward'
+		| 'invalidMove'
+		| 'jump'
+		| 'kiss'
+		| 'hit'
+		| 'goUp'
+		| 'goDown'
+}
+
 const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	environment,
 	instructions,
@@ -105,20 +120,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		() => ({ x: 0, y: environment.startRowIndex }),
 		[environment.startRowIndex],
 	)
-	const [playerRenderState, setPlayerRenderState] = useState<{
-		x: number
-		y: number
-		hasSword: boolean
-		animation:
-			| null
-			| 'goForward'
-			| 'invalidMove'
-			| 'jump'
-			| 'kiss'
-			| 'hit'
-			| 'goUp'
-			| 'goDown'
-	}>({
+	const [playerRenderState, setPlayerRenderState] = useState<PlayerState>({
 		...playerStartPosition,
 		animation: null,
 		hasSword: false,
@@ -418,6 +420,39 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	useMirrorLoading(isRunning)
 
 	return (
+		<EnvironmentGrid
+			foundations={completeFoundations}
+			elements={elements}
+			playerState={playerRenderState}
+			onAnimationEnd={() => {
+				setPlayerRenderState((state) => ({
+					...state,
+					animation: null,
+				}))
+			}}
+		/>
+	)
+}
+
+export const EnvironmentGrid: FunctionComponent<{
+	foundations: Array<Array<EnvironmentFoundation>>
+	elements: Array<{
+		x: number
+		y: number
+		type: EnvironmentElement
+	}>
+	playerState: PlayerState
+	onAnimationEnd?: () => void
+}> = ({ foundations, elements, playerState, onAnimationEnd }) => {
+	const size = useMemo(
+		() => ({
+			width: Math.max(...foundations.map((row) => row.length)),
+			height: foundations.length,
+		}),
+		[foundations],
+	)
+
+	return (
 		<div
 			className={styles.wrapper}
 			style={
@@ -427,7 +462,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				} as CSSProperties
 			}
 		>
-			{completeFoundations.map((row, rowIndex) => (
+			{foundations.map((row, rowIndex) => (
 				<Fragment key={rowIndex}>
 					{row.map((foundation, columnIndex) => (
 						<div
@@ -499,23 +534,18 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			<div
 				className={clsx(
 					styles.player,
-					styles[`is_animating_${playerRenderState.animation}`],
+					styles[`is_animating_${playerState.animation}`],
 				)}
 				style={
 					{
-						'--Environment-position-x': playerRenderState.x,
-						'--Environment-position-y': playerRenderState.y,
+						'--Environment-position-x': playerState.x,
+						'--Environment-position-y': playerState.y,
 					} as CSSProperties
 				}
-				onAnimationEnd={() => {
-					setPlayerRenderState((state) => ({
-						...state,
-						animation: null,
-					}))
-				}}
+				onAnimationEnd={onAnimationEnd}
 			>
 				<img src={princess} className={styles.player} />
-				{playerRenderState.hasSword && (
+				{playerState.hasSword && (
 					<img src={swordPicked} className={styles.swordPicked} />
 				)}
 			</div>
