@@ -77,23 +77,75 @@ export const LevelEditor: FunctionComponent = () => {
 			<div className={styles.rowColumnEdits}>
 				<RowColumnEdit
 					position="top"
-					onAdd={() => undefined}
-					onRemove={() => undefined}
+					onAdd={() => {
+						setFoundations((foundations) => [
+							foundations.at(0) ?? Array(foundations[0].length).fill('sky'),
+							...foundations,
+						])
+						setElements((elements) =>
+							elements.map((element) => ({ ...element, y: element.y + 1 })),
+						)
+					}}
+					onRemove={() => {
+						setFoundations((foundations) => foundations.slice(1))
+						setElements((elements) =>
+							elements.map((element) => ({ ...element, y: element.y - 1 })),
+						)
+						// @TODO: remove elements out of bound
+					}}
 				/>
 				<RowColumnEdit
 					position="left"
-					onAdd={() => undefined}
-					onRemove={() => undefined}
+					onAdd={() => {
+						setFoundations((foundations) => [
+							...foundations.map((row) => [
+								row.at(0) ?? ('sky' as const),
+								...row,
+							]),
+						])
+						setElements((elements) =>
+							elements.map((element) => ({ ...element, x: element.x + 1 })),
+						)
+					}}
+					onRemove={() => {
+						setFoundations((foundations) => [
+							...foundations.map((row) => row.slice(1)),
+						])
+						setElements((elements) =>
+							elements.map((element) => ({ ...element, x: element.x - 1 })),
+						)
+						// @TODO: remove elements out of bound
+					}}
 				/>
 				<RowColumnEdit
 					position="right"
-					onAdd={() => undefined}
-					onRemove={() => undefined}
+					onAdd={() => {
+						setFoundations((foundations) => [
+							...foundations.map((row) => [
+								...row,
+								row.at(-1) ?? ('sky' as const),
+							]),
+						])
+					}}
+					onRemove={() => {
+						setFoundations((foundations) => [
+							...foundations.map((row) => row.slice(0, -1)),
+						])
+						// @TODO: remove elements out of bound
+					}}
 				/>
 				<RowColumnEdit
 					position="bottom"
-					onAdd={() => undefined}
-					onRemove={() => undefined}
+					onAdd={() => {
+						setFoundations((foundations) => [
+							...foundations,
+							foundations.at(-1) ?? Array(foundations[0].length).fill('soil'),
+						])
+					}}
+					onRemove={() => {
+						setFoundations((foundations) => foundations.slice(0, -1))
+						// @TODO: remove elements out of bound
+					}}
 				/>
 				<EnvironmentGrid
 					foundations={foundations}
@@ -212,15 +264,15 @@ const RowColumnEdit: FunctionComponent<{
 	position: 'top' | 'left' | 'right' | 'bottom'
 	onAdd: () => void
 	onRemove: () => void
-}> = ({ position }) => {
+}> = ({ position, onAdd, onRemove }) => {
 	return (
 		<div
 			className={clsx(styles.rowColumnEdit, styles[`is_position_${position}`])}
 		>
-			<IconButton color="success">
+			<IconButton color="success" onClick={onAdd}>
 				<AddIcon />
 			</IconButton>
-			<IconButton color="error">
+			<IconButton color="error" onClick={onRemove}>
 				<RemoveIcon />
 			</IconButton>
 		</div>
