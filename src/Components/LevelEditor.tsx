@@ -1,12 +1,16 @@
+import AddIcon from '@mui/icons-material/Add'
+import RemoveIcon from '@mui/icons-material/Remove'
 import {
 	Button,
 	Container,
 	FormControl,
+	IconButton,
 	InputLabel,
 	MenuItem,
 	Select,
 } from '@mui/material'
 import Typography from '@mui/material/Typography'
+import clsx from 'clsx'
 import {
 	useMemo,
 	useState,
@@ -21,6 +25,7 @@ import {
 	environmentFoundations,
 } from '../data/levels'
 import { EnvironmentGrid } from './Environment'
+import styles from './LevelEditor.module.css'
 
 type EnvironmentGridProps = ComponentProps<typeof EnvironmentGrid>
 
@@ -69,50 +74,74 @@ export const LevelEditor: FunctionComponent = () => {
 			<Typography variant="h5" component="h1" gutterBottom mt={4}>
 				Level editor
 			</Typography>
-			<EnvironmentGrid
-				foundations={foundations}
-				elements={elements}
-				playerState={playerState}
-				onSegmentClick={(x, y) => {
-					if (tool === 'erase') {
-						setElements((elements) =>
-							elements.filter(
-								({ x: elementX, y: elementY }) =>
-									x !== elementX || y !== elementY,
-							),
+			<div className={styles.rowColumnEdits}>
+				<RowColumnEdit
+					position="top"
+					onAdd={() => undefined}
+					onRemove={() => undefined}
+				/>
+				<RowColumnEdit
+					position="left"
+					onAdd={() => undefined}
+					onRemove={() => undefined}
+				/>
+				<RowColumnEdit
+					position="right"
+					onAdd={() => undefined}
+					onRemove={() => undefined}
+				/>
+				<RowColumnEdit
+					position="bottom"
+					onAdd={() => undefined}
+					onRemove={() => undefined}
+				/>
+				<EnvironmentGrid
+					foundations={foundations}
+					elements={elements}
+					playerState={playerState}
+					onSegmentClick={(x, y) => {
+						if (tool === 'erase') {
+							setElements((elements) =>
+								elements.filter(
+									({ x: elementX, y: elementY }) =>
+										x !== elementX || y !== elementY,
+								),
+							)
+							return
+						}
+						if (tool === 'player') {
+							setStartRowIndex(y)
+							return
+						}
+						const element = environmentElement.find(
+							({ value }) => value === tool,
 						)
-						return
-					}
-					if (tool === 'player') {
-						setStartRowIndex(y)
-						return
-					}
-					const element = environmentElement.find(({ value }) => value === tool)
-					if (element) {
-						setElements((elements) => [
-							...elements,
-							{
-								type: element.value,
-								x,
-								y,
-							},
-						])
-						return
-					}
-					const foundation = environmentFoundations.find(
-						({ value }) => value === tool,
-					)
-					if (foundation) {
-						setFoundations((foundations) => {
-							const newFoundations = [...foundations]
-							newFoundations[y] = [...foundations[y]]
-							newFoundations[y][x] = foundation.value
-							return newFoundations
-						})
-						return
-					}
-				}}
-			/>
+						if (element) {
+							setElements((elements) => [
+								...elements,
+								{
+									type: element.value,
+									x,
+									y,
+								},
+							])
+							return
+						}
+						const foundation = environmentFoundations.find(
+							({ value }) => value === tool,
+						)
+						if (foundation) {
+							setFoundations((foundations) => {
+								const newFoundations = [...foundations]
+								newFoundations[y] = [...foundations[y]]
+								newFoundations[y][x] = foundation.value
+								return newFoundations
+							})
+							return
+						}
+					}}
+				/>
+			</div>
 			<FormControl fullWidth>
 				<InputLabel id="tool-label">Zvolený nástroj</InputLabel>
 				<Select
@@ -176,5 +205,24 @@ export const LevelEditor: FunctionComponent = () => {
 				</Button>
 			</Typography>
 		</Container>
+	)
+}
+
+const RowColumnEdit: FunctionComponent<{
+	position: 'top' | 'left' | 'right' | 'bottom'
+	onAdd: () => void
+	onRemove: () => void
+}> = ({ position }) => {
+	return (
+		<div
+			className={clsx(styles.rowColumnEdit, styles[`is_position_${position}`])}
+		>
+			<IconButton color="success">
+				<AddIcon />
+			</IconButton>
+			<IconButton color="error">
+				<RemoveIcon />
+			</IconButton>
+		</div>
 	)
 }

@@ -1,0 +1,55 @@
+.rowColumnEdits {
+	position: relative;
+	margin-bottom: 4rem;
+}
+
+.rowColumnEdit {
+	position: absolute;
+	z-index: 20;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: 0.2s;
+	transition-delay: 0.5s;
+	padding: 0.5rem;
+}
+
+.rowColumnEdit:hover,
+.rowColumnEdit:focus-within {
+	opacity: 1;
+	transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion) {
+	.rowColumnEdit {
+		transition-timing-function: step-start;
+	}
+}
+
+.rowColumnEdit.is_position_left,
+.rowColumnEdit.is_position_right {
+	flex-direction: column;
+}
+
+.rowColumnEdit.is_position_top {
+	bottom: 100%;
+	left: 0;
+	right: 0;
+}
+.rowColumnEdit.is_position_bottom {
+	top: 100%;
+	left: 0;
+	right: 0;
+}
+.rowColumnEdit.is_position_left {
+	right: 100%;
+	top: 0;
+	bottom: 0;
+}
+.rowColumnEdit.is_position_right {
+	left: 100%;
+	top: 0;
+	bottom: 0;
+}
