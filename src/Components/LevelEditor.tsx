@@ -1,4 +1,11 @@
-import { Button, Container } from '@mui/material'
+import {
+	Button,
+	Container,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+} from '@mui/material'
 import Typography from '@mui/material/Typography'
 import {
 	useMemo,
@@ -6,7 +13,13 @@ import {
 	type ComponentProps,
 	type FunctionComponent,
 } from 'react'
-import type { Level } from '../data/levels'
+import {
+	EnvironmentElement,
+	EnvironmentFoundation,
+	Level,
+	environmentElement,
+	environmentFoundations,
+} from '../data/levels'
 import { EnvironmentGrid } from './Environment'
 
 type EnvironmentGridProps = ComponentProps<typeof EnvironmentGrid>
@@ -47,9 +60,9 @@ export const LevelEditor: FunctionComponent = () => {
 		[startRowIndex],
 	)
 
-	if (Math.random() > 1) {
-		console.log(setFoundations, setElements, setStartRowIndex) // @TODO: call these at some point
-	}
+	const [tool, setTool] = useState<
+		'erase' | EnvironmentFoundation | EnvironmentElement
+	>('erase')
 
 	return (
 		<Container>
@@ -60,24 +73,71 @@ export const LevelEditor: FunctionComponent = () => {
 				foundations={foundations}
 				elements={elements}
 				playerState={playerState}
-			/>
-			<Button
-				onClick={() => {
-					navigator.clipboard.writeText(
-						JSON.stringify(
-							{
-								startRowIndex,
-								elements,
-								foundations,
-							} satisfies Level['environment'],
-							null,
-							2,
-						),
-					)
+				onSegmentClick={(x, y) => {
+					console.log(x, y)
 				}}
-			>
-				Zkopírovat kód
-			</Button>
+			/>
+			<FormControl fullWidth>
+				<InputLabel id="tool-label">Zvolený nástroj</InputLabel>
+				<Select
+					labelId="tool-label"
+					id="tool"
+					value={tool}
+					label="Zvolený nástroj"
+					onChange={(value) => {
+						setTool(value.target.value as typeof tool)
+					}}
+				>
+					<MenuItem value="erase">Guma</MenuItem>
+					{environmentFoundations.map(({ value, label }) => (
+						<MenuItem key={value} value={value}>
+							{label}
+						</MenuItem>
+					))}
+					{environmentElement.map(({ value, label }) => (
+						<MenuItem key={value} value={value}>
+							{label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			{/* @TODO: add, remove row or column, above, below, right, left */}
+			<br />
+			<br />
+			<Typography align="center">
+				<Button
+					onClick={() => {
+						navigator.clipboard.writeText(
+							JSON.stringify(
+								{
+									startRowIndex,
+									elements,
+									foundations,
+								} satisfies Level['environment'],
+								null,
+								2,
+							),
+						)
+					}}
+				>
+					Zkopírovat kód
+				</Button>{' '}
+				<Button
+					onClick={() => {
+						const input = prompt('Vložte kód ve formátu JSON:')
+						if (input === null) {
+							return
+						}
+						const parsed = JSON.parse(input)
+						// @TODO: validate parsed
+						setFoundations(parsed.foundations)
+						setElements(parsed.elements)
+						setStartRowIndex(parsed.startRowIndex)
+					}}
+				>
+					Načíst kód
+				</Button>
+			</Typography>
 		</Container>
 	)
 }

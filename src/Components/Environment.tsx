@@ -443,7 +443,14 @@ export const EnvironmentGrid: FunctionComponent<{
 	}>
 	playerState: PlayerState
 	onAnimationEnd?: () => void
-}> = ({ foundations, elements, playerState, onAnimationEnd }) => {
+	onSegmentClick?: (x: number, y: number) => void
+}> = ({
+	foundations,
+	elements,
+	playerState,
+	onAnimationEnd,
+	onSegmentClick,
+}) => {
 	const size = useMemo(
 		() => ({
 			width: Math.max(...foundations.map((row) => row.length)),
@@ -531,6 +538,27 @@ export const EnvironmentGrid: FunctionComponent<{
 					/>
 				</div>
 			))}
+			{onSegmentClick &&
+				foundations.map((row, rowIndex) => (
+					<Fragment key={rowIndex}>
+						{row.map((_, columnIndex) => (
+							<button
+								key={columnIndex}
+								className={styles.clickable}
+								style={
+									{
+										'--Environment-position-x': columnIndex,
+										'--Environment-position-y': rowIndex,
+									} as CSSProperties
+								}
+								type="button"
+								onClick={() => {
+									onSegmentClick(columnIndex, rowIndex)
+								}}
+							/>
+						))}
+					</Fragment>
+				))}
 			<div
 				className={clsx(
 					styles.player,

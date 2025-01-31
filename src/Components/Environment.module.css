@@ -163,3 +163,25 @@
 .swordPicked {
 	z-index: 3;
 }
+
+.clickable {
+	position: relative;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	border: none;
+	padding: 0;
+	background-color: #333333;
+	mix-blend-mode: difference;
+	opacity: 0;
+	grid-column: calc(var(--Environment-position-x) + 1);
+	grid-row: calc(var(--Environment-position-y) + 1);
+}
+.clickable:hover,
+.clickable:focus-visible {
+	opacity: 0.5;
+}
+.clickable:active {
+	opacity: 0.6;
+}

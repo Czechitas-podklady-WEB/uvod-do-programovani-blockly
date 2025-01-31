@@ -20,15 +20,25 @@ export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
 
-export type EnvironmentFoundation = 'sky' | 'soil' | 'grass' | 'floor' | 'wall'
+export const environmentFoundations = [
+	{ value: 'sky', label: 'Nebe' },
+	{ value: 'soil', label: 'Půda' },
+	{ value: 'grass', label: 'Louka' },
+	{ value: 'floor', label: 'Podlaha' },
+	{ value: 'wall', label: 'Zeď' },
+] as const
+export type EnvironmentFoundation =
+	(typeof environmentFoundations)[number]['value']
 
-export type EnvironmentElement =
-	| 'frog'
-	| 'sword'
-	| 'thicket'
-	| 'web'
-	| 'hole'
-	| 'leader'
+export const environmentElement = [
+	{ value: 'frog', label: 'Žába' },
+	{ value: 'sword', label: 'Meč' },
+	{ value: 'thicket', label: 'Keř' },
+	{ value: 'web', label: 'Pavučina' },
+	{ value: 'hole', label: 'Díra' },
+	{ value: 'leader', label: 'Žebřík' },
+] as const
+export type EnvironmentElement = (typeof environmentElement)[number]['value']
 
 const developmentGroup = {
 	key: makeGroupKey('development'),
