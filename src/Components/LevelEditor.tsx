@@ -74,7 +74,39 @@ export const LevelEditor: FunctionComponent = () => {
 				elements={elements}
 				playerState={playerState}
 				onSegmentClick={(x, y) => {
-					console.log(x, y)
+					if (tool === 'erase') {
+						setElements((elements) =>
+							elements.filter(
+								({ x: elementX, y: elementY }) =>
+									x !== elementX || y !== elementY,
+							),
+						)
+						return
+					}
+					const element = environmentElement.find(({ value }) => value === tool)
+					if (element) {
+						setElements((elements) => [
+							...elements,
+							{
+								type: element.value,
+								x,
+								y,
+							},
+						])
+						return
+					}
+					const foundation = environmentFoundations.find(
+						({ value }) => value === tool,
+					)
+					if (foundation) {
+						setFoundations((foundations) => {
+							const newFoundations = [...foundations]
+							newFoundations[y] = [...foundations[y]]
+							newFoundations[y][x] = foundation.value
+							return newFoundations
+						})
+						return
+					}
 				}}
 			/>
 			<FormControl fullWidth>
@@ -89,12 +121,12 @@ export const LevelEditor: FunctionComponent = () => {
 					}}
 				>
 					<MenuItem value="erase">Guma</MenuItem>
-					{environmentFoundations.map(({ value, label }) => (
+					{environmentElement.map(({ value, label }) => (
 						<MenuItem key={value} value={value}>
 							{label}
 						</MenuItem>
 					))}
-					{environmentElement.map(({ value, label }) => (
+					{environmentFoundations.map(({ value, label }) => (
 						<MenuItem key={value} value={value}>
 							{label}
 						</MenuItem>
