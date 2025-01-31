@@ -12,6 +12,7 @@ import {
 import Typography from '@mui/material/Typography'
 import clsx from 'clsx'
 import {
+	useEffect,
 	useMemo,
 	useState,
 	type ComponentProps,
@@ -69,6 +70,19 @@ export const LevelEditor: FunctionComponent = () => {
 		'erase' | 'player' | EnvironmentFoundation | EnvironmentElement
 	>('erase')
 
+	useEffect(() => {
+		// Removes elements that are out of bounds
+		setElements((elements) =>
+			elements.filter(
+				({ x, y }) =>
+					x < foundations[0].length &&
+					y < foundations.length &&
+					x >= 0 &&
+					y >= 0,
+			),
+		)
+	}, [foundations])
+
 	return (
 		<Container>
 			<Typography variant="h5" component="h1" gutterBottom mt={4}>
@@ -91,7 +105,6 @@ export const LevelEditor: FunctionComponent = () => {
 						setElements((elements) =>
 							elements.map((element) => ({ ...element, y: element.y - 1 })),
 						)
-						// @TODO: remove elements out of bound
 					}}
 				/>
 				<RowColumnEdit
@@ -114,7 +127,6 @@ export const LevelEditor: FunctionComponent = () => {
 						setElements((elements) =>
 							elements.map((element) => ({ ...element, x: element.x - 1 })),
 						)
-						// @TODO: remove elements out of bound
 					}}
 				/>
 				<RowColumnEdit
@@ -131,7 +143,6 @@ export const LevelEditor: FunctionComponent = () => {
 						setFoundations((foundations) => [
 							...foundations.map((row) => row.slice(0, -1)),
 						])
-						// @TODO: remove elements out of bound
 					}}
 				/>
 				<RowColumnEdit
@@ -144,7 +155,6 @@ export const LevelEditor: FunctionComponent = () => {
 					}}
 					onRemove={() => {
 						setFoundations((foundations) => foundations.slice(0, -1))
-						// @TODO: remove elements out of bound
 					}}
 				/>
 				<EnvironmentGrid
