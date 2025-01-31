@@ -1,4 +1,4 @@
-import { PositiveInt, String, useEvolu } from '@evolu/react'
+import { String, useEvolu } from '@evolu/react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HomeIcon from '@mui/icons-material/Home'
@@ -14,6 +14,7 @@ import {
 	useLevel,
 } from '../data/levels'
 import { Database } from '../database/Database'
+import { PositiveIntOrZero } from '../database/tables/FinishedLevel'
 import { EditorXml } from '../utilities/editorXml'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { levelLink, type LevelLink } from '../utilities/levelLink'
@@ -94,7 +95,7 @@ const InHasLevel: FunctionComponent<{
 			if (newRating >= rating) {
 				createOrUpdate('finishedLevel', {
 					id: getLevelIdentifier(level.group.key, level.key),
-					rating: PositiveInt.make(newRating),
+					rating: PositiveIntOrZero.make(newRating),
 					blocklyWorkspaceXml: String.make(xml),
 				})
 			}

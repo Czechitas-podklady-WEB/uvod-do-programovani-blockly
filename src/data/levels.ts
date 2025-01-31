@@ -377,7 +377,7 @@ type LevelGroup = {
 
 export type Level = LevelGroup['levels'][number]
 
-const allLevels = levelGroups.flatMap((group) =>
+export const allLevels = levelGroups.flatMap((group) =>
 	group.levels.map((level) => ({
 		...level,
 		groupKey: group.key,

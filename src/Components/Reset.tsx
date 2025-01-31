@@ -5,7 +5,7 @@ import { PageWithConfirmation } from './PageWithConfirmation'
 export const Reset: FunctionComponent = () => {
 	return (
 		<PageWithConfirmation
-			title="Smazat veškerý pokrok"
+			title="Smazat veškerý pokrok?"
 			onConfirm={async () => {
 				await evolu.resetOwner()
 			}}

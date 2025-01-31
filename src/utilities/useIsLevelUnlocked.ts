@@ -27,5 +27,8 @@ export const useIsLevelUnlocked = (groupKey: GroupKey, levelKey: LevelKey) => {
 	)
 	const { row } = useQuery(query)
 
-	return previousLevelIdentifier === null || (row?.rating ?? 0) > 0
+	return (
+		previousLevelIdentifier === null ||
+		(typeof row?.rating === 'number' && row.rating >= 0)
+	)
 }

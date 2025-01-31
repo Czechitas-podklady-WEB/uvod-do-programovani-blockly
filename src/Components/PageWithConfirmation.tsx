@@ -1,6 +1,6 @@
 import { Button, Container, Stack } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import type { FunctionComponent } from 'react'
+import { useState, type FunctionComponent } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 
 export const PageWithConfirmation: FunctionComponent<{
@@ -8,6 +8,7 @@ export const PageWithConfirmation: FunctionComponent<{
 	onConfirm: () => void | Promise<void>
 }> = ({ title, onConfirm }) => {
 	const navigate = useNavigate()
+	const [isProcessing, setIsProcessing] = useState(false)
 
 	return (
 		<Container>
@@ -27,7 +28,9 @@ export const PageWithConfirmation: FunctionComponent<{
 				<Button
 					variant="contained"
 					color="error"
+					disabled={isProcessing}
 					onClick={async () => {
+						setIsProcessing(true)
 						await onConfirm()
 						navigate('/', {
 							replace: false,
