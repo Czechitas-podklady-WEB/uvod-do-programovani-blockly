@@ -163,11 +163,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			)
 		}
 		const elementsAtPosition = (x: number, y: number) =>
-			x < 0 || y < 0 || x >= size.width || y >= size.height
-				? []
-				: elements
-						.filter((element) => element.x === x && element.y === y)
-						.map(({ type }) => type)
+			elements
+				.filter((element) => element.x === x && element.y === y)
+				.map(({ type }) => type)
 
 		const canStandOn = (
 			type: EnvironmentFoundation | undefined,
