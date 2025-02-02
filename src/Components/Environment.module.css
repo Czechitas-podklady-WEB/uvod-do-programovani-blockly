@@ -25,6 +25,7 @@
 	border: 0.0625rem solid #333333;
 	mix-blend-mode: difference;
 	opacity: 0.3;
+	pointer-events: none;
 }
 .foundation.is_edge_top::after {
 	border-top: none;
