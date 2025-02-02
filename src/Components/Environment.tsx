@@ -131,8 +131,6 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	})
 	const [elements, setElements] = useState(elementsWithIds)
 
-	// @TODO: penalize one star for invalid moves
-
 	useEffect(() => {
 		if (isDoneRunningRef.current) {
 			return
