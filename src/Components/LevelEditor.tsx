@@ -48,7 +48,9 @@ export const LevelEditor: FunctionComponent = () => {
 		],
 		['soil', 'soil', 'soil', 'soil', 'soil', 'soil', 'soil', 'soil', 'soil'],
 	])
-	const [elements, setElements] = useState<EnvironmentGridProps['elements']>([
+	const [elements, setElements] = useState<
+		Array<Omit<EnvironmentGridProps['elements'][number], 'id'>>
+	>(() => [
 		{
 			type: 'frog',
 			x: 8,
@@ -82,6 +84,11 @@ export const LevelEditor: FunctionComponent = () => {
 			),
 		)
 	}, [foundations])
+
+	const elementsWithIds = useMemo(
+		() => elements.map((element, id) => ({ id, ...element })),
+		[elements],
+	)
 
 	return (
 		<Container>
@@ -159,7 +166,7 @@ export const LevelEditor: FunctionComponent = () => {
 				/>
 				<EnvironmentGrid
 					foundations={foundations}
-					elements={elements}
+					elements={elementsWithIds}
 					playerState={playerState}
 					onSegmentClick={(x, y) => {
 						if (tool === 'erase') {

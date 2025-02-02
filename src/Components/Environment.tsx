@@ -113,6 +113,10 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		})
 		return foundations
 	}, [size, environment.foundations])
+	const elementsWithIds = useMemo(
+		() => environment.elements.map((element, id) => ({ id, ...element })),
+		[environment.elements],
+	)
 
 	const [isRunning, setIsRunning] = useState(false)
 	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
@@ -125,7 +129,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		animation: null,
 		hasSword: false,
 	})
-	const [elements, setElements] = useState(environment.elements)
+	const [elements, setElements] = useState(elementsWithIds)
 
 	// @TODO: penalize one star for invalid moves
 
@@ -149,7 +153,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				| { type: 'until' }
 			)
 		>
-		let elements = environment.elements
+		let elements = elementsWithIds
 		const state: State = [{ type: 'basic', index: 0 }]
 		const playerPosition = { ...playerStartPosition }
 		let performedNeedlessMove = false
@@ -411,7 +415,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		onFail,
 		playerStartPosition,
 		completeFoundations,
-		environment.elements,
+		elementsWithIds,
 		size,
 	])
 
@@ -435,6 +439,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 export const EnvironmentGrid: FunctionComponent<{
 	foundations: Array<Array<EnvironmentFoundation>>
 	elements: Array<{
+		id: number
 		x: number
 		y: number
 		type: EnvironmentElement
@@ -506,9 +511,9 @@ export const EnvironmentGrid: FunctionComponent<{
 					))}
 				</Fragment>
 			))}
-			{elements.map(({ x, y, type }, index) => (
+			{elements.map(({ x, y, type, id }) => (
 				<div
-					key={index}
+					key={id}
 					className={clsx(styles.element, styles[`is_type_${type}`])}
 					style={
 						{
