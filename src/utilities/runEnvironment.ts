@@ -13,6 +13,7 @@ export type PlayerState = {
 	x: number
 	y: number
 	hasSword: boolean
+	isInsideHole: boolean
 	animation:
 		| null
 		| 'goForward'
@@ -23,6 +24,7 @@ export type PlayerState = {
 		| 'goUp'
 		| 'goDown'
 		| 'pickSword'
+		| 'fallIntoHole'
 }
 
 // @TODO: replace by recursion
@@ -62,6 +64,7 @@ export function* runEnvironment(
 		y: startRowIndex,
 	}
 	let hasSword = false
+	let isInsideHole = false
 	let performedNeedlessMove = false
 	let elements = [...initialElements]
 
@@ -95,6 +98,7 @@ export function* runEnvironment(
 		player: {
 			x: playerPosition.x,
 			y: playerPosition.y,
+			isInsideHole,
 			hasSword,
 			animation,
 		},
@@ -153,7 +157,10 @@ export function* runEnvironment(
 			}
 		} else if (instruction.type === 'go_forward') {
 			if (elementsAt(playerPosition.x + 1, playerPosition.y).includes('hole')) {
-				// @TODO: animate fall into hole
+				playerPosition.x++
+				playerPosition.y++
+				isInsideHole = true
+				yield step('fallIntoHole')
 				return {
 					success: false,
 				}

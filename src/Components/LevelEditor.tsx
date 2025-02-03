@@ -58,12 +58,13 @@ export const LevelEditor: FunctionComponent = () => {
 		},
 	])
 	const [startRowIndex, setStartRowIndex] = useState(1)
-	const playerState = useMemo<EnvironmentGridProps['playerState']>(
+	const playerState = useMemo<EnvironmentGridProps['player']>(
 		() => ({
 			x: 0,
 			y: startRowIndex,
 			animation: null,
 			hasSword: false,
+			isInsideHole: false,
 		}),
 		[startRowIndex],
 	)
@@ -167,7 +168,7 @@ export const LevelEditor: FunctionComponent = () => {
 				<EnvironmentGrid
 					foundations={foundations}
 					elements={elementsWithIds}
-					playerState={playerState}
+					player={playerState}
 					onSegmentClick={(x, y) => {
 						if (tool === 'erase') {
 							setElements((elements) =>

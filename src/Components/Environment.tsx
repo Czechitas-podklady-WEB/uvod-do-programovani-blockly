@@ -114,6 +114,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 			player: {
 				x: 0,
 				y: environment.startRowIndex,
+				isInsideHole: false,
 				animation: null,
 				hasSword: false,
 			},
@@ -171,8 +172,9 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		<EnvironmentGrid
 			foundations={completeFoundations}
 			elements={elements}
-			playerState={player}
+			player={player}
 			onAnimationEnd={() => {
+				// @TODO: send signal to the runtime loop to proceed
 				setState((state) => ({
 					...state,
 					player: {
@@ -193,16 +195,10 @@ export const EnvironmentGrid: FunctionComponent<{
 		y: number
 		type: EnvironmentElement
 	}>
-	playerState: PlayerState
+	player: PlayerState
 	onAnimationEnd?: () => void
 	onSegmentClick?: (x: number, y: number) => void
-}> = ({
-	foundations,
-	elements,
-	playerState,
-	onAnimationEnd,
-	onSegmentClick,
-}) => {
+}> = ({ foundations, elements, player, onAnimationEnd, onSegmentClick }) => {
 	const size = useMemo(
 		() => ({
 			width: Math.max(...foundations.map((row) => row.length)),
@@ -314,18 +310,19 @@ export const EnvironmentGrid: FunctionComponent<{
 			<div
 				className={clsx(
 					styles.player,
-					styles[`is_animating_${playerState.animation}`],
+					styles[`is_animating_${player.animation}`],
+					player.isInsideHole && styles.is_insideHole,
 				)}
 				style={
 					{
-						'--Environment-position-x': playerState.x,
-						'--Environment-position-y': playerState.y,
+						'--Environment-position-x': player.x,
+						'--Environment-position-y': player.y,
 					} as CSSProperties
 				}
 				onAnimationEnd={onAnimationEnd}
 			>
 				<img src={princess} className={styles.player} />
-				{playerState.hasSword && (
+				{player.hasSword && (
 					<img src={swordPicked} className={styles.swordPicked} />
 				)}
 			</div>

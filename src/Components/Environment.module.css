@@ -7,6 +7,7 @@
 	grid-template-rows: repeat(var(--Environment-size-height), 1fr);
 	position: relative;
 	isolation: isolate;
+	overflow: hidden;
 }
 .foundation,
 .element {
@@ -56,11 +57,20 @@
 }
 
 .player {
-	position: relative;
+	position: absolute;
 	z-index: 2;
-	grid-column: calc(var(--Environment-position-x) + 1);
-	grid-row: calc(var(--Environment-position-y) + 1);
+	top: calc(
+		var(--Environment-position-y) * 100% / var(--Environment-size-height)
+	);
+	left: calc(
+		var(--Environment-position-x) * 100% / var(--Environment-size-width)
+	);
+	width: calc(100% / var(--Environment-size-width));
 	animation-duration: 0.5s;
+	aspect-ratio: 1;
+}
+.player.is_insideHole {
+	opacity: 0;
 }
 
 @keyframes goForward {
@@ -79,6 +89,23 @@
 .is_animating_pickSword {
 	transform-origin: 50% 80%;
 	animation-name: pickSword;
+}
+@keyframes fallIntoHole {
+	0% {
+		transform: translate(-100%, -100%);
+		opacity: 1;
+	}
+	50% {
+		transform: translate(-50%, -100%);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(-50%) scaleX(0);
+		opacity: 0;
+	}
+}
+.is_animating_fallIntoHole {
+	animation-name: fallIntoHole;
 }
 @keyframes jump {
 	0% {
