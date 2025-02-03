@@ -31,7 +31,11 @@ import { countInstructions } from '../utilities/countInstructions'
 import { Instructions } from '../utilities/decodeCodeInstructions'
 import { delay } from '../utilities/delay'
 import type { EditorXml } from '../utilities/editorXml'
-import { runEnvironment } from '../utilities/runEnvironment'
+import {
+	Elements,
+	PlayerState,
+	runEnvironment,
+} from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
@@ -56,21 +60,6 @@ export const Environment: FunctionComponent<{
 	}
 
 	return <In {...props} key={lastInstructionsRef.current.key} />
-}
-
-type PlayerState = {
-	x: number
-	y: number
-	hasSword: boolean
-	animation:
-		| null
-		| 'goForward'
-		| 'invalidMove'
-		| 'jump'
-		| 'kiss'
-		| 'hit'
-		| 'goUp'
-		| 'goDown'
 }
 
 const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
@@ -116,13 +105,20 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		[environment.elements],
 	)
 
-	const [playerRenderState, setPlayerRenderState] = useState<PlayerState>({
-		x: 0,
-		y: environment.startRowIndex,
-		animation: null,
-		hasSword: false,
-	})
-	const [elements, setElements] = useState(elementsWithIds)
+	const [{ elements, player }, setState] = useState(
+		(): {
+			elements: Elements
+			player: PlayerState
+		} => ({
+			elements: elementsWithIds,
+			player: {
+				x: 0,
+				y: environment.startRowIndex,
+				animation: null,
+				hasSword: false,
+			},
+		}),
+	)
 
 	useEffect(() => {
 		if (instructions === null) {
@@ -150,11 +146,10 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					}
 					break
 				}
-
-				// @TODO: merge into one state
-				setElements(value.elements)
-				setPlayerRenderState(value.player)
-
+				setState({
+					elements: value.elements,
+					player: value.player,
+				})
 				if (value.player.animation) {
 					await delay(700) // @TODO await CSS animationend instead
 				}
@@ -176,11 +171,14 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		<EnvironmentGrid
 			foundations={completeFoundations}
 			elements={elements}
-			playerState={playerRenderState}
+			playerState={player}
 			onAnimationEnd={() => {
-				setPlayerRenderState((state) => ({
+				setState((state) => ({
 					...state,
-					animation: null,
+					player: {
+						...state.player,
+						animation: null,
+					},
 				}))
 			}}
 		/>

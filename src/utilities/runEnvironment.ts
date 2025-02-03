@@ -2,14 +2,14 @@ import { EnvironmentFoundation, type EnvironmentElement } from '../data/levels'
 import { ConditionValue } from './blocks'
 import { InstructionBlock, Instructions } from './decodeCodeInstructions'
 
-type Elements = Array<{
+export type Elements = Array<{
 	id: number
 	x: number
 	y: number
 	type: EnvironmentElement
 }>
 
-type PlayerState = {
+export type PlayerState = {
 	x: number
 	y: number
 	hasSword: boolean
