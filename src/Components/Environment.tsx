@@ -9,7 +9,6 @@ import {
 	type CSSProperties,
 	type FunctionComponent,
 } from 'react'
-import { useMirrorLoading } from 'shared-loading-indicator'
 import floor from '../assets/floor.png'
 import frog from '../assets/frog.png'
 import grass from '../assets/grass.png'
@@ -28,12 +27,11 @@ import {
 	EnvironmentFoundation,
 	Level,
 } from '../data/levels'
-import { ConditionValue } from '../utilities/blocks'
-import {
-	InstructionBlock,
-	Instructions,
-} from '../utilities/decodeCodeInstructions'
+import { countInstructions } from '../utilities/countInstructions'
+import { Instructions } from '../utilities/decodeCodeInstructions'
+import { delay } from '../utilities/delay'
 import type { EditorXml } from '../utilities/editorXml'
+import { runEnvironment } from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
 
 export const Environment: FunctionComponent<{
@@ -118,306 +116,61 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 		[environment.elements],
 	)
 
-	const [isRunning, setIsRunning] = useState(false)
-	const isDoneRunningRef = useRef(false) // Hotfix: Animation was playing multiple times for some reason.
-	const playerStartPosition = useMemo(
-		() => ({ x: 0, y: environment.startRowIndex }),
-		[environment.startRowIndex],
-	)
 	const [playerRenderState, setPlayerRenderState] = useState<PlayerState>({
-		...playerStartPosition,
+		x: 0,
+		y: environment.startRowIndex,
 		animation: null,
 		hasSword: false,
 	})
 	const [elements, setElements] = useState(elementsWithIds)
 
 	useEffect(() => {
-		if (isDoneRunningRef.current) {
-			return
-		}
 		if (instructions === null) {
-			setIsRunning(false)
 			return
 		}
-		const warnAboutNeedlessMove = () => {
-			// @TODO: visualize to user
-			performedNeedlessMove = true
-		}
-		type State = Array<
-			{ index: number } & (
-				| { type: 'basic' }
-				| { type: 'repeat'; remainingIterations: number }
-				| { type: 'if' }
-				| { type: 'until' }
+		let isRunning = true
+		;(async () => {
+			const runtime = runEnvironment(
+				environment.startRowIndex,
+				completeFoundations,
+				elementsWithIds,
+				instructions.instructions,
 			)
-		>
-		let elements = elementsWithIds
-		const state: State = [{ type: 'basic', index: 0 }]
-		const playerPosition = { ...playerStartPosition }
-		let performedNeedlessMove = false
-		let success: null | boolean = null
-		let hasSword = false
-
-		const removeElement = (x: number, y: number, type: EnvironmentElement) => {
-			elements = elements.filter(
-				(element) =>
-					element.x !== x || element.y !== y || element.type !== type,
-			)
-		}
-		const elementsAtPosition = (x: number, y: number) =>
-			elements
-				.filter((element) => element.x === x && element.y === y)
-				.map(({ type }) => type)
-
-		const canStandOn = (
-			type: EnvironmentFoundation | undefined,
-			elements: EnvironmentElement[],
-		) =>
-			(type === 'grass' || type === 'floor') &&
-			!elements.includes('thicket') &&
-			!elements.includes('web')
-		const loop = (lastRunSuccess: null | boolean) => {
-			if (lastRunSuccess !== null) {
-				if (lastRunSuccess) {
-					const countInstructions = (
-						instructions: InstructionBlock[],
-					): number =>
-						instructions.reduce(
-							(count, instruction) =>
-								count +
-								1 +
-								('blocks' in instruction
-									? countInstructions(instruction.blocks)
-									: 0),
-							0,
+			while (isRunning) {
+				const { value, done } = runtime.next()
+				if (done) {
+					if (value.success) {
+						onSuccess(
+							instructions.xml,
+							value.performedNeedlessMove,
+							countInstructions(instructions.instructions),
 						)
-					const instructionsCount = countInstructions(instructions.instructions)
-					onSuccess(instructions.xml, performedNeedlessMove, instructionsCount)
-				} else {
-					onFail()
-				}
-				isDoneRunningRef.current = true
-				setIsRunning(false)
-				return
-			}
-			const instruction = (() => {
-				const getBlockAtIndex = (
-					blocks: InstructionBlock[],
-					indexes: State,
-				) => {
-					const localState = [...indexes]
-					const firstStateItem = localState.shift()
-					if (firstStateItem === undefined) {
-						return undefined
-					}
-					const block = blocks.at(firstStateItem.index)
-					if (localState.length === 0 || block === undefined) {
-						return block
-					}
-					if (
-						block.type !== 'repeat' &&
-						block.type !== 'if' &&
-						block.type !== 'until'
-					) {
-						throw new Error(`Invalid instruction "${block.type}"`)
-					}
-					return getBlockAtIndex(block.blocks, localState)
-				}
-				return getBlockAtIndex(instructions.instructions, state)
-			})()
-
-			const currentSegment = completeFoundations
-				.at(playerPosition.y)
-				?.at(playerPosition.x)
-			const currentElements = elementsAtPosition(
-				playerPosition.x,
-				playerPosition.y,
-			)
-			const nextElements = elementsAtPosition(
-				playerPosition.x + 1,
-				playerPosition.y,
-			)
-			const aboveElements = elementsAtPosition(
-				playerPosition.x,
-				playerPosition.y - 1,
-			)
-			const belowElements = elementsAtPosition(
-				playerPosition.x,
-				playerPosition.y + 1,
-			)
-			const nextSegment = completeFoundations
-				.at(playerPosition.y)
-				?.at(playerPosition.x + 1)
-			const currentSubState = state[state.length - 1]
-			let animation: (typeof playerRenderState)['animation'] = null
-			if (currentSegment === undefined) {
-				throw new Error('Player out of bounds')
-			}
-			const isConditionFulfilled = {
-				frog: nextElements.includes('frog'),
-				sword: currentElements.includes('sword'),
-				leaderUp:
-					currentElements.includes('leader') &&
-					aboveElements.includes('leader'),
-				leaderDown:
-					currentElements.includes('leader') &&
-					belowElements.includes('leader'),
-				hole: nextElements.includes('hole'),
-				thicket: nextElements.includes('thicket'),
-				web: nextElements.includes('web'),
-			} satisfies { [key in ConditionValue]: boolean }
-			if (instruction === undefined) {
-				if (state.length === 1) {
-					success = false
-				}
-			} else if (instruction.type === 'go_forward') {
-				if (canStandOn(nextSegment, nextElements)) {
-					playerPosition.x++
-					animation = 'goForward'
-				} else if (nextElements.includes('hole')) {
-					success = false
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'jump') {
-				if (canStandOn(nextSegment, nextElements)) {
-					playerPosition.x++
-					animation = 'jump'
-					if (!nextElements.includes('hole')) {
-						warnAboutNeedlessMove()
-					}
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'pick') {
-				if (isConditionFulfilled.sword) {
-					hasSword = true
-					removeElement(playerPosition.x, playerPosition.y, 'sword')
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'up') {
-				if (isConditionFulfilled.leaderUp) {
-					playerPosition.y--
-					animation = 'goUp'
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'down') {
-				if (isConditionFulfilled.leaderDown) {
-					playerPosition.y++
-					animation = 'goDown'
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'hit') {
-				if (hasSword) {
-					animation = 'hit'
-					if (isConditionFulfilled.thicket) {
-						removeElement(playerPosition.x + 1, playerPosition.y, 'thicket')
-					} else if (isConditionFulfilled.web) {
-						removeElement(playerPosition.x + 1, playerPosition.y, 'web')
 					} else {
-						warnAboutNeedlessMove()
+						onFail()
 					}
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
+					break
 				}
-			} else if (instruction.type === 'kiss') {
-				if (nextElements.includes('frog')) {
-					animation = 'kiss'
-					success = true
-				} else {
-					animation = 'invalidMove'
-					warnAboutNeedlessMove()
-				}
-			} else if (instruction.type === 'repeat') {
-				state.push({
-					type: 'repeat',
-					index: 0,
-					remainingIterations: instruction.times,
-				})
-			} else if (instruction.type === 'if') {
-				if (isConditionFulfilled[instruction.condition]) {
-					state.push({
-						type: 'if',
-						index: 0,
-					})
-				}
-			} else if (instruction.type === 'until') {
-				if (!isConditionFulfilled[instruction.condition]) {
-					state.push({
-						type: 'until',
-						index: 0,
-					})
-				}
-			} else {
-				instruction.type satisfies 'start'
-			}
 
-			if (instruction === undefined) {
-				if (currentSubState.type === 'repeat') {
-					currentSubState.remainingIterations--
-					if (currentSubState.remainingIterations === 0) {
-						state.pop()
-						const nextSubState = state[state.length - 1]
-						if (nextSubState !== undefined) {
-							nextSubState.index++
-						}
-					}
-					currentSubState.index = 0
-				} else if (currentSubState.type === 'if') {
-					state.pop()
-					const nextSubState = state[state.length - 1]
-					if (nextSubState !== undefined) {
-						nextSubState.index++
-					}
-				} else if (currentSubState.type === 'until') {
-					state.pop()
-				}
-			} else if (currentSubState === state[state.length - 1]) {
-				currentSubState.index++
-			}
-			setElements(elements)
-			setPlayerRenderState({ ...playerPosition, animation, hasSword })
-			timer = setTimeout(
-				() => {
-					loop(success)
-				},
-				instruction === undefined ||
-					instruction.type === 'start' ||
-					instruction.type === 'repeat' ||
-					instruction.type === 'if' ||
-					instruction.type === 'until'
-					? 0
-					: 700,
-			)
-		}
-		let timer: ReturnType<typeof setTimeout> = setTimeout(() => {
-			loop(null)
-		}, 1000) // I feel very stupid writing this and I expect React.StrictMode will punish me.
-		setIsRunning(true)
+				// @TODO: merge into one state
+				setElements(value.elements)
+				setPlayerRenderState(value.player)
 
+				if (value.player.animation) {
+					await delay(700) // @TODO await CSS animationend instead
+				}
+			}
+		})()
 		return () => {
-			clearTimeout(timer)
+			isRunning = false
 		}
 	}, [
+		completeFoundations,
+		elementsWithIds,
+		environment.startRowIndex,
 		instructions,
 		onSuccess,
 		onFail,
-		playerStartPosition,
-		completeFoundations,
-		elementsWithIds,
-		size,
 	])
-
-	useMirrorLoading(isRunning)
 
 	return (
 		<EnvironmentGrid
