@@ -130,25 +130,29 @@ export function* runEnvironment(
 		const currentSegment = foundations
 			.at(playerPosition.y)
 			?.at(playerPosition.x)
-		const currentElements = elementsAt(playerPosition.x, playerPosition.y)
-		const nextElements = elementsAt(playerPosition.x + 1, playerPosition.y)
-		const aboveElements = elementsAt(playerPosition.x, playerPosition.y - 1)
-		const belowElements = elementsAt(playerPosition.x, playerPosition.y + 1)
 		const currentSubState = state[state.length - 1]
 		if (currentSegment === undefined) {
 			throw new Error('Player out of bounds')
 		}
-		const isConditionFulfilled = {
-			frog: nextElements.includes('frog'),
-			sword: currentElements.includes('sword'),
-			leaderUp:
-				currentElements.includes('leader') && aboveElements.includes('leader'),
-			leaderDown:
-				currentElements.includes('leader') && belowElements.includes('leader'),
-			hole: nextElements.includes('hole'),
-			thicket: nextElements.includes('thicket'),
-			web: nextElements.includes('web'),
-		} satisfies { [key in ConditionValue]: boolean }
+		const isConditionFulfilled = (() => {
+			const currentElements = elementsAt(playerPosition.x, playerPosition.y)
+			const nextElements = elementsAt(playerPosition.x + 1, playerPosition.y)
+			const aboveElements = elementsAt(playerPosition.x, playerPosition.y - 1)
+			const belowElements = elementsAt(playerPosition.x, playerPosition.y + 1)
+			return {
+				frog: nextElements.includes('frog'),
+				sword: currentElements.includes('sword'),
+				leaderUp:
+					currentElements.includes('leader') &&
+					aboveElements.includes('leader'),
+				leaderDown:
+					currentElements.includes('leader') &&
+					belowElements.includes('leader'),
+				hole: nextElements.includes('hole'),
+				thicket: nextElements.includes('thicket'),
+				web: nextElements.includes('web'),
+			} satisfies { [key in ConditionValue]: boolean }
+		})()
 		if (instruction === undefined) {
 			if (state.length === 1) {
 				return {
@@ -174,7 +178,9 @@ export function* runEnvironment(
 		} else if (instruction.type === 'jump') {
 			if (canStandAt(playerPosition.x + 1, playerPosition.y)) {
 				playerPosition.x++
-				if (!nextElements.includes('hole')) {
+				if (
+					!elementsAt(playerPosition.x + 1, playerPosition.y).includes('hole')
+				) {
 					warnAboutNeedlessMove()
 				}
 				yield step('jump')
@@ -222,7 +228,7 @@ export function* runEnvironment(
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'kiss') {
-			if (nextElements.includes('frog')) {
+			if (elementsAt(playerPosition.x + 1, playerPosition.y).includes('frog')) {
 				yield step('kiss') // @TODO: allow air kisses into the air with needless move penalization
 				return {
 					success: true,
