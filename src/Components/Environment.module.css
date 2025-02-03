@@ -71,6 +71,15 @@
 .is_animating_goForward {
 	animation-name: goForward;
 }
+@keyframes pickSword {
+	30% {
+		transform: scaleY(0.5);
+	}
+}
+.is_animating_pickSword {
+	transform-origin: 50% 80%;
+	animation-name: pickSword;
+}
 @keyframes jump {
 	0% {
 		transform: translateX(-100%);

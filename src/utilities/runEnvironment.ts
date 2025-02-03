@@ -22,6 +22,7 @@ export type PlayerState = {
 		| 'hit'
 		| 'goUp'
 		| 'goDown'
+		| 'pickSword'
 }
 
 // @TODO: replace by recursion
@@ -177,7 +178,7 @@ export function* runEnvironment(
 		} else if (instruction.type === 'pick') {
 			if (isConditionFulfilled.sword) {
 				hasSword = true
-				yield step(null) // @TODO: add pick animation
+				yield step('pickSword')
 				removeElement(playerPosition.x, playerPosition.y, 'sword')
 			} else {
 				warnAboutNeedlessMove()
