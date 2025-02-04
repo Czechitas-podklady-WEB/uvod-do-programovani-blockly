@@ -233,7 +233,6 @@ export const EnvironmentGrid: FunctionComponent<{
 			}, {}),
 		[elements],
 	)
-	console.log(groupedElements)
 
 	return (
 		<div

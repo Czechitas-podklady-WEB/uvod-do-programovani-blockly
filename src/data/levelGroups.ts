@@ -331,13 +331,66 @@ export const levelGroups = [
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
+				maximumInstructionsCountForBestRating: 16,
+				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					elements: [],
-					foundations: [['grass', 'grass', 'grass', 'grass', 'grass']],
-				}, // @TODO
+					elements: [
+						{
+							type: 'frog',
+							x: 8,
+							y: 0,
+						},
+						{
+							type: 'sword',
+							x: 1,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 6,
+							y: 0,
+						},
+					],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				},
 			},
 		],
 	},
