@@ -5,7 +5,6 @@ import story10 from '../assets/story-10.png'
 import story11 from '../assets/story-11.png'
 import story2 from '../assets/story-2.png'
 import story3 from '../assets/story-3.png'
-import story4 from '../assets/story-4.png'
 import story5 from '../assets/story-5.png'
 import story6 from '../assets/story-6.png'
 import story7 from '../assets/story-7.png'
@@ -182,55 +181,170 @@ export const levelGroups = [
 				key: makeLevelKey('3'),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
-				maximumInstructionsCountForBestRating: 8,
-				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
+				maximumInstructionsCountForBestRating: 9,
+				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 				environment: {
 					startRowIndex: 0,
 					elements: [
 						{
-							type: 'sword',
-							x: 1,
+							type: 'frog',
+							x: 8,
 							y: 0,
 						},
 						{
-							type: 'thicket',
+							type: 'hole',
 							x: 3,
 							y: 0,
 						},
 						{
-							type: 'frog',
+							type: 'hole',
 							x: 5,
 							y: 0,
 						},
+						{
+							type: 'hole',
+							x: 6,
+							y: 0,
+						},
 					],
-					foundations: [['grass', 'grass', 'grass', 'grass', 'grass', 'grass']],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
 				},
 			},
 			{
 				label: 'Level 4',
 				key: makeLevelKey('4'),
-				description: 'Nauč se pracovat s poli, seznamy a datovými strukturami.',
-				image: story4,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
+				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
+				image: story3,
+				maximumInstructionsCountForBestRating: 12,
+				allowedBlocks: ['go_forward', 'pick', 'jump', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					elements: [],
-					foundations: [['grass', 'grass', 'grass']],
-				}, // @TODO
+					elements: [
+						{
+							type: 'frog',
+							x: 8,
+							y: 0,
+						},
+						{
+							type: 'sword',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'hole',
+							x: 2,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 6,
+							y: 0,
+						},
+					],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				},
 			},
 			{
 				label: 'Level 5',
 				key: makeLevelKey('5'),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
+				maximumInstructionsCountForBestRating: 16,
+				allowedBlocks: ['go_forward', 'pick', 'jump', 'hit', 'kiss'],
 				environment: {
 					startRowIndex: 0,
-					elements: [],
-					foundations: [['grass', 'grass', 'grass', 'grass']],
-				}, // @TODO
+					elements: [
+						{
+							type: 'hole',
+							x: 1,
+							y: 0,
+						},
+						{
+							type: 'hole',
+							x: 2,
+							y: 0,
+						},
+						{
+							type: 'sword',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'frog',
+							x: 10,
+							y: 0,
+						},
+						{
+							type: 'hole',
+							x: 7,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 8,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 9,
+							y: 0,
+						},
+					],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				},
 			},
 			{
 				label: 'Level 6',
