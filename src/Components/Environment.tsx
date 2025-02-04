@@ -22,8 +22,11 @@ import swordPicked from '../assets/swordPicked.png'
 import thicket from '../assets/thicket.png'
 import wall from '../assets/wall.png'
 import web from '../assets/web.png'
+import type {
+	EnvironmentElement,
+	EnvironmentFoundation,
+} from '../data/environment'
 import { Level } from '../data/Level'
-import { EnvironmentElement, EnvironmentFoundation } from '../data/levelGroups'
 import { countInstructions } from '../utilities/countInstructions'
 import { Instructions } from '../utilities/decodeCodeInstructions'
 import { delay } from '../utilities/delay'
