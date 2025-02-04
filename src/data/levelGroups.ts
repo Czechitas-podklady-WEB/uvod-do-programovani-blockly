@@ -730,39 +730,56 @@ export const levelGroups = [
 				key: makeLevelKey('1'),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
+				maximumInstructionsCountForBestRating: 4,
+				allowedBlocks: ['go_forward', 'kiss', 'repeat'],
 				environment: {
 					startRowIndex: 0,
-					elements: [],
+					elements: [
+						{
+							type: 'frog',
+							x: 5,
+							y: 0,
+						},
+					],
 					foundations: [['grass', 'grass', 'grass', 'grass', 'grass', 'grass']],
-				}, // @TODO
+				},
 			},
 			{
 				label: 'Level 2',
 				key: makeLevelKey('2'),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
+				maximumInstructionsCountForBestRating: 9,
+				allowedBlocks: ['go_forward', 'kiss', 'pick', 'hit', 'repeat'],
 				environment: {
 					startRowIndex: 0,
-					elements: [],
-					foundations: [
-						['grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass'],
+					elements: [
+						{
+							type: 'sword',
+							x: 1,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'frog',
+							x: 7,
+							y: 0,
+						},
 					],
-				}, // @TODO
-			},
-			{
-				label: 'Level 3',
-				key: makeLevelKey('3'),
-				description: 'Ponoř se do návrhu programových struktur a modulů.',
-				image: story7,
-				maximumInstructionsCountForBestRating: 0, // @TODO
-				allowedBlocks: [], // @TODO
-				environment: {
-					startRowIndex: 0,
-					elements: [],
 					foundations: [
 						[
 							'grass',
@@ -775,7 +792,121 @@ export const levelGroups = [
 							'grass',
 						],
 					],
-				}, // @TODO
+				},
+			},
+			{
+				label: 'Level 3',
+				key: makeLevelKey('3'),
+				description: 'Ponoř se do návrhu programových struktur a modulů.',
+				image: story7,
+				maximumInstructionsCountForBestRating: 13,
+				allowedBlocks: ['go_forward', 'pick', 'hit', 'jump', 'kiss', 'repeat'],
+				environment: {
+					startRowIndex: 2,
+					elements: [
+						{
+							type: 'thicket',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'sword',
+							x: 1,
+							y: 2,
+						},
+						{
+							type: 'hole',
+							x: 5,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 2,
+						},
+						{
+							type: 'web',
+							x: 7,
+							y: 2,
+						},
+						{
+							type: 'frog',
+							x: 10,
+							y: 2,
+						},
+						{
+							type: 'hole',
+							x: 8,
+							y: 2,
+						},
+						{
+							type: 'web',
+							x: 9,
+							y: 0,
+						},
+						{
+							type: 'web',
+							x: 10,
+							y: 1,
+						},
+					],
+					foundations: [
+						[
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+						],
+						[
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+						],
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'floor',
+							'floor',
+							'floor',
+							'floor',
+							'floor',
+						],
+					],
+				},
 			},
 		],
 	},
