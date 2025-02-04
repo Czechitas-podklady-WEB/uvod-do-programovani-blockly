@@ -19,7 +19,9 @@ import sky from '../assets/sky.png'
 import soil from '../assets/soil.png'
 import sword from '../assets/sword.png'
 import swordPicked from '../assets/swordPicked.png'
-import thicket from '../assets/thicket.png'
+import thicket1 from '../assets/thicket-1.png'
+import thicket2 from '../assets/thicket-2.png'
+import thicket3 from '../assets/thicket-3.png'
 import wall from '../assets/wall.png'
 import web from '../assets/web.png'
 import type {
@@ -207,6 +209,31 @@ export const EnvironmentGrid: FunctionComponent<{
 		[foundations],
 	)
 
+	const groupedElements = useMemo(
+		() =>
+			elements.reduce<{
+				[y: number]: {
+					[x: number]: {
+						[type in EnvironmentElement]?: {
+							id: number
+							count: number
+						}
+					}
+				}
+			}>((grouped, element) => {
+				grouped[element.y] ??= {}
+				grouped[element.y][element.x] ??= {}
+				grouped[element.y][element.x][element.type] ??= {
+					id: element.id,
+					count: 0,
+				}
+				grouped[element.y][element.x][element.type]!.count++
+				return grouped
+			}, {}),
+		[elements],
+	)
+	console.log(groupedElements)
+
 	return (
 		<div
 			className={styles.wrapper}
@@ -256,36 +283,44 @@ export const EnvironmentGrid: FunctionComponent<{
 					))}
 				</Fragment>
 			))}
-			{elements.map(({ x, y, type, id }) => (
-				<div
-					key={id}
-					className={clsx(styles.element, styles[`is_type_${type}`])}
-					style={
-						{
-							'--Environment-position-x': x,
-							'--Environment-position-y': y,
-						} as CSSProperties
-					}
-				>
-					<img
-						src={
-							type === 'frog'
-								? frog
-								: type === 'hole'
-									? hole
-									: type === 'sword'
-										? sword
-										: type === 'thicket'
-											? thicket
-											: type === 'leader'
-												? leader
-												: type === 'web'
-													? web
-													: (type satisfies never)
-						}
-					/>
-				</div>
-			))}
+			{Object.entries(groupedElements).map(([y, row]) =>
+				Object.entries(row).map(([x, elements]) =>
+					Object.entries(elements).map(([type, { id, count }]) => (
+						<div
+							key={id}
+							className={clsx(styles.element, styles[`is_type_${type}`])}
+							style={
+								{
+									'--Environment-position-x': x,
+									'--Environment-position-y': y,
+								} as CSSProperties
+							}
+						>
+							<img
+								src={
+									type === 'frog'
+										? frog
+										: type === 'hole'
+											? hole
+											: type === 'sword'
+												? sword
+												: type === 'thicket'
+													? count === 1
+														? thicket1
+														: count === 2
+															? thicket2
+															: thicket3
+													: type === 'leader'
+														? leader
+														: type === 'web'
+															? web
+															: (type satisfies never)
+								}
+							/>
+						</div>
+					)),
+				),
+			)}
 			{onSegmentClick &&
 				foundations.map((row, rowIndex) => (
 					<Fragment key={rowIndex}>
