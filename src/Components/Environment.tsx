@@ -33,6 +33,7 @@ import { countInstructions } from '../utilities/countInstructions'
 import { Instructions } from '../utilities/decodeCodeInstructions'
 import { delay } from '../utilities/delay'
 import type { EditorXml } from '../utilities/editorXml'
+import { entriesOf } from '../utilities/entriesOf'
 import {
 	Elements,
 	PlayerState,
@@ -283,42 +284,45 @@ export const EnvironmentGrid: FunctionComponent<{
 					))}
 				</Fragment>
 			))}
-			{Object.entries(groupedElements).map(([y, row]) =>
-				Object.entries(row).map(([x, elements]) =>
-					Object.entries(elements).map(([type, { id, count }]) => (
-						<div
-							key={id}
-							className={clsx(styles.element, styles[`is_type_${type}`])}
-							style={
-								{
-									'--Environment-position-x': x,
-									'--Environment-position-y': y,
-								} as CSSProperties
-							}
-						>
-							<img
-								src={
-									type === 'frog'
-										? frog
-										: type === 'hole'
-											? hole
-											: type === 'sword'
-												? sword
-												: type === 'thicket'
-													? count === 1
-														? thicket1
-														: count === 2
-															? thicket2
-															: thicket3
-													: type === 'leader'
-														? leader
-														: type === 'web'
-															? web
-															: (type satisfies never)
-								}
-							/>
-						</div>
-					)),
+			{entriesOf(groupedElements).map(([y, row]) =>
+				entriesOf(row).map(([x, elements]) =>
+					entriesOf(elements).map(
+						([type, element]) =>
+							element && (
+								<div
+									key={element.id}
+									className={clsx(styles.element, styles[`is_type_${type}`])}
+									style={
+										{
+											'--Environment-position-x': x,
+											'--Environment-position-y': y,
+										} as CSSProperties
+									}
+								>
+									<img
+										src={
+											type === 'frog'
+												? frog
+												: type === 'hole'
+													? hole
+													: type === 'sword'
+														? sword
+														: type === 'thicket'
+															? element.count === 1
+																? thicket1
+																: element.count === 2
+																	? thicket2
+																	: thicket3
+															: type === 'leader'
+																? leader
+																: type === 'web'
+																	? web
+																	: (type satisfies never)
+										}
+									/>
+								</div>
+							),
+					),
 				),
 			)}
 			{onSegmentClick &&
