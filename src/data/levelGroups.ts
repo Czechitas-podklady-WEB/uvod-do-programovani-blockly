@@ -4,6 +4,7 @@ import story10 from '../assets/story-10.png'
 import story11 from '../assets/story-11.png'
 import story2 from '../assets/story-2.png'
 import story3 from '../assets/story-3.png'
+import story4 from '../assets/story-4.png'
 import story5 from '../assets/story-5.png'
 import story6 from '../assets/story-6.png'
 import story7 from '../assets/story-7.png'
@@ -330,7 +331,7 @@ export const levelGroups = [
 				key: makeLevelKey('6'),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story11,
+				image: story6,
 				maximumInstructionsCountForBestRating: 16,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
@@ -384,6 +385,332 @@ export const levelGroups = [
 							'grass',
 							'grass',
 							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				},
+			},
+			{
+				label: 'Level 7',
+				key: makeLevelKey('7'),
+				description:
+					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
+				image: story2,
+				maximumInstructionsCountForBestRating: 18,
+				allowedBlocks: ['go_forward', 'pick', 'hit', 'jump', 'kiss'],
+				environment: {
+					startRowIndex: 0,
+					elements: [
+						{
+							type: 'hole',
+							x: 2,
+							y: 0,
+						},
+						{
+							type: 'sword',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'hole',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 7,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 7,
+							y: 0,
+						},
+						{
+							type: 'thicket',
+							x: 7,
+							y: 0,
+						},
+						{
+							type: 'hole',
+							x: 9,
+							y: 0,
+						},
+						{
+							type: 'frog',
+							x: 11,
+							y: 0,
+						},
+					],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				},
+			},
+			{
+				label: 'Level 8',
+				key: makeLevelKey('8'),
+				description:
+					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
+				image: story4,
+				maximumInstructionsCountForBestRating: 14,
+				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
+				environment: {
+					startRowIndex: 2,
+					elements: [
+						{
+							type: 'frog',
+							x: 8,
+							y: 2,
+						},
+						{
+							type: 'web',
+							x: 8,
+							y: 0,
+						},
+						{
+							type: 'web',
+							x: 6,
+							y: 1,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 2,
+						},
+						{
+							type: 'thicket',
+							x: 4,
+							y: 2,
+						},
+						{
+							type: 'sword',
+							x: 2,
+							y: 2,
+						},
+						{
+							type: 'web',
+							x: 7,
+							y: 2,
+						},
+					],
+					foundations: [
+						['sky', 'sky', 'sky', 'sky', 'sky', 'wall', 'wall', 'wall', 'wall'],
+						['sky', 'sky', 'sky', 'sky', 'sky', 'wall', 'wall', 'wall', 'wall'],
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'floor',
+							'floor',
+							'floor',
+							'floor',
+						],
+					],
+				},
+			},
+			{
+				label: 'Level 9',
+				key: makeLevelKey('9'),
+				description:
+					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
+				image: story11,
+				maximumInstructionsCountForBestRating: 12,
+				allowedBlocks: ['go_forward', 'pick', 'hit', 'up', 'down', 'kiss'],
+				environment: {
+					startRowIndex: 2,
+					elements: [
+						{
+							type: 'web',
+							x: 0,
+							y: 0,
+						},
+						{
+							type: 'leader',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'leader',
+							x: 3,
+							y: 1,
+						},
+						{
+							type: 'leader',
+							x: 3,
+							y: 0,
+						},
+						{
+							type: 'web',
+							x: 2,
+							y: 2,
+						},
+						{
+							type: 'web',
+							x: 5,
+							y: 0,
+						},
+						{
+							type: 'web',
+							x: 6,
+							y: 1,
+						},
+						{
+							type: 'frog',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'sword',
+							x: 1,
+							y: 2,
+						},
+					],
+					foundations: [
+						['wall', 'wall', 'wall', 'floor', 'floor', 'floor', 'floor'],
+						['wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall'],
+						['floor', 'floor', 'floor', 'floor', 'floor', 'floor', 'floor'],
+					],
+				},
+			},
+			{
+				label: 'Level 10',
+				key: makeLevelKey('10'),
+				description:
+					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
+				image: story1,
+				maximumInstructionsCountForBestRating: 16,
+				allowedBlocks: ['go_forward', 'up', 'down', 'jump', 'kiss'],
+				environment: {
+					startRowIndex: 0,
+					elements: [
+						{
+							type: 'leader',
+							x: 2,
+							y: 0,
+						},
+						{
+							type: 'leader',
+							x: 2,
+							y: 1,
+						},
+						{
+							type: 'leader',
+							x: 4,
+							y: 1,
+						},
+						{
+							type: 'leader',
+							x: 6,
+							y: 0,
+						},
+						{
+							type: 'leader',
+							x: 6,
+							y: 2,
+						},
+						{
+							type: 'leader',
+							x: 4,
+							y: 0,
+						},
+						{
+							type: 'web',
+							x: 3,
+							y: 2,
+						},
+						{
+							type: 'leader',
+							x: 6,
+							y: 1,
+						},
+						{
+							type: 'web',
+							x: 1,
+							y: 1,
+						},
+						{
+							type: 'hole',
+							x: 9,
+							y: 2,
+						},
+						{
+							type: 'frog',
+							x: 11,
+							y: 2,
+						},
+					],
+					foundations: [
+						[
+							'floor',
+							'floor',
+							'floor',
+							'wall',
+							'floor',
+							'floor',
+							'floor',
+							'wall',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+						],
+						[
+							'wall',
+							'wall',
+							'floor',
+							'floor',
+							'floor',
+							'wall',
+							'wall',
+							'wall',
+							'sky',
+							'sky',
+							'sky',
+							'sky',
+						],
+						[
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+							'wall',
+							'floor',
+							'floor',
 							'grass',
 							'grass',
 							'grass',
