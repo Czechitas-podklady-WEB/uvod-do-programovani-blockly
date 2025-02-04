@@ -78,9 +78,10 @@ export function* runEnvironment(
 			.filter((element) => element.x === x && element.y === y)
 			.map(({ type }) => type)
 	const removeElement = (x: number, y: number, type: EnvironmentElement) => {
-		elements = elements.filter(
-			(element) => element.x !== x || element.y !== y || element.type !== type,
+		const index = elements.findIndex(
+			(element) => element.x === x && element.y === y && element.type === type,
 		)
+		elements = elements.filter((_, otherIndex) => otherIndex !== index)
 	}
 	const canStandAt = (x: number, y: number) => {
 		const elements = elementsAt(x, y)
