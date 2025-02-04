@@ -78,7 +78,7 @@ export function* runEnvironment(
 			.filter((element) => element.x === x && element.y === y)
 			.map(({ type }) => type)
 	const removeElement = (x: number, y: number, type: EnvironmentElement) => {
-		const index = elements.findIndex(
+		const index = elements.findLastIndex(
 			(element) => element.x === x && element.y === y && element.type === type,
 		)
 		elements = elements.filter((_, otherIndex) => otherIndex !== index)
