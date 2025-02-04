@@ -1,6 +1,6 @@
 import { cast, useQuery } from '@evolu/react'
 import { useMemo } from 'react'
-import type { GroupKey, LevelKey } from '../data/levels'
+import type { GroupKey, LevelKey } from '../data/levelGroups'
 import { evolu } from '../database/Database'
 import { makeEditorXml } from './editorXml'
 import { getLevelIdentifier } from './getLevelIdentifier'

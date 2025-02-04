@@ -19,12 +19,12 @@ import {
 	type FunctionComponent,
 } from 'react'
 import {
-	EnvironmentElement,
-	EnvironmentFoundation,
-	Level,
 	environmentElement,
 	environmentFoundations,
-} from '../data/levels'
+	type EnvironmentElement,
+	type EnvironmentFoundation,
+} from '../data/environment'
+import { Level } from '../data/Level'
 import { EnvironmentGrid } from './Environment'
 import styles from './LevelEditor.module.css'
 

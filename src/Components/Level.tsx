@@ -11,14 +11,14 @@ import {
 	LevelKey,
 	makeGroupKey,
 	makeLevelKey,
-	useLevel,
-} from '../data/levels'
+} from '../data/levelGroups'
 import { Database } from '../database/Database'
 import { PositiveIntOrZero } from '../database/tables/FinishedLevel'
 import { EditorXml } from '../utilities/editorXml'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
 import { levelLink, type LevelLink } from '../utilities/levelLink'
 import { useIsLevelUnlocked } from '../utilities/useIsLevelUnlocked'
+import { useLevel } from '../utilities/useLevel'
 import { useLevelDraft } from '../utilities/useLevelDraft'
 import { useLevelRating } from '../utilities/useLevelRating'
 import styles from './Level.module.css'

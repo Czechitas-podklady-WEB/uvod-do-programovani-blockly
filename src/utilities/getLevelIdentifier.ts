@@ -1,5 +1,6 @@
 import { id } from '@evolu/react'
-import { GroupKey, LevelKey, getLevel } from '../data/levels'
+import { GroupKey, LevelKey } from '../data/levelGroups'
+import { getLevel } from './getLevel'
 
 export const LevelIdentifier = id('LevelIdentifier')
 export type LevelIdentifier = typeof LevelIdentifier.Type

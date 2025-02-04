@@ -1,4 +1,7 @@
-import { EnvironmentFoundation, type EnvironmentElement } from '../data/levels'
+import {
+	EnvironmentFoundation,
+	type EnvironmentElement,
+} from '../data/levelGroups'
 import { ConditionValue } from './blocks'
 import { InstructionBlock, Instructions } from './decodeCodeInstructions'
 

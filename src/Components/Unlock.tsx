@@ -1,6 +1,6 @@
 import { String, useEvolu } from '@evolu/react'
 import { FunctionComponent } from 'react'
-import { allLevels } from '../data/levels'
+import { levels } from '../data/levels'
 import { Database } from '../database/Database'
 import { PositiveIntOrZero } from '../database/tables/FinishedLevel'
 import { getLevelIdentifier } from '../utilities/getLevelIdentifier'
@@ -13,7 +13,7 @@ export const Unlock: FunctionComponent = () => {
 		<PageWithConfirmation
 			title="Odemknout všechny úrovně?"
 			onConfirm={async () => {
-				for (const { groupKey, key } of allLevels) {
+				for (const { groupKey, key } of levels) {
 					await new Promise<void>((resolve) => {
 						// @TODO: don't update if already exists
 						createOrUpdate(

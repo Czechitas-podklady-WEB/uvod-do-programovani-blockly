@@ -1,5 +1,5 @@
 import { Brand } from 'effect'
-import type { GroupKey, LevelKey } from '../data/levels'
+import type { GroupKey, LevelKey } from '../data/levelGroups'
 
 export const levelLinkPattern = '/level/:group/:level'
 
