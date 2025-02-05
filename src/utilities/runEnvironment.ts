@@ -45,27 +45,30 @@ type Step = {
 	player: PlayerState
 }
 
+type RunPlayerState = { x: number; y: number; hasSword: boolean }
+
+type RunCommon = {
+	playerState: RunPlayerState
+	elements: Elements
+}
+type RunFinal = { type: 'final' } & RunCommon &
+	({ success: true; performedNeedlessMove: boolean } | { success: false })
+type RunNotDone = {
+	type: 'not-done'
+	performedNothing: boolean
+	performedNeedlessMove: boolean
+} & RunCommon
+
 function* run(
-	initialPlayerState: { x: number; y: number; hasSword: boolean },
+	initialPlayerState: RunPlayerState,
 	foundations: Array<Array<EnvironmentFoundation>>,
 	initialElements: Elements,
 	instructions: Instructions,
-): Generator<
-	Step,
-	| ({ type: 'final' } & (
-			| { success: true; performedNeedlessMove: boolean }
-			| { success: false }
-	  ))
-	| {
-			type: 'not-done'
-			performedNothing: boolean
-			performedNeedlessMove: boolean
-	  },
-	void
-> {
-	const playerState = { ...initialPlayerState }
+): Generator<Step, RunFinal | RunNotDone, void> {
+	let playerState = { ...initialPlayerState }
 	let isInsideHole = false
 	let performedNeedlessMove = false
+	let performedNothing = true
 	let elements = [...initialElements]
 
 	const foundationAt = (x: number, y: number) =>
@@ -94,16 +97,30 @@ function* run(
 		performedNeedlessMove = true
 	}
 
-	const step = (animation: PlayerState['animation']): Step => ({
-		elements,
-		player: {
-			x: playerState.x,
-			y: playerState.y,
-			isInsideHole,
-			hasSword: playerState.hasSword,
-			animation,
-		},
-	})
+	const step = (animation: PlayerState['animation']): Step => {
+		performedNothing = false
+		return {
+			elements,
+			player: {
+				x: playerState.x,
+				y: playerState.y,
+				isInsideHole,
+				hasSword: playerState.hasSword,
+				animation,
+			},
+		}
+	}
+
+	const final = (value: RunFinal): RunFinal => {
+		if (value.success) {
+			return {
+				...value,
+				performedNeedlessMove:
+					value.performedNeedlessMove || performedNeedlessMove,
+			}
+		}
+		return value
+	}
 
 	for (const instruction of instructions) {
 		const isConditionFulfilled = (() => {
@@ -136,6 +153,8 @@ function* run(
 				return {
 					type: 'final',
 					success: false,
+					elements,
+					playerState,
 				}
 			} else if (canStandAt(playerState.x + 1, playerState.y)) {
 				playerState.x++
@@ -204,13 +223,18 @@ function* run(
 					type: 'final',
 					success: true,
 					performedNeedlessMove,
+					elements,
+					playerState,
 				}
 			} else {
 				warnAboutNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'repeat') {
-			// @TODO
+			// @TODO: if repeat does nothing, it should warn as a needless move
+			for (let iteration = 1; iteration <= instruction.times; iteration++) {
+				// @TODO
+			}
 		} else if (instruction.type === 'until') {
 			// @TODO
 		} else if (instruction.type === 'if') {
@@ -223,36 +247,24 @@ function* run(
 				)
 				const value = yield* runtime
 				if (value.type === 'final') {
-					if (value.success) {
-						return {
-							type: 'final',
-							success: true,
-							performedNeedlessMove:
-								value.performedNeedlessMove || performedNeedlessMove,
-						}
-					} else {
-						return {
-							type: 'final',
-							success: false,
-						}
-					}
+					return final(value)
 				} else if (value.type === 'not-done') {
-					return {
-						type: 'not-done',
-						performedNothing: false, // @TODO
-						performedNeedlessMove:
-							value.performedNeedlessMove || performedNeedlessMove,
-					}
+					performedNothing = value.performedNothing && performedNothing
+					performedNeedlessMove =
+						value.performedNeedlessMove || performedNeedlessMove
+					elements = value.elements
+					playerState = value.playerState
 				}
-				return value satisfies never
 			}
 		}
 	}
 
 	return {
 		type: 'not-done',
-		performedNothing: false, // @TODO
+		performedNothing,
 		performedNeedlessMove,
+		elements,
+		playerState,
 	}
 }
 
