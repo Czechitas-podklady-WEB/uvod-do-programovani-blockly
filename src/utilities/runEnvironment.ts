@@ -270,12 +270,8 @@ function* run(
 				}
 				if (value.performedNothing) {
 					// Infinite loop detected
-					return {
-						type: 'final',
-						success: false,
-						elements,
-						playerState,
-					}
+					warnAboutNeedlessMove()
+					yield step('invalidMove')
 				}
 			}
 		} else if (instruction.type === 'if') {
