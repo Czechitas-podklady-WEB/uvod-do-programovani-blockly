@@ -127,27 +127,26 @@ function* run(
 		elements = value.elements
 		playerState = value.playerState
 	}
+	const getFulfilledConditions = () => {
+		const currentElements = elementsAt(playerState.x, playerState.y)
+		const nextElements = elementsAt(playerState.x + 1, playerState.y)
+		const aboveElements = elementsAt(playerState.x, playerState.y - 1)
+		const belowElements = elementsAt(playerState.x, playerState.y + 1)
+		return {
+			frog: nextElements.includes('frog'),
+			sword: currentElements.includes('sword'),
+			leaderUp:
+				currentElements.includes('leader') && aboveElements.includes('leader'),
+			leaderDown:
+				currentElements.includes('leader') && belowElements.includes('leader'),
+			hole: nextElements.includes('hole'),
+			thicket: nextElements.includes('thicket'),
+			web: nextElements.includes('web'),
+		} satisfies { [key in ConditionValue]: boolean }
+	}
 
 	for (const instruction of instructions) {
-		const isConditionFulfilled = (() => {
-			const currentElements = elementsAt(playerState.x, playerState.y)
-			const nextElements = elementsAt(playerState.x + 1, playerState.y)
-			const aboveElements = elementsAt(playerState.x, playerState.y - 1)
-			const belowElements = elementsAt(playerState.x, playerState.y + 1)
-			return {
-				frog: nextElements.includes('frog'),
-				sword: currentElements.includes('sword'),
-				leaderUp:
-					currentElements.includes('leader') &&
-					aboveElements.includes('leader'),
-				leaderDown:
-					currentElements.includes('leader') &&
-					belowElements.includes('leader'),
-				hole: nextElements.includes('hole'),
-				thicket: nextElements.includes('thicket'),
-				web: nextElements.includes('web'),
-			} satisfies { [key in ConditionValue]: boolean }
-		})()
+		const isConditionFulfilled = getFulfilledConditions()
 		console.log('')
 		console.log(instruction)
 		if (instruction.type === 'go_forward') {
@@ -252,7 +251,33 @@ function* run(
 				}
 			}
 		} else if (instruction.type === 'until') {
-			// @TODO
+			while (true) {
+				const isConditionFulfilled = getFulfilledConditions()
+				if (isConditionFulfilled[instruction.condition]) {
+					break
+				}
+				const runtime = run(
+					playerState,
+					foundations,
+					elements,
+					instruction.blocks,
+				)
+				const value = yield* runtime
+				if (value.type === 'final') {
+					return final(value)
+				} else if (value.type === 'not-done') {
+					notDone(value)
+				}
+				if (value.performedNothing) {
+					// Infinite loop detected
+					return {
+						type: 'final',
+						success: false,
+						elements,
+						playerState,
+					}
+				}
+			}
 		} else if (instruction.type === 'if') {
 			if (isConditionFulfilled[instruction.condition]) {
 				const runtime = run(
