@@ -9,11 +9,14 @@ import {
 	type CSSProperties,
 	type FunctionComponent,
 } from 'react'
+import floorHole from '../assets/floor-hole.png'
 import floor from '../assets/floor.png'
 import frog from '../assets/frog.png'
+import grassHole from '../assets/grass-hole.png'
 import grass from '../assets/grass.png'
-import hole from '../assets/hole.png'
-import leader from '../assets/leader.png'
+import leaderBottom from '../assets/leader-bottom.png'
+import leaderMiddle from '../assets/leader-middle.png'
+import leaderTop from '../assets/leader-top.png'
 import princess from '../assets/princess.png'
 import sky from '../assets/sky.png'
 import soil from '../assets/soil.png'
@@ -33,7 +36,7 @@ import { countInstructions } from '../utilities/countInstructions'
 import { Instructions } from '../utilities/decodeCodeInstructions'
 import { delay } from '../utilities/delay'
 import type { EditorXml } from '../utilities/editorXml'
-import { entriesOf } from '../utilities/entriesOf'
+import { isDefined } from '../utilities/isDefined'
 import {
 	Elements,
 	PlayerState,
@@ -210,29 +213,77 @@ export const EnvironmentGrid: FunctionComponent<{
 		[foundations],
 	)
 
-	const groupedElements = useMemo(
-		() =>
-			elements.reduce<{
-				[y: number]: {
-					[x: number]: {
-						[type in EnvironmentElement]?: {
-							id: number
-							count: number
-						}
+	const smoothedElements = useMemo(() => {
+		const elementsAt = (x: number, y: number, type?: EnvironmentElement) =>
+			elements.filter(
+				(element) =>
+					element.x === x &&
+					element.y === y &&
+					(!type || element.type === type),
+			)
+		const foundationAt = (x: number, y: number) =>
+			foundations.at(y)?.at(x) ?? null
+
+		return elements
+			.map((element) => {
+				if (element.type === 'thicket') {
+					const atPosition = elementsAt(element.x, element.y, 'thicket')
+					if (atPosition.at(0)?.id !== element.id) {
+						return
+					}
+					return {
+						...element,
+						type: 'thicket' as const,
+						count: atPosition.length,
 					}
 				}
-			}>((grouped, element) => {
-				grouped[element.y] ??= {}
-				grouped[element.y][element.x] ??= {}
-				grouped[element.y][element.x][element.type] ??= {
-					id: element.id,
-					count: 0,
+				if (element.type === 'leader') {
+					const hasAbove =
+						elementsAt(element.x, element.y - 1, 'leader').length > 0
+					const hasBelow =
+						elementsAt(element.x, element.y + 1, 'leader').length > 0
+					return {
+						...element,
+						type: 'leader' as const,
+						part:
+							hasAbove && !hasBelow
+								? ('bottom' as const)
+								: !hasAbove && hasBelow
+									? ('top' as const)
+									: ('middle' as const),
+					}
 				}
-				grouped[element.y][element.x][element.type]!.count++
-				return grouped
-			}, {}),
-		[elements],
-	)
+				if (element.type === 'hole') {
+					const foundation = foundationAt(element.x, element.y)
+					return {
+						...element,
+						type: 'hole' as const,
+						foundation:
+							foundation === 'floor' ? ('floor' as const) : ('grass' as const),
+					}
+				}
+				if (element.type === 'web') {
+					return {
+						...element,
+						type: 'web' as const,
+					}
+				}
+				if (element.type === 'frog') {
+					return {
+						...element,
+						type: 'frog' as const,
+					}
+				}
+				if (element.type === 'sword') {
+					return {
+						...element,
+						type: 'sword' as const,
+					}
+				}
+				element.type satisfies never
+			})
+			.filter(isDefined)
+	}, [elements, foundations])
 
 	return (
 		<div
@@ -283,47 +334,50 @@ export const EnvironmentGrid: FunctionComponent<{
 					))}
 				</Fragment>
 			))}
-			{entriesOf(groupedElements).map(([y, row]) =>
-				entriesOf(row).map(([x, elements]) =>
-					entriesOf(elements).map(
-						([type, element]) =>
-							element && (
-								<div
-									key={element.id}
-									className={clsx(styles.element, styles[`is_type_${type}`])}
-									style={
-										{
-											'--Environment-position-x': x,
-											'--Environment-position-y': y,
-										} as CSSProperties
-									}
-								>
-									<img
-										src={
-											type === 'frog'
-												? frog
-												: type === 'hole'
-													? hole
-													: type === 'sword'
-														? sword
-														: type === 'thicket'
-															? element.count === 1
-																? thicket1
-																: element.count === 2
-																	? thicket2
-																	: thicket3
-															: type === 'leader'
-																? leader
-																: type === 'web'
-																	? web
-																	: (type satisfies never)
-										}
-									/>
-								</div>
-							),
-					),
-				),
-			)}
+			{smoothedElements.map((element) => (
+				<div
+					key={element.id}
+					className={clsx(styles.element, styles[`is_type_${element.type}`])}
+					style={
+						{
+							'--Environment-position-x': element.x,
+							'--Environment-position-y': element.y,
+						} as CSSProperties
+					}
+				>
+					<img
+						src={
+							element.type === 'frog'
+								? frog
+								: element.type === 'hole'
+									? element.foundation === 'grass'
+										? grassHole
+										: element.foundation === 'floor'
+											? floorHole
+											: (element.foundation satisfies never)
+									: element.type === 'sword'
+										? sword
+										: element.type === 'thicket'
+											? element.count === 1
+												? thicket1
+												: element.count === 2
+													? thicket2
+													: thicket3
+											: element.type === 'leader'
+												? element.part === 'top'
+													? leaderTop
+													: element.part === 'middle'
+														? leaderMiddle
+														: element.part === 'bottom'
+															? leaderBottom
+															: (element.part satisfies never)
+												: element.type === 'web'
+													? web
+													: (element satisfies never)
+						}
+					/>
+				</div>
+			))}
 			{onSegmentClick &&
 				foundations.map((row, rowIndex) => (
 					<Fragment key={rowIndex}>
