@@ -92,8 +92,7 @@ function* run(
 			!elements.includes('web')
 		)
 	}
-	const warnAboutNeedlessMove = () => {
-		// @TODO: visualize to user
+	const markAsNeedlessMove = () => {
 		performedNeedlessMove = true
 	}
 
@@ -165,18 +164,18 @@ function* run(
 				playerState.x++
 				yield step('goForward')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'jump') {
 			if (canStandAt(playerState.x + 1, playerState.y)) {
 				playerState.x++
 				if (!elementsAt(playerState.x + 1, playerState.y).includes('hole')) {
-					warnAboutNeedlessMove()
+					markAsNeedlessMove()
 				}
 				yield step('jump')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'pick') {
@@ -188,7 +187,7 @@ function* run(
 				yield step('pickSword')
 				removeElement(playerState.x, playerState.y, 'sword')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'up') {
@@ -196,7 +195,7 @@ function* run(
 				playerState.y--
 				yield step('goUp')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'down') {
@@ -204,7 +203,7 @@ function* run(
 				playerState.y++
 				yield step('goDown')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'hit') {
@@ -214,16 +213,16 @@ function* run(
 				} else if (isConditionFulfilled.web) {
 					removeElement(playerState.x + 1, playerState.y, 'web')
 				} else {
-					warnAboutNeedlessMove()
+					markAsNeedlessMove()
 				}
 				yield step('hit')
 			} else {
-				warnAboutNeedlessMove()
+				markAsNeedlessMove()
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'kiss') {
+			yield step('kiss') // @TODO: allow air kisses into the air with needless move penalization
 			if (elementsAt(playerState.x + 1, playerState.y).includes('frog')) {
-				yield step('kiss') // @TODO: allow air kisses into the air with needless move penalization
 				return {
 					type: 'final',
 					success: true,
@@ -232,8 +231,7 @@ function* run(
 					playerState,
 				}
 			} else {
-				warnAboutNeedlessMove()
-				yield step('invalidMove')
+				markAsNeedlessMove()
 			}
 		} else if (instruction.type === 'repeat') {
 			for (let iteration = 1; iteration <= instruction.times; iteration++) {
@@ -270,7 +268,7 @@ function* run(
 				}
 				if (value.performedNothing) {
 					// Infinite loop detected
-					warnAboutNeedlessMove()
+					markAsNeedlessMove()
 					yield step('invalidMove')
 				}
 			}
