@@ -45,7 +45,239 @@ type Step = {
 	player: PlayerState
 }
 
+function* run(
+	initialPlayerState: { x: number; y: number; hasSword: boolean },
+	foundations: Array<Array<EnvironmentFoundation>>,
+	initialElements: Elements,
+	instructions: Instructions,
+): Generator<
+	Step,
+	| ({ type: 'final' } & (
+			| { success: true; performedNeedlessMove: boolean }
+			| { success: false }
+	  ))
+	| {
+			type: 'not-done'
+			performedNothing: boolean
+			performedNeedlessMove: boolean
+	  },
+	void
+> {
+	const playerState = { ...initialPlayerState }
+	let isInsideHole = false
+	let performedNeedlessMove = false
+	let elements = [...initialElements]
+
+	const foundationAt = (x: number, y: number) =>
+		foundations.at(y)?.at(x) ?? null
+	const elementsAt = (x: number, y: number) =>
+		elements
+			.filter((element) => element.x === x && element.y === y)
+			.map(({ type }) => type)
+	const removeElement = (x: number, y: number, type: EnvironmentElement) => {
+		const index = elements.findLastIndex(
+			(element) => element.x === x && element.y === y && element.type === type,
+		)
+		elements = elements.filter((_, otherIndex) => otherIndex !== index)
+	}
+	const canStandAt = (x: number, y: number) => {
+		const elements = elementsAt(x, y)
+		const foundation = foundationAt(x, y)
+		return (
+			(foundation === 'grass' || foundation === 'floor') &&
+			!elements.includes('thicket') &&
+			!elements.includes('web')
+		)
+	}
+	const warnAboutNeedlessMove = () => {
+		// @TODO: visualize to user
+		performedNeedlessMove = true
+	}
+
+	const step = (animation: PlayerState['animation']): Step => ({
+		elements,
+		player: {
+			x: playerState.x,
+			y: playerState.y,
+			isInsideHole,
+			hasSword: playerState.hasSword,
+			animation,
+		},
+	})
+
+	for (const instruction of instructions) {
+		const isConditionFulfilled = (() => {
+			const currentElements = elementsAt(playerState.x, playerState.y)
+			const nextElements = elementsAt(playerState.x + 1, playerState.y)
+			const aboveElements = elementsAt(playerState.x, playerState.y - 1)
+			const belowElements = elementsAt(playerState.x, playerState.y + 1)
+			return {
+				frog: nextElements.includes('frog'),
+				sword: currentElements.includes('sword'),
+				leaderUp:
+					currentElements.includes('leader') &&
+					aboveElements.includes('leader'),
+				leaderDown:
+					currentElements.includes('leader') &&
+					belowElements.includes('leader'),
+				hole: nextElements.includes('hole'),
+				thicket: nextElements.includes('thicket'),
+				web: nextElements.includes('web'),
+			} satisfies { [key in ConditionValue]: boolean }
+		})()
+		console.log('')
+		console.log(instruction)
+		if (instruction.type === 'go_forward') {
+			if (elementsAt(playerState.x + 1, playerState.y).includes('hole')) {
+				playerState.x++
+				playerState.y++
+				isInsideHole = true
+				yield step('fallIntoHole')
+				return {
+					type: 'final',
+					success: false,
+				}
+			} else if (canStandAt(playerState.x + 1, playerState.y)) {
+				playerState.x++
+				yield step('goForward')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'jump') {
+			if (canStandAt(playerState.x + 1, playerState.y)) {
+				playerState.x++
+				if (!elementsAt(playerState.x + 1, playerState.y).includes('hole')) {
+					warnAboutNeedlessMove()
+				}
+				yield step('jump')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'pick') {
+			console.log(isConditionFulfilled)
+			console.log(elements)
+			console.log(elementsAt(playerState.x, playerState.y))
+			if (isConditionFulfilled.sword) {
+				playerState.hasSword = true
+				yield step('pickSword')
+				removeElement(playerState.x, playerState.y, 'sword')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'up') {
+			if (isConditionFulfilled.leaderUp) {
+				playerState.y--
+				yield step('goUp')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'down') {
+			if (isConditionFulfilled.leaderDown) {
+				playerState.y++
+				yield step('goDown')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'hit') {
+			if (playerState.hasSword) {
+				if (isConditionFulfilled.thicket) {
+					removeElement(playerState.x + 1, playerState.y, 'thicket')
+				} else if (isConditionFulfilled.web) {
+					removeElement(playerState.x + 1, playerState.y, 'web')
+				} else {
+					warnAboutNeedlessMove()
+				}
+				yield step('hit')
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'kiss') {
+			if (elementsAt(playerState.x + 1, playerState.y).includes('frog')) {
+				yield step('kiss') // @TODO: allow air kisses into the air with needless move penalization
+				return {
+					type: 'final',
+					success: true,
+					performedNeedlessMove,
+				}
+			} else {
+				warnAboutNeedlessMove()
+				yield step('invalidMove')
+			}
+		} else if (instruction.type === 'repeat') {
+			// @TODO
+		} else if (instruction.type === 'until') {
+			// @TODO
+		} else if (instruction.type === 'if') {
+			// @TODO
+		}
+	}
+
+	return {
+		type: 'not-done',
+		performedNothing: false, // @TODO
+		performedNeedlessMove,
+	}
+}
+
 export function* runEnvironment(
+	startRowIndex: number,
+	foundations: Array<Array<EnvironmentFoundation>>,
+	initialElements: Elements,
+	instructions: Instructions,
+): Generator<
+	Step,
+	| {
+			success: false
+	  }
+	| {
+			success: true
+			performedNeedlessMove: boolean
+	  },
+	void
+> {
+	const runtime = run(
+		{
+			x: 0,
+			y: startRowIndex,
+			hasSword: false,
+		},
+		foundations,
+		initialElements,
+		instructions,
+	)
+
+	while (true) {
+		const { value, done } = runtime.next()
+		if (done) {
+			console.log('done', value)
+			if (value.type === 'final') {
+				if (value.success) {
+					return {
+						success: true,
+						performedNeedlessMove: value.performedNeedlessMove,
+					}
+				} else {
+					return { success: false }
+				}
+			}
+			if (value.type === 'not-done') {
+				return { success: false }
+			}
+			return value satisfies never
+		}
+		console.log({ value })
+		yield value
+	}
+}
+
+// @TODO: remove next function in favor of the previous one
+export function* runEnvironmentX(
 	startRowIndex: number,
 	foundations: Array<Array<EnvironmentFoundation>>,
 	initialElements: Elements,
