@@ -214,7 +214,38 @@ function* run(
 		} else if (instruction.type === 'until') {
 			// @TODO
 		} else if (instruction.type === 'if') {
-			// @TODO
+			if (isConditionFulfilled[instruction.condition]) {
+				const runtime = run(
+					playerState,
+					foundations,
+					elements,
+					instruction.blocks,
+				)
+				const value = yield* runtime
+				if (value.type === 'final') {
+					if (value.success) {
+						return {
+							type: 'final',
+							success: true,
+							performedNeedlessMove:
+								value.performedNeedlessMove || performedNeedlessMove,
+						}
+					} else {
+						return {
+							type: 'final',
+							success: false,
+						}
+					}
+				} else if (value.type === 'not-done') {
+					return {
+						type: 'not-done',
+						performedNothing: false, // @TODO
+						performedNeedlessMove:
+							value.performedNeedlessMove || performedNeedlessMove,
+					}
+				}
+				return value satisfies never
+			}
 		}
 	}
 
