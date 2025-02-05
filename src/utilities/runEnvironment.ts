@@ -121,6 +121,12 @@ function* run(
 		}
 		return value
 	}
+	const notDone = (value: RunNotDone) => {
+		performedNothing = value.performedNothing && performedNothing
+		performedNeedlessMove = value.performedNeedlessMove || performedNeedlessMove
+		elements = value.elements
+		playerState = value.playerState
+	}
 
 	for (const instruction of instructions) {
 		const isConditionFulfilled = (() => {
@@ -249,11 +255,7 @@ function* run(
 				if (value.type === 'final') {
 					return final(value)
 				} else if (value.type === 'not-done') {
-					performedNothing = value.performedNothing && performedNothing
-					performedNeedlessMove =
-						value.performedNeedlessMove || performedNeedlessMove
-					elements = value.elements
-					playerState = value.playerState
+					notDone(value)
 				}
 			}
 		}
