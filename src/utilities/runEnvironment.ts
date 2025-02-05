@@ -237,9 +237,19 @@ function* run(
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'repeat') {
-			// @TODO: if repeat does nothing, it should warn as a needless move
 			for (let iteration = 1; iteration <= instruction.times; iteration++) {
-				// @TODO
+				const runtime = run(
+					playerState,
+					foundations,
+					elements,
+					instruction.blocks,
+				)
+				const value = yield* runtime
+				if (value.type === 'final') {
+					return final(value)
+				} else if (value.type === 'not-done') {
+					notDone(value)
+				}
 			}
 		} else if (instruction.type === 'until') {
 			// @TODO
