@@ -15,7 +15,7 @@ export type LevelGroup = {
 		environment: {
 			startRowIndex: number
 			elements: Array<{ x: number; y: number; type: EnvironmentElement }>
-			foundations: Array<Array<EnvironmentFoundation | undefined>>
+			foundations: Array<Array<EnvironmentFoundation>>
 		}
 	}>
 }

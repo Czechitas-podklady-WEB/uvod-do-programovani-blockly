@@ -6,12 +6,14 @@ import {
 	FormControl,
 	IconButton,
 	InputLabel,
+	Menu,
 	MenuItem,
 	Select,
 } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import clsx from 'clsx'
 import {
+	Fragment,
 	useEffect,
 	useMemo,
 	useState,
@@ -25,6 +27,7 @@ import {
 	type EnvironmentFoundation,
 } from '../data/environment'
 import { Level } from '../data/Level'
+import { levelGroups } from '../data/levelGroups'
 import { EnvironmentGrid } from './Environment'
 import styles from './LevelEditor.module.css'
 
@@ -241,6 +244,28 @@ export const LevelEditor: FunctionComponent = () => {
 			<br />
 			<br />
 			<Typography align="center">
+				<LevelPicker
+					onSelect={(level) => {
+						setFoundations(level.environment.foundations)
+						setElements(level.environment.elements)
+						setStartRowIndex(level.environment.startRowIndex)
+					}}
+				/>{' '}
+				<Button
+					onClick={() => {
+						const input = prompt('Vložte kód ve formátu JSON:')
+						if (input === null) {
+							return
+						}
+						const parsed = JSON.parse(input)
+						// @TODO: validate parsed
+						setFoundations(parsed.foundations)
+						setElements(parsed.elements)
+						setStartRowIndex(parsed.startRowIndex)
+					}}
+				>
+					Načíst kód
+				</Button>{' '}
 				<Button
 					onClick={() => {
 						navigator.clipboard.writeText(
@@ -257,24 +282,61 @@ export const LevelEditor: FunctionComponent = () => {
 					}}
 				>
 					Zkopírovat kód
-				</Button>{' '}
-				<Button
-					onClick={() => {
-						const input = prompt('Vložte kód ve formátu JSON:')
-						if (input === null) {
-							return
-						}
-						const parsed = JSON.parse(input)
-						// @TODO: validate parsed
-						setFoundations(parsed.foundations)
-						setElements(parsed.elements)
-						setStartRowIndex(parsed.startRowIndex)
-					}}
-				>
-					Načíst kód
 				</Button>
 			</Typography>
 		</Container>
+	)
+}
+
+const LevelPicker: FunctionComponent<{
+	onSelect: (level: Level) => void
+}> = ({ onSelect }) => {
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+	const open = Boolean(anchorEl)
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget)
+	}
+	const handleClose = () => {
+		setAnchorEl(null)
+	}
+
+	return (
+		<>
+			<Button
+				id="basic-button"
+				aria-controls={open ? 'basic-menu' : undefined}
+				aria-haspopup="true"
+				aria-expanded={open ? 'true' : undefined}
+				onClick={handleClick}
+			>
+				Načíst level
+			</Button>
+			<Menu
+				id="basic-menu"
+				anchorEl={anchorEl}
+				open={open}
+				onClose={handleClose}
+				MenuListProps={{
+					'aria-labelledby': 'basic-button',
+				}}
+			>
+				{levelGroups.map((group) => (
+					<Fragment key={group.key}>
+						{group.levels.map((level) => (
+							<MenuItem
+								key={level.key}
+								onClick={() => {
+									handleClose()
+									onSelect(level)
+								}}
+							>
+								{group.label}: {level.label}
+							</MenuItem>
+						))}
+					</Fragment>
+				))}
+			</Menu>
+		</>
 	)
 }
 
