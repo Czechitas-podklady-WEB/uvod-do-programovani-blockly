@@ -215,34 +215,33 @@ export const LevelEditor: FunctionComponent = () => {
 					}}
 				/>
 			</div>
-			<FormControl fullWidth>
-				<InputLabel id="tool-label">Zvolený nástroj</InputLabel>
-				<Select
-					labelId="tool-label"
-					id="tool"
-					value={tool}
-					label="Zvolený nástroj"
-					onChange={(value) => {
-						setTool(value.target.value as typeof tool)
-					}}
-				>
-					<MenuItem value="erase">Guma</MenuItem>
-					<MenuItem value="player">Princezna</MenuItem>
-					{environmentElement.map(({ value, label }) => (
-						<MenuItem key={value} value={value}>
-							{label}
-						</MenuItem>
-					))}
-					{environmentFoundations.map(({ value, label }) => (
-						<MenuItem key={value} value={value}>
-							{label}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
-			{/* @TODO: add, remove row or column, above, below, right, left */}
-			<br />
-			<br />
+			<div className={styles.toolSelect}>
+				<FormControl fullWidth>
+					<InputLabel id="tool-label">Zvolený nástroj</InputLabel>
+					<Select
+						labelId="tool-label"
+						id="tool"
+						value={tool}
+						label="Zvolený nástroj"
+						onChange={(value) => {
+							setTool(value.target.value as typeof tool)
+						}}
+					>
+						<MenuItem value="erase">Guma</MenuItem>
+						<MenuItem value="player">Princezna</MenuItem>
+						{environmentElement.map(({ value, label }) => (
+							<MenuItem key={value} value={value}>
+								{label}
+							</MenuItem>
+						))}
+						{environmentFoundations.map(({ value, label }) => (
+							<MenuItem key={value} value={value}>
+								{label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</div>
 			<Typography align="center">
 				<LevelPicker
 					onSelect={(level) => {
