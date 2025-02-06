@@ -157,10 +157,10 @@ function* run(
 			}
 		} else if (instruction.type === 'jump') {
 			if (canStandAt(playerState.x + 1, playerState.y)) {
-				playerState.x++
 				if (!elementsAt(playerState.x + 1, playerState.y).includes('hole')) {
 					markAsNeedlessMove()
 				}
+				playerState.x++
 				yield step('jump')
 			} else {
 				markAsNeedlessMove()
