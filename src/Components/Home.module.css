@@ -2,9 +2,14 @@
 	display: grid;
 }
 
+.card_media_in {
+	aspect-ratio: 16 / 9;
+	background-color: rgba(0, 0, 0, 0.048);
+}
+
 .card:not(.is_unlocked) .card_media_in {
 	filter: grayscale(100%);
-	opacity: 0.2;
+	opacity: 0.1;
 }
 
 .card_media {
