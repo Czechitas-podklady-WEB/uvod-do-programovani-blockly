@@ -820,11 +820,6 @@ export const levelGroups = [
 							y: 2,
 						},
 						{
-							type: 'thicket',
-							x: 3,
-							y: 2,
-						},
-						{
 							type: 'sword',
 							x: 1,
 							y: 2,
