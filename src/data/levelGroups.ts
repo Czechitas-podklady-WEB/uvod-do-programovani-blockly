@@ -18,14 +18,24 @@ export type GroupKey = string & Brand.Brand<'GroupKey'>
 export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
+const makeLevelKeyAndLabel = (() => {
+	let lastLevel = 0
+	return () => {
+		lastLevel++
+		return {
+			key: makeLevelKey(lastLevel.toString()),
+			label: `Level ${lastLevel}`,
+		}
+	}
+})()
 
 const developmentGroup = {
 	key: makeGroupKey('development'),
 	label: 'Testovací prostředí',
 	levels: [
 		{
-			label: 'Test',
-			key: makeLevelKey('1'),
+			label: 'Mix',
+			key: makeLevelKey('mix'),
 			description:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			image: tester,
@@ -126,8 +136,7 @@ export const levelGroups = [
 		key: makeGroupKey('basics'),
 		levels: [
 			{
-				label: 'Level 1',
-				key: makeLevelKey('1'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
 				image: story1,
@@ -146,8 +155,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 2',
-				key: makeLevelKey('2'),
+				...makeLevelKeyAndLabel(),
 				description: 'Zvládni podmínky, smyčky a práci s textem.',
 				image: story2,
 				maximumInstructionsCountForBestRating: 5,
@@ -170,8 +178,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 3',
-				key: makeLevelKey('3'),
+				...makeLevelKeyAndLabel(),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story3,
 				maximumInstructionsCountForBestRating: 9,
@@ -216,8 +223,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 4',
-				key: makeLevelKey('4'),
+				...makeLevelKeyAndLabel(),
 				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				image: story7,
 				maximumInstructionsCountForBestRating: 12,
@@ -267,8 +273,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 5',
-				key: makeLevelKey('5'),
+				...makeLevelKeyAndLabel(),
 				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				image: story10,
 				maximumInstructionsCountForBestRating: 16,
@@ -340,8 +345,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 6',
-				key: makeLevelKey('6'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story6,
@@ -407,8 +411,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 7',
-				key: makeLevelKey('7'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story2,
@@ -487,8 +490,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 8',
-				key: makeLevelKey('8'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story4,
@@ -556,8 +558,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 9',
-				key: makeLevelKey('9'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story11,
@@ -620,8 +621,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 10',
-				key: makeLevelKey('10'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				image: story1,
@@ -739,8 +739,7 @@ export const levelGroups = [
 		key: makeGroupKey('medium'),
 		levels: [
 			{
-				label: 'Level 1',
-				key: makeLevelKey('1'),
+				...makeLevelKeyAndLabel(),
 				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				image: story5,
 				maximumInstructionsCountForBestRating: 4,
@@ -758,8 +757,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 2',
-				key: makeLevelKey('2'),
+				...makeLevelKeyAndLabel(),
 				description: 'Pracuj s API, soubory a databázemi.',
 				image: story6,
 				maximumInstructionsCountForBestRating: 9,
@@ -808,8 +806,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				label: 'Level 3',
-				key: makeLevelKey('3'),
+				...makeLevelKeyAndLabel(),
 				description: 'Ponoř se do návrhu programových struktur a modulů.',
 				image: story7,
 				maximumInstructionsCountForBestRating: 13,
@@ -923,8 +920,7 @@ export const levelGroups = [
 		key: makeGroupKey('hard'),
 		levels: [
 			{
-				label: 'Level 1',
-				key: makeLevelKey('1'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				image: story9,
@@ -949,8 +945,7 @@ export const levelGroups = [
 				}, // @TODO
 			},
 			{
-				label: 'Level 2',
-				key: makeLevelKey('2'),
+				...makeLevelKeyAndLabel(),
 				description:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				image: story8,
