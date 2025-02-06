@@ -146,8 +146,6 @@ function* run(
 
 	for (const instruction of instructions) {
 		const isConditionFulfilled = getFulfilledConditions()
-		console.log('')
-		console.log(instruction)
 		if (instruction.type === 'go_forward') {
 			if (elementsAt(playerState.x + 1, playerState.y).includes('hole')) {
 				playerState.x++
@@ -179,9 +177,6 @@ function* run(
 				yield step('invalidMove')
 			}
 		} else if (instruction.type === 'pick') {
-			console.log(isConditionFulfilled)
-			console.log(elements)
-			console.log(elementsAt(playerState.x, playerState.y))
 			if (isConditionFulfilled.sword) {
 				playerState.hasSword = true
 				yield step('pickSword')
@@ -329,7 +324,6 @@ export function* runEnvironment(
 	while (true) {
 		const { value, done } = runtime.next()
 		if (done) {
-			console.log('done', value)
 			if (value.type === 'final') {
 				if (value.success) {
 					return {
@@ -345,7 +339,6 @@ export function* runEnvironment(
 			}
 			return value satisfies never
 		}
-		console.log({ value })
 		yield value
 	}
 }
