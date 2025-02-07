@@ -1,9 +1,11 @@
 import { Brand } from 'effect'
+import cpu from '../assets/rewards/cpu.jpg'
+import gpu from '../assets/rewards/gpu.jpg'
+import ram from '../assets/rewards/ram.jpg'
 import story1 from '../assets/story-1.png'
 import story10 from '../assets/story-10.png'
 import story11 from '../assets/story-11.png'
 import story2 from '../assets/story-2.png'
-import story3 from '../assets/story-3.png'
 import story4 from '../assets/story-4.png'
 import story5 from '../assets/story-5.png'
 import story6 from '../assets/story-6.png'
@@ -36,9 +38,9 @@ const developmentGroup = {
 		{
 			label: 'Mix',
 			key: makeLevelKey('mix'),
-			description:
+			instructions:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
-			image: tester,
+			reward: { image: tester, label: 'Test', description: 'Test' },
 			maximumInstructionsCountForBestRating: 0, // @TODO
 			allowedBlocks: [
 				'go_forward',
@@ -137,9 +139,14 @@ export const levelGroups = [
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
-				image: story1,
+				reward: {
+					image: cpu,
+					label: 'Procesor (CPU)',
+					description:
+						'Mozek počítače, který vykonává instrukce programů a provádí výpočty.',
+				},
 				maximumInstructionsCountForBestRating: 3,
 				allowedBlocks: ['go_forward', 'kiss'],
 				environment: {
@@ -156,8 +163,13 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Zvládni podmínky, smyčky a práci s textem.',
-				image: story2,
+				instructions: 'Zvládni podmínky, smyčky a práci s textem.',
+				reward: {
+					image: gpu,
+					label: 'Grafická karta (GPU)',
+					description:
+						'Specializovaný čip pro vykreslování grafiky a akceleraci výpočtů.',
+				},
 				maximumInstructionsCountForBestRating: 5,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 				environment: {
@@ -179,8 +191,13 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
-				image: story3,
+				instructions: 'Procvič si funkce, ladění kódu a základní algoritmy.',
+				reward: {
+					image: ram,
+					label: 'Operační paměť (RAM)',
+					description:
+						'Dočasné úložiště pro data a programy během běhu počítače.',
+				},
 				maximumInstructionsCountForBestRating: 9,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
 				environment: {
@@ -224,8 +241,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Procvič si funkce, ladění kódu a základní algoritmy.',
-				image: story7,
+				instructions: 'Procvič si funkce, ladění kódu a základní algoritmy.',
+				reward: { image: story7, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 12,
 				allowedBlocks: ['go_forward', 'pick', 'jump', 'hit', 'kiss'],
 				environment: {
@@ -274,8 +291,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Začni psát vlastní jednoduché projekty a aplikace.',
-				image: story10,
+				instructions: 'Začni psát vlastní jednoduché projekty a aplikace.',
+				reward: { image: story10, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 16,
 				allowedBlocks: ['go_forward', 'pick', 'jump', 'hit', 'kiss'],
 				environment: {
@@ -346,9 +363,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story6,
+				reward: { image: story6, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 16,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
@@ -412,9 +429,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story2,
+				reward: { image: story2, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 18,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'jump', 'kiss'],
 				environment: {
@@ -491,9 +508,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story4,
+				reward: { image: story4, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 14,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'kiss'],
 				environment: {
@@ -559,9 +576,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story11,
+				reward: { image: story11, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 12,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'up', 'down', 'kiss'],
 				environment: {
@@ -622,9 +639,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
-				image: story1,
+				reward: { image: story1, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 16,
 				allowedBlocks: ['go_forward', 'up', 'down', 'jump', 'kiss'],
 				environment: {
@@ -740,8 +757,8 @@ export const levelGroups = [
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
-				image: story5,
+				instructions: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
+				reward: { image: story5, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 4,
 				allowedBlocks: ['go_forward', 'kiss', 'repeat'],
 				environment: {
@@ -758,8 +775,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Pracuj s API, soubory a databázemi.',
-				image: story6,
+				instructions: 'Pracuj s API, soubory a databázemi.',
+				reward: { image: story6, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 9,
 				allowedBlocks: ['go_forward', 'kiss', 'pick', 'hit', 'repeat'],
 				environment: {
@@ -807,8 +824,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description: 'Ponoř se do návrhu programových struktur a modulů.',
-				image: story7,
+				instructions: 'Ponoř se do návrhu programových struktur a modulů.',
+				reward: { image: story7, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 13,
 				allowedBlocks: ['go_forward', 'pick', 'hit', 'jump', 'kiss', 'repeat'],
 				environment: {
@@ -921,9 +938,9 @@ export const levelGroups = [
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
-				image: story9,
+				reward: { image: story9, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {
@@ -946,9 +963,9 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				description:
+				instructions:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
-				image: story8,
+				reward: { image: story8, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 0, // @TODO
 				allowedBlocks: [], // @TODO
 				environment: {

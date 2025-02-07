@@ -131,7 +131,7 @@ const InHasLevel: FunctionComponent<{
 				<div className={styles.header}>
 					<div className={styles.header_label}>
 						{level.group.label}: {level.label}{' '}
-						<Rating value={rating} size="large" />
+						{isUnlocked && <Rating value={rating} size="large" />}
 					</div>
 					<div className={styles.header_navigation}>
 						<ButtonGroup>
@@ -161,18 +161,20 @@ const InHasLevel: FunctionComponent<{
 					</div>
 				</div>
 			</Typography>
-			<Typography variant="body1" gutterBottom>
-				{level.description}
-			</Typography>
 			{isUnlocked ? (
-				<Playground
-					key={initialEditorXml.key}
-					level={level}
-					onSuccess={handleSuccess}
-					initialEditorXml={initialEditorXml.xml}
-					onEditorXmlChange={handleEditorXmlChange}
-					loadBestEditorXml={loadBestEditorXml}
-				/>
+				<>
+					<Typography variant="body1" gutterBottom>
+						{level.instructions}
+					</Typography>
+					<Playground
+						key={initialEditorXml.key}
+						level={level}
+						onSuccess={handleSuccess}
+						initialEditorXml={initialEditorXml.xml}
+						onEditorXmlChange={handleEditorXmlChange}
+						loadBestEditorXml={loadBestEditorXml}
+					/>
+				</>
 			) : (
 				<div className={styles.locked}>
 					<div className={styles.locked_in}>

@@ -8,8 +8,12 @@ export type LevelGroup = {
 	levels: Array<{
 		label: string
 		key: LevelKey
-		description: string
-		image: string
+		instructions: string
+		reward: {
+			image: string
+			label: string
+			description: string
+		}
 		allowedBlocks: Array<Omit<BlockType, 'start'>>
 		maximumInstructionsCountForBestRating: number
 		environment: {

@@ -6,7 +6,6 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
-import clsx from 'clsx'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import cloud from '../assets/cloud.jpg'
@@ -59,7 +58,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 	const { rating } = useLevelRating(groupKey, level.key)
 
 	return (
-		<Card className={clsx(styles.card, isUnlocked && styles.is_unlocked)}>
+		<Card className={styles.card}>
 			{/* @ts-expect-error: Fix to vs href prop. */}
 			<CardActionArea
 				LinkComponent={NavLink}
@@ -69,7 +68,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 				<div className={styles.card_media}>
 					<CardMedia
 						component="img"
-						image={isUnlocked && rating > 0 ? level.image : cloud}
+						image={isUnlocked && rating !== 0 ? level.reward.image : cloud}
 						alt=""
 						className={styles.card_media_in}
 					/>
@@ -86,9 +85,11 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 							{isUnlocked && <Rating value={rating} />}
 						</div>
 					</Typography>
-					<Typography variant="body2" sx={{ color: 'text.secondary' }}>
-						{level.description}
-					</Typography>
+					{isUnlocked && (
+						<Typography variant="body2" sx={{ color: 'text.secondary' }}>
+							{rating === 0 ? ' ' : level.reward.label}
+						</Typography>
+					)}
 				</CardContent>
 			</CardActionArea>
 		</Card>

@@ -7,7 +7,7 @@
 	background-color: rgba(0, 0, 0, 0.048);
 }
 
-.card:not(.is_unlocked) .card_media_in {
+.card:has(.card_lock) .card_media_in {
 	filter: grayscale(100%);
 	opacity: 0.1;
 }
@@ -16,7 +16,8 @@
 	position: relative;
 }
 
-.card_lock {
+.card_lock,
+.card_mystery {
 	position: absolute;
 	inset: 0;
 	display: grid;
