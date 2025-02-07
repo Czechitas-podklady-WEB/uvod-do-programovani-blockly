@@ -25,7 +25,7 @@ import styles from './Level.module.css'
 import { NotFound } from './NotFound'
 import { Playground } from './Playground'
 import { Rating } from './Rating'
-import { SuccessDialog } from './SuccessDialog'
+import { SuccessDialog, type SuccessDialogDetails } from './SuccessDialog'
 
 export const Level: FunctionComponent = () => {
 	const { group: groupKey, level: levelKey } = useParams()
@@ -61,10 +61,8 @@ const InHasLevel: FunctionComponent<{
 }> = ({ level }) => {
 	const isUnlocked = useIsLevelUnlocked(level.group.key, level.key)
 	const { createOrUpdate } = useEvolu<Database>()
-	const [successDialog, setSuccessDialog] = useState<null | {
-		rating: 1 | 2 | 3
-		nextLevelLink: LevelLink | null
-	}>(null)
+	const [successDialog, setSuccessDialog] =
+		useState<null | SuccessDialogDetails>(null)
 	const { rating, xml: bestEditorXml } = useLevelRating(
 		level.group.key,
 		level.key,
@@ -104,9 +102,17 @@ const InHasLevel: FunctionComponent<{
 				nextLevelLink: level.nextLevel
 					? levelLink(level.nextLevel.group.key, level.nextLevel.key)
 					: null,
+				reward: level.reward,
 			})
 		},
-		[createOrUpdate, level.group.key, level.key, level.nextLevel, rating],
+		[
+			createOrUpdate,
+			level.group.key,
+			level.key,
+			level.nextLevel,
+			level.reward,
+			rating,
+		],
 	)
 
 	const handleEditorXmlChange = useCallback(

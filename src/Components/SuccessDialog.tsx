@@ -5,22 +5,26 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	Typography,
 } from '@mui/material'
 import { useRef, type FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
+import type { Level } from '../data/Level'
 import { LevelLink } from '../utilities/levelLink'
 import { Rating } from './Rating'
+import styles from './SuccessDialog.module.css'
 
-type Details = {
+export type SuccessDialogDetails = {
 	rating: 1 | 2 | 3
 	nextLevelLink: LevelLink | null
+	reward: Level['reward']
 }
 
 export const SuccessDialog: FunctionComponent<{
-	details: Details | null
+	details: SuccessDialogDetails | null
 	onClose: () => void
 }> = ({ details, onClose }) => {
-	const notNullDetailsRef = useRef<null | Details>(null)
+	const notNullDetailsRef = useRef<null | SuccessDialogDetails>(null)
 	notNullDetailsRef.current = details ?? notNullDetailsRef.current
 
 	return (
@@ -33,19 +37,29 @@ export const SuccessDialog: FunctionComponent<{
 }
 
 const In: FunctionComponent<
-	Details & {
+	SuccessDialogDetails & {
 		onClose: () => void
 	}
-> = ({ rating, nextLevelLink, onClose }) => {
+> = ({ rating, reward, nextLevelLink, onClose }) => {
 	return (
 		<>
 			<DialogTitle>Hurá!</DialogTitle>
-			<DialogContent>
+			<DialogContent className={styles.content}>
 				<DialogContentText align="center" gutterBottom>
-					Máš to správně. Skvělá práce. Jen tak dál.
+					Máš to správně. Skvělá práce. Jen tak dál. Na tvé pouti se ti podařilo
+					získat od žabáka další součástku.
 				</DialogContentText>
-				<DialogContentText align="center">
+				<DialogContentText align="center" gutterBottom>
 					<Rating value={rating} size="large" />
+				</DialogContentText>
+				<DialogContentText align="center" gutterBottom>
+					<div className={styles.reward}>
+						<Typography variant="h6" gutterBottom>
+							{reward.label}
+						</Typography>
+						<img src={reward.image} className={styles.reward_image} />
+						<Typography variant="body2">{reward.description}</Typography>
+					</div>
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

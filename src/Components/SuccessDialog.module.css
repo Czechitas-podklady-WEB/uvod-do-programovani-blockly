@@ -1,0 +1,16 @@
+.content {
+	width: 100%;
+	max-width: 30rem;
+}
+
+.reward {
+	margin-top: 1rem;
+}
+.reward_image {
+	width: 100%;
+	max-width: 20rem;
+	display: block;
+	margin-inline: auto;
+	height: auto;
+	margin-bottom: 0.5rem;
+}

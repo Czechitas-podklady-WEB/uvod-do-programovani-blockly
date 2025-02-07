@@ -145,7 +145,7 @@ export const levelGroups = [
 					image: cpu,
 					label: 'Procesor (CPU)',
 					description:
-						'Mozek počítače, který vykonává instrukce programů a provádí výpočty.',
+						'Procesor je mozek počítače, který vykonává instrukce programů a provádí výpočty.',
 				},
 				maximumInstructionsCountForBestRating: 3,
 				allowedBlocks: ['go_forward', 'kiss'],
@@ -168,7 +168,7 @@ export const levelGroups = [
 					image: gpu,
 					label: 'Grafická karta (GPU)',
 					description:
-						'Specializovaný čip pro vykreslování grafiky a akceleraci výpočtů.',
+						'Grafická karta je specializovaný čip pro vykreslování grafiky a akceleraci výpočtů.',
 				},
 				maximumInstructionsCountForBestRating: 5,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
@@ -196,7 +196,7 @@ export const levelGroups = [
 					image: ram,
 					label: 'Operační paměť (RAM)',
 					description:
-						'Dočasné úložiště pro data a programy během běhu počítače.',
+						'Operační paměť je dočasné úložiště pro data a programy během běhu počítače.',
 				},
 				maximumInstructionsCountForBestRating: 9,
 				allowedBlocks: ['go_forward', 'jump', 'kiss'],
