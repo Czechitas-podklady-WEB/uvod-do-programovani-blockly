@@ -46,8 +46,8 @@ const In: FunctionComponent<
 			<DialogTitle>Hurá!</DialogTitle>
 			<DialogContent className={styles.content}>
 				<DialogContentText align="center" gutterBottom>
-					Máš to správně. Skvělá práce. Jen tak dál. Na tvé pouti se ti podařilo
-					získat od žabáka další součástku.
+					Ta mlaskla. Skvělá práce. Jen tak dál. Na tvé pouti se ti podařilo
+					získat od žabáka novou součástku.
 				</DialogContentText>
 				<DialogContentText align="center" gutterBottom>
 					<Rating value={rating} size="large" />

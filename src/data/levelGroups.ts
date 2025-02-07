@@ -140,7 +140,7 @@ export const levelGroups = [
 			{
 				...makeLevelKeyAndLabel(),
 				instructions:
-					'Nauč se základy syntaxe, proměnných a jednoduchých výpočtů.',
+					'Já jsem kouzelná žába. Kvák. Kvák. Za každý polibek ti pomohu dostat se blíže k tvému snu dostat se do IT.',
 				reward: {
 					image: cpu,
 					label: 'Procesor (CPU)',
@@ -163,7 +163,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				instructions: 'Zvládni podmínky, smyčky a práci s textem.',
+				instructions:
+					'Nebudeš to mít lehké. Pozor na překážky. Hlavně nespadni do díry.',
 				reward: {
 					image: gpu,
 					label: 'Grafická karta (GPU)',
@@ -191,7 +192,8 @@ export const levelGroups = [
 			},
 			{
 				...makeLevelKeyAndLabel(),
-				instructions: 'Procvič si funkce, ladění kódu a základní algoritmy.',
+				instructions:
+					'Nám tu snad řádí nějaký krtek. Já už mám naskákáno dost. Kvák. Teď je řada na tobě.',
 				reward: {
 					image: ram,
 					label: 'Operační paměť (RAM)',
