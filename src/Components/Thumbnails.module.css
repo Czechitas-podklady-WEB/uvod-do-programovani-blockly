@@ -1,7 +1,9 @@
 .wrapper {
+	--target-width: 568;
+	--target-height: 320;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, 568px);
-	grid-auto-rows: 320px;
+	grid-template-columns: repeat(auto-fill, calc(var(--target-width) * 1px));
+	grid-auto-rows: calc(var(--target-height) * 1px);
 	gap: 1px;
 }
 
@@ -10,5 +12,10 @@
 }
 
 .level_in {
-	/* @TODO: scale to cover whole parent */
+	transform: scale(
+		max(
+			var(--target-width) / var(--width),
+			var(--target-height) / var(--height)
+		)
+	);
 }

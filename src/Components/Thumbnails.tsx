@@ -1,4 +1,5 @@
-import { Fragment, FunctionComponent } from 'react'
+import { Fragment, FunctionComponent, type CSSProperties } from 'react'
+import { useMeasure } from 'react-use'
 import type { Level } from '../data/Level'
 import { levelGroups } from '../data/levelGroups'
 import { Environment } from './Environment'
@@ -19,9 +20,20 @@ export const Thumbnails: FunctionComponent = () => {
 }
 
 const Level: FunctionComponent<{ level: Level }> = ({ level }) => {
+	const [refIn, { width, height }] = useMeasure<HTMLDivElement>()
+
 	return (
-		<div className={styles.level} data-level-key={level.key}>
-			<div className={styles.level_in}>
+		<div
+			className={styles.level}
+			data-level-key={level.key}
+			style={
+				{
+					'--width': `${width}`,
+					'--height': `${height}`,
+				} as CSSProperties
+			}
+		>
+			<div className={styles.level_in} ref={refIn}>
 				<Environment
 					environment={level.environment}
 					instructions={null}
