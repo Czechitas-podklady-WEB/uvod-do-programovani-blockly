@@ -2,6 +2,16 @@
 	display: grid;
 }
 
+.card_media {
+	overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.card_media_in {
+		transition: scale 0.2s;
+	}
+}
+
 .card_media_in {
 	aspect-ratio: 16 / 9;
 	background-color: rgba(0, 0, 0, 0.048);
@@ -10,6 +20,11 @@
 .card:has(.card_lock) .card_media_in {
 	filter: grayscale(100%);
 	opacity: 0.1;
+}
+
+a:hover .card_media_in,
+a:focus-visible .card_media_in {
+	scale: 1.03;
 }
 
 .card_media {
