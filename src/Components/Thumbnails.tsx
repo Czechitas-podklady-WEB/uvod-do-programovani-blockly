@@ -44,6 +44,7 @@ const Level: FunctionComponent<{ level: Level }> = ({ level }) => {
 					instructions={null}
 					onFail={undefined}
 					onSuccess={undefined}
+					thumbnail
 				/>
 			</div>
 		</div>

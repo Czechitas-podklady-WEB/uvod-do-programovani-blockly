@@ -56,6 +56,7 @@ export const Environment: FunctionComponent<{
 		  ) => void)
 		| undefined
 	onFail: (() => void) | undefined
+	thumbnail?: boolean
 }> = (props) => {
 	const lastInstructionsRef = useRef({
 		key: 0,
@@ -76,6 +77,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	instructions,
 	onSuccess,
 	onFail,
+	thumbnail = false,
 }) => {
 	const size = useMemo(
 		() => calculateEnvironmentSize(environment),
@@ -183,6 +185,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 					},
 				}))
 			}}
+			thumbnail={thumbnail}
 		/>
 	)
 }
@@ -198,7 +201,15 @@ export const EnvironmentGrid: FunctionComponent<{
 	player: PlayerState
 	onAnimationEnd?: () => void
 	onSegmentClick?: (x: number, y: number) => void
-}> = ({ foundations, elements, player, onAnimationEnd, onSegmentClick }) => {
+	thumbnail: boolean
+}> = ({
+	foundations,
+	elements,
+	player,
+	onAnimationEnd,
+	onSegmentClick,
+	thumbnail,
+}) => {
 	const size = useMemo(
 		() => ({
 			width: Math.max(...foundations.map((row) => row.length)),
@@ -281,7 +292,7 @@ export const EnvironmentGrid: FunctionComponent<{
 
 	return (
 		<div
-			className={styles.wrapper}
+			className={clsx(styles.wrapper, thumbnail && styles.is_thumbnail)}
 			style={
 				{
 					'--Environment-size-width': size.width,

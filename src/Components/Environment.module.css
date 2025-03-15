@@ -72,6 +72,11 @@
 	opacity: 0;
 }
 
+.is_thumbnail .player,
+.is_thumbnail .element.is_type_frog {
+	display: none;
+}
+
 @keyframes goForward {
 	0% {
 		transform: translateX(-100%);
