@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography'
 import { FunctionComponent } from 'react'
 import { NavLink } from 'react-router'
 import cloud from '../assets/cloud.jpg'
-import mystery from '../assets/rewards/mystery.jpg'
 import { Level } from '../data/Level'
 import { levelGroups, type GroupKey } from '../data/levelGroups'
 import { levelLink } from '../utilities/levelLink'
@@ -69,9 +68,7 @@ const Tile: FunctionComponent<{ level: Level; groupKey: GroupKey }> = ({
 				<div className={styles.card_media}>
 					<CardMedia
 						component="img"
-						image={
-							isUnlocked ? (rating === 0 ? mystery : level.reward.image) : cloud
-						}
+						image={isUnlocked ? level.thumbnailImage : cloud}
 						alt=""
 						className={styles.card_media_in}
 					/>

@@ -8,6 +8,7 @@ export type LevelGroup = {
 	levels: Array<{
 		label: string
 		key: LevelKey
+		thumbnailImage: string
 		instructions: string
 		reward: {
 			image: string

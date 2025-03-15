@@ -1,6 +1,7 @@
 import { Brand } from 'effect'
 import cpu from '../assets/rewards/cpu.jpg'
 import gpu from '../assets/rewards/gpu.jpg'
+import mystery from '../assets/rewards/mystery.jpg'
 import ram from '../assets/rewards/ram.jpg'
 import story1 from '../assets/story-1.png'
 import story10 from '../assets/story-10.png'
@@ -13,6 +14,7 @@ import story7 from '../assets/story-7.png'
 import story8 from '../assets/story-8.png'
 import story9 from '../assets/story-9.png'
 import tester from '../assets/tester.png'
+import { thumbnails } from '../assets/thumbnails/thumbnails'
 import { isDevelopmentMode } from '../utilities/isDevelopmentMode'
 import type { LevelGroup } from './Level'
 
@@ -20,13 +22,16 @@ export type GroupKey = string & Brand.Brand<'GroupKey'>
 export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
-const makeLevelKeyAndLabel = (() => {
-	let lastLevel = 0
+const makeLevelKeyLabelThumbnail = (() => {
+	let lastLevel = -1
 	return () => {
 		lastLevel++
+		const key = makeLevelKey(lastLevel.toString())
+		const thumbnailImage = thumbnails.get(key) ?? mystery
 		return {
-			key: makeLevelKey(lastLevel.toString()),
+			key,
 			label: `Level ${lastLevel}`,
+			thumbnailImage,
 		}
 	}
 })()
@@ -36,8 +41,7 @@ const developmentGroup = {
 	label: 'Testovací prostředí',
 	levels: [
 		{
-			label: 'Mix',
-			key: makeLevelKey('mix'),
+			...makeLevelKeyLabelThumbnail(),
 			instructions:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			reward: { image: tester, label: 'Test', description: 'Test' },
@@ -138,7 +142,7 @@ export const levelGroups = [
 		key: makeGroupKey('zakladni'),
 		levels: [
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Já jsem kouzelná žába. Kvák. Kvák. Za každý polibek ti pomohu dostat se blíže k tvému snu dostat se do IT.',
 				reward: {
@@ -162,7 +166,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Nebudeš to mít lehké. Pozor na překážky. Hlavně nespadni do díry.',
 				reward: {
@@ -191,7 +195,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Nám tu snad řádí nějaký krtek. Já už mám naskákáno dost. Kvák. Teď je řada na tobě.',
 				reward: {
@@ -242,7 +246,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions: 'Procvič si funkce, ladění kódu a základní algoritmy.',
 				reward: { image: story7, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 12,
@@ -292,7 +296,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions: 'Začni psát vlastní jednoduché projekty a aplikace.',
 				reward: { image: story10, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 16,
@@ -364,7 +368,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				reward: { image: story6, label: '@TODO', description: '@TODO' },
@@ -430,7 +434,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				reward: { image: story2, label: '@TODO', description: '@TODO' },
@@ -509,7 +513,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				reward: { image: story4, label: '@TODO', description: '@TODO' },
@@ -577,7 +581,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				reward: { image: story11, label: '@TODO', description: '@TODO' },
@@ -640,7 +644,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Odstraň chyby jako profesionál pomocí nástrojů pro ladění.',
 				reward: { image: story1, label: '@TODO', description: '@TODO' },
@@ -758,7 +762,7 @@ export const levelGroups = [
 		key: makeGroupKey('mirne-pokrocile'),
 		levels: [
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions: 'Rozvíjej schopnost řešit složité problémy algoritmy.',
 				reward: { image: story5, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 4,
@@ -776,7 +780,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions: 'Pracuj s API, soubory a databázemi.',
 				reward: { image: story6, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 9,
@@ -825,7 +829,7 @@ export const levelGroups = [
 				},
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions: 'Ponoř se do návrhu programových struktur a modulů.',
 				reward: { image: story7, label: '@TODO', description: '@TODO' },
 				maximumInstructionsCountForBestRating: 13,
@@ -939,7 +943,7 @@ export const levelGroups = [
 		key: makeGroupKey('pokrocile'),
 		levels: [
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				reward: { image: story9, label: '@TODO', description: '@TODO' },
@@ -964,7 +968,7 @@ export const levelGroups = [
 				}, // @TODO
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				reward: { image: story8, label: '@TODO', description: '@TODO' },
@@ -996,7 +1000,7 @@ export const levelGroups = [
 		key: makeGroupKey('tezke'),
 		levels: [
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				reward: { image: story9, label: '@TODO', description: '@TODO' },
@@ -1021,7 +1025,7 @@ export const levelGroups = [
 				}, // @TODO
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				reward: { image: story8, label: '@TODO', description: '@TODO' },
@@ -1053,7 +1057,7 @@ export const levelGroups = [
 		key: makeGroupKey('velmi-tezke'),
 		levels: [
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
 				reward: { image: story9, label: '@TODO', description: '@TODO' },
@@ -1078,7 +1082,7 @@ export const levelGroups = [
 				}, // @TODO
 			},
 			{
-				...makeLevelKeyAndLabel(),
+				...makeLevelKeyLabelThumbnail(),
 				instructions:
 					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
 				reward: { image: story8, label: '@TODO', description: '@TODO' },
