@@ -1,9 +1,10 @@
 import { cast, useQuery } from '@evolu/react'
 import { useMemo } from 'react'
-import { GroupKey, LevelKey } from '../data/levelGroups'
+import { GroupKey, LevelKey, developmentGroup } from '../data/levelGroups'
 import { evolu } from '../database/Database'
 import { getLevelIdentifier } from './getLevelIdentifier'
 import { getPreviousLevel } from './getPreviousLevel'
+import { isDevelopmentMode } from './isDevelopmentMode'
 
 export const useIsLevelUnlocked = (groupKey: GroupKey, levelKey: LevelKey) => {
 	const previousLevelIdentifier = useMemo(() => {
@@ -30,6 +31,12 @@ export const useIsLevelUnlocked = (groupKey: GroupKey, levelKey: LevelKey) => {
 
 	return (
 		previousLevelIdentifier === null ||
+		(isDevelopmentMode &&
+			developmentGroup.levels.some(
+				(level) =>
+					getLevelIdentifier(developmentGroup.key, level.key) ===
+					previousLevelIdentifier,
+			)) ||
 		(typeof row?.rating === 'number' && row.rating >= 0)
 	)
 }

@@ -36,7 +36,7 @@ const makeLevelKeyLabelThumbnail = (() => {
 	}
 })()
 
-const developmentGroup = {
+export const developmentGroup = {
 	key: makeGroupKey('development'),
 	label: 'Testovací prostředí',
 	levels: [
