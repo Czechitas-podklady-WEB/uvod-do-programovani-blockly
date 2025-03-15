@@ -20,7 +20,7 @@ export const Thumbnails: FunctionComponent = () => {
 
 const Level: FunctionComponent<{ level: Level }> = ({ level }) => {
 	return (
-		<div className={styles.level}>
+		<div className={styles.level} data-level-key={level.key}>
 			<div className={styles.level_in}>
 				<Environment
 					environment={level.environment}
