@@ -47,12 +47,14 @@ import styles from './Environment.module.css'
 export const Environment: FunctionComponent<{
 	environment: Level['environment']
 	instructions: null | { instructions: Instructions; xml: EditorXml }
-	onSuccess: (
-		xml: EditorXml,
-		performedNeedlessMove: boolean,
-		instructionsCount: number,
-	) => void
-	onFail: () => void
+	onSuccess:
+		| ((
+				xml: EditorXml,
+				performedNeedlessMove: boolean,
+				instructionsCount: number,
+		  ) => void)
+		| undefined
+	onFail: (() => void) | undefined
 }> = (props) => {
 	const lastInstructionsRef = useRef({
 		key: 0,
@@ -143,13 +145,13 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 				const { value, done } = runtime.next()
 				if (done) {
 					if (value.success) {
-						onSuccess(
+						onSuccess?.(
 							instructions.xml,
 							value.performedNeedlessMove,
 							countInstructions(instructions.instructions),
 						)
 					} else {
-						onFail()
+						onFail?.()
 					}
 					break
 				}
