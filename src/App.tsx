@@ -18,6 +18,7 @@ import { Level } from './Components/Level'
 import { LevelEditor } from './Components/LevelEditor'
 import { NotFound } from './Components/NotFound'
 import { Reset } from './Components/Reset'
+import { Thumbnails } from './Components/Thumbnails'
 import { Unlock } from './Components/Unlock'
 import './index.css'
 import { isDevelopmentMode } from './utilities/isDevelopmentMode'
@@ -47,6 +48,7 @@ export const App: FunctionComponent = () => {
 										<>
 											<Route path="/unlock" element={<Unlock />} />
 											<Route path="/editor" element={<LevelEditor />} />
+											<Route path="/thumbnails" element={<Thumbnails />} />
 										</>
 									)}
 									<Route path={levelLinkPattern} element={<Level />} />
