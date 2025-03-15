@@ -135,7 +135,7 @@ export const levelGroups = [
 	...(isDevelopmentMode ? [developmentGroup] : []),
 	{
 		label: 'Základní',
-		key: makeGroupKey('basics'),
+		key: makeGroupKey('zakladni'),
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
@@ -754,8 +754,8 @@ export const levelGroups = [
 		],
 	},
 	{
-		label: 'Středně obtížné',
-		key: makeGroupKey('medium'),
+		label: 'Mírně pokročilé',
+		key: makeGroupKey('mirne-pokrocile'),
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
@@ -935,8 +935,122 @@ export const levelGroups = [
 		],
 	},
 	{
-		label: 'Nejtěžší',
-		key: makeGroupKey('hard'),
+		label: 'Pokročilé',
+		key: makeGroupKey('pokrocile'),
+		levels: [
+			{
+				...makeLevelKeyAndLabel(),
+				instructions:
+					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
+				reward: { image: story9, label: '@TODO', description: '@TODO' },
+				maximumInstructionsCountForBestRating: 0, // @TODO
+				allowedBlocks: [], // @TODO
+				environment: {
+					startRowIndex: 0,
+					elements: [],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				}, // @TODO
+			},
+			{
+				...makeLevelKeyAndLabel(),
+				instructions:
+					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
+				reward: { image: story8, label: '@TODO', description: '@TODO' },
+				maximumInstructionsCountForBestRating: 0, // @TODO
+				allowedBlocks: [], // @TODO
+				environment: {
+					startRowIndex: 0,
+					elements: [],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				}, // @TODO
+			},
+		],
+	},
+	{
+		label: 'Těžké',
+		key: makeGroupKey('tezke'),
+		levels: [
+			{
+				...makeLevelKeyAndLabel(),
+				instructions:
+					'Zdokonal své znalosti optimalizace, testování a týmové spolupráce.',
+				reward: { image: story9, label: '@TODO', description: '@TODO' },
+				maximumInstructionsCountForBestRating: 0, // @TODO
+				allowedBlocks: [], // @TODO
+				environment: {
+					startRowIndex: 0,
+					elements: [],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				}, // @TODO
+			},
+			{
+				...makeLevelKeyAndLabel(),
+				instructions:
+					'Ovládni pokročilé koncepty, jako jsou paralelní zpracování, optimalizace výkonu a návrhové vzory na úrovni mistrů.',
+				reward: { image: story8, label: '@TODO', description: '@TODO' },
+				maximumInstructionsCountForBestRating: 0, // @TODO
+				allowedBlocks: [], // @TODO
+				environment: {
+					startRowIndex: 0,
+					elements: [],
+					foundations: [
+						[
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+							'grass',
+						],
+					],
+				}, // @TODO
+			},
+		],
+	},
+	{
+		label: 'Velmi těžké',
+		key: makeGroupKey('velmi-tezke'),
 		levels: [
 			{
 				...makeLevelKeyAndLabel(),
