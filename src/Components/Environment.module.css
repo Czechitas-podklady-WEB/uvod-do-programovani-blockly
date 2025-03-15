@@ -1,5 +1,4 @@
 .wrapper {
-	margin-block: 2rem;
 	display: grid;
 	max-width: calc(8rem * var(--Environment-size-width));
 	margin-inline: auto;

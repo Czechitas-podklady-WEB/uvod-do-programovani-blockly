@@ -9,6 +9,8 @@
 
 .level {
 	overflow: hidden;
+	display: grid;
+	align-content: center;
 }
 
 .level_in {

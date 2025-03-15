@@ -32,6 +32,7 @@ import type {
 	EnvironmentFoundation,
 } from '../data/environment'
 import { Level } from '../data/Level'
+import { calculateEnvironmentSize } from '../utilities/calculateEnvironmentSize'
 import { countInstructions } from '../utilities/countInstructions'
 import { Instructions } from '../utilities/decodeCodeInstructions'
 import { delay } from '../utilities/delay'
@@ -77,17 +78,8 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	onFail,
 }) => {
 	const size = useMemo(
-		() => ({
-			width: Math.max(
-				...environment.foundations.map((row) => row.length),
-				...environment.elements.map(({ x }) => x + 1),
-			),
-			height: Math.max(
-				environment.foundations.length,
-				...environment.elements.map(({ y }) => y + 1),
-			),
-		}),
-		[environment.foundations, environment.elements],
+		() => calculateEnvironmentSize(environment),
+		[environment],
 	)
 	const completeFoundations = useMemo<
 		Array<Array<EnvironmentFoundation>>
