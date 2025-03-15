@@ -16,8 +16,8 @@
 .level_in {
 	transform: scale(
 		max(
-			var(--target-width) / var(--width),
-			var(--target-height) / var(--height)
+			var(--target-width) / (var(--width) - 10),
+			var(--target-height) / (var(--height) - 10)
 		)
-	);
+	); /* -10 is subtracted to overcome rounding errors */
 }
