@@ -35,7 +35,7 @@ export const useIsLevelUnlocked = (groupKey: GroupKey, levelKey: LevelKey) => {
 			developmentGroup.levels.some(
 				(level) =>
 					getLevelIdentifier(developmentGroup.key, level.key) ===
-					previousLevelIdentifier,
+						previousLevelIdentifier || level.key === levelKey,
 			)) ||
 		(typeof row?.rating === 'number' && row.rating >= 0)
 	)
