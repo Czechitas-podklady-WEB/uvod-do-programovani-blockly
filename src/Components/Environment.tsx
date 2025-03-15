@@ -77,7 +77,7 @@ const In: FunctionComponent<ComponentProps<typeof Environment>> = ({
 	instructions,
 	onSuccess,
 	onFail,
-	thumbnail = false,
+	thumbnail,
 }) => {
 	const size = useMemo(
 		() => calculateEnvironmentSize(environment),
@@ -201,14 +201,14 @@ export const EnvironmentGrid: FunctionComponent<{
 	player: PlayerState
 	onAnimationEnd?: () => void
 	onSegmentClick?: (x: number, y: number) => void
-	thumbnail: boolean
+	thumbnail?: boolean
 }> = ({
 	foundations,
 	elements,
 	player,
 	onAnimationEnd,
 	onSegmentClick,
-	thumbnail,
+	thumbnail = false,
 }) => {
 	const size = useMemo(
 		() => ({
