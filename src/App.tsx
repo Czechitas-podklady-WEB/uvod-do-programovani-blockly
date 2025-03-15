@@ -20,6 +20,7 @@ import { NotFound } from './Components/NotFound'
 import { Reset } from './Components/Reset'
 import { Unlock } from './Components/Unlock'
 import './index.css'
+import { isDevelopmentMode } from './utilities/isDevelopmentMode'
 import { levelLinkPattern } from './utilities/levelLink'
 
 const theme = createTheme({
@@ -42,8 +43,12 @@ export const App: FunctionComponent = () => {
 								<Routes>
 									<Route index element={<Home />} />
 									<Route path="/reset" element={<Reset />} />
-									<Route path="/unlock" element={<Unlock />} />
-									<Route path="/editor" element={<LevelEditor />} />
+									{isDevelopmentMode && (
+										<>
+											<Route path="/unlock" element={<Unlock />} />
+											<Route path="/editor" element={<LevelEditor />} />
+										</>
+									)}
 									<Route path={levelLinkPattern} element={<Level />} />
 									<Route path="*" element={<NotFound />} />
 								</Routes>
