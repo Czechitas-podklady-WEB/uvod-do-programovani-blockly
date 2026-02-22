@@ -18,6 +18,7 @@ import { Level } from './Components/Level'
 import { LevelEditor } from './Components/LevelEditor'
 import { NotFound } from './Components/NotFound'
 import { Reset } from './Components/Reset'
+import { ScrollToTop } from './Components/ScrollToTop'
 import { Thumbnails } from './Components/Thumbnails'
 import { Unlock } from './Components/Unlock'
 import './index.css'
@@ -36,6 +37,7 @@ export const App: FunctionComponent = () => {
 		<SharedLoadingIndicatorContextProvider>
 			<LoadingSuspense>
 				<Router>
+					<ScrollToTop />
 					<ThemeProvider theme={theme} noSsr>
 						<CssBaseline enableColorScheme />
 						<DatabaseProvider>
