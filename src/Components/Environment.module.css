@@ -71,7 +71,8 @@
 }
 
 .is_thumbnail .player,
-.is_thumbnail .element.is_type_frog {
+.is_thumbnail .element.is_type_frog,
+.is_thumbnail .foundation::after {
 	display: none;
 }
 
