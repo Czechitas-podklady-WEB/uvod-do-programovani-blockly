@@ -12,6 +12,7 @@ import {
 	SharedProgressLoadingIndicator,
 } from 'shared-loading-indicator'
 import { DatabaseProvider } from './Components/DatabaseProvider'
+import { Group } from './Components/Group'
 import { Home } from './Components/Home'
 import { Layout } from './Components/Layout'
 import { Level } from './Components/Level'
@@ -23,7 +24,7 @@ import { Thumbnails } from './Components/Thumbnails'
 import { Unlock } from './Components/Unlock'
 import './index.css'
 import { isDevelopmentMode } from './utilities/isDevelopmentMode'
-import { levelLinkPattern } from './utilities/levelLink'
+import { groupLinkPattern, levelLinkPattern } from './utilities/levelLink'
 
 const theme = createTheme({
 	colorSchemes: {
@@ -61,6 +62,7 @@ export const App: FunctionComponent = () => {
 									{isDevelopmentMode && (
 										<Route path="/unlock" element={<Unlock />} />
 									)}
+									<Route path={groupLinkPattern} element={<Group />} />
 									<Route path={levelLinkPattern} element={<Level />} />
 									<Route path="*" element={<NotFound />} />
 								</Route>
