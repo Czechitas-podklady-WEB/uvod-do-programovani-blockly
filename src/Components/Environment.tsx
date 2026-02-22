@@ -17,11 +17,8 @@ import grass from '../assets/environment/grass.png'
 import leaderBottom from '../assets/environment/leader-bottom.png'
 import leaderMiddle from '../assets/environment/leader-middle.png'
 import leaderTop from '../assets/environment/leader-top.png'
-import princess from '../assets/environment/princess.png'
 import sky from '../assets/environment/sky.png'
 import soil from '../assets/environment/soil.png'
-import sword from '../assets/environment/sword.png'
-import swordPicked from '../assets/environment/swordPicked.png'
 import thicket1 from '../assets/environment/thicket-1.png'
 import thicket2 from '../assets/environment/thicket-2.png'
 import thicket3 from '../assets/environment/thicket-3.png'
@@ -44,6 +41,8 @@ import {
 	runEnvironment,
 } from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
+import { Princess } from './Environment/Princess'
+import { Sword } from './Environment/Sword'
 
 export const Environment: FunctionComponent<{
 	environment: Level['environment']
@@ -350,18 +349,19 @@ export const EnvironmentGrid: FunctionComponent<{
 						} as CSSProperties
 					}
 				>
-					<img
-						src={
-							element.type === 'frog'
-								? frog
-								: element.type === 'hole'
-									? element.foundation === 'grass'
-										? grassHole
-										: element.foundation === 'floor'
-											? floorHole
-											: (element.foundation satisfies never)
-									: element.type === 'sword'
-										? sword
+					{element.type === 'sword' ? (
+						<Sword />
+					) : (
+						<img
+							src={
+								element.type === 'frog'
+									? frog
+									: element.type === 'hole'
+										? element.foundation === 'grass'
+											? grassHole
+											: element.foundation === 'floor'
+												? floorHole
+												: (element.foundation satisfies never)
 										: element.type === 'thicket'
 											? element.count === 1
 												? thicket1
@@ -379,8 +379,9 @@ export const EnvironmentGrid: FunctionComponent<{
 												: element.type === 'web'
 													? web
 													: (element satisfies never)
-						}
-					/>
+							}
+						/>
+					)}
 				</div>
 			))}
 			{onSegmentClick &&
@@ -418,10 +419,7 @@ export const EnvironmentGrid: FunctionComponent<{
 				}
 				onAnimationEnd={onAnimationEnd}
 			>
-				<img src={princess} className={styles.player} />
-				{player.hasSword && (
-					<img src={swordPicked} className={styles.swordPicked} />
-				)}
+				<Princess hasSword={player.hasSword} />
 			</div>
 		</div>
 	)

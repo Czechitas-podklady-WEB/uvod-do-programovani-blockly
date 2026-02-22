@@ -39,10 +39,8 @@
 .foundation.is_edge_right::after {
 	border-right: none;
 }
-.player img,
-.swordPicked img,
 .foundation img,
-.element img {
+.element > img {
 	width: 100%;
 	object-fit: cover;
 	position: absolute;
@@ -199,10 +197,6 @@
 }
 .is_animating_invalidMove {
 	animation-name: invalidMove;
-}
-
-.swordPicked {
-	z-index: 3;
 }
 
 .clickable {
