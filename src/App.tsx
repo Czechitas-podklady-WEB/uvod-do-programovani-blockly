@@ -5,7 +5,7 @@ import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { FunctionComponent } from 'react'
-import { Route, HashRouter as Router, Routes } from 'react-router'
+import { Outlet, Route, HashRouter as Router, Routes } from 'react-router'
 import {
 	LoadingSuspense,
 	SharedLoadingIndicatorContextProvider,
@@ -40,24 +40,32 @@ export const App: FunctionComponent = () => {
 					<ScrollToTop />
 					<ThemeProvider theme={theme} noSsr>
 						<CssBaseline enableColorScheme />
-						<DatabaseProvider>
-							<Layout>
-								<SharedProgressLoadingIndicator />
-								<Routes>
+						<Layout>
+							<SharedProgressLoadingIndicator />
+							<Routes>
+								{isDevelopmentMode && (
+									<>
+										<Route path="/editor" element={<LevelEditor />} />
+										<Route path="/thumbnails" element={<Thumbnails />} />
+									</>
+								)}
+								<Route
+									element={
+										<DatabaseProvider>
+											<Outlet />
+										</DatabaseProvider>
+									}
+								>
 									<Route index element={<Home />} />
 									<Route path="/reset" element={<Reset />} />
 									{isDevelopmentMode && (
-										<>
-											<Route path="/unlock" element={<Unlock />} />
-											<Route path="/editor" element={<LevelEditor />} />
-											<Route path="/thumbnails" element={<Thumbnails />} />
-										</>
+										<Route path="/unlock" element={<Unlock />} />
 									)}
 									<Route path={levelLinkPattern} element={<Level />} />
 									<Route path="*" element={<NotFound />} />
-								</Routes>
-							</Layout>
-						</DatabaseProvider>
+								</Route>
+							</Routes>
+						</Layout>
 					</ThemeProvider>
 				</Router>
 			</LoadingSuspense>
