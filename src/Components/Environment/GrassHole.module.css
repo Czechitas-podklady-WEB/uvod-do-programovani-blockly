@@ -1,0 +1,13 @@
+.wrapper {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	justify-items: center;
+	grid-template-rows: 10fr auto 1fr;
+}
+
+.plain {
+	aspect-ratio: 166 / 82;
+	width: 60%;
+	grid-row: 2;
+}

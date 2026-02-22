@@ -9,10 +9,8 @@ import {
 	type CSSProperties,
 	type FunctionComponent,
 } from 'react'
-import floorHole from '../assets/environment/floor-hole.png'
 import floor from '../assets/environment/floor.png'
 import frog from '../assets/environment/frog.png'
-import grassHole from '../assets/environment/grass-hole.png'
 import leaderBottom from '../assets/environment/leader-bottom.png'
 import leaderMiddle from '../assets/environment/leader-middle.png'
 import leaderTop from '../assets/environment/leader-top.png'
@@ -39,6 +37,7 @@ import {
 } from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
 import { Grass } from './Environment/Grass'
+import { GrassHole } from './Environment/GrassHole'
 import { Princess } from './Environment/Princess'
 import { Sky } from './Environment/Sky'
 import { Soil } from './Environment/Soil'
@@ -354,35 +353,31 @@ export const EnvironmentGrid: FunctionComponent<{
 				>
 					{element.type === 'sword' ? (
 						<Sword />
+					) : element.type === 'hole' ? (
+						<GrassHole foundation={element.foundation} />
 					) : (
 						<img
 							className={styles.image}
 							src={
 								element.type === 'frog'
 									? frog
-									: element.type === 'hole'
-										? element.foundation === 'grass'
-											? grassHole
-											: element.foundation === 'floor'
-												? floorHole
-												: (element.foundation satisfies never)
-										: element.type === 'thicket'
-											? element.count === 1
-												? thicket1
-												: element.count === 2
-													? thicket2
-													: thicket3
-											: element.type === 'leader'
-												? element.part === 'top'
-													? leaderTop
-													: element.part === 'middle'
-														? leaderMiddle
-														: element.part === 'bottom'
-															? leaderBottom
-															: (element.part satisfies never)
-												: element.type === 'web'
-													? web
-													: (element satisfies never)
+									: element.type === 'thicket'
+										? element.count === 1
+											? thicket1
+											: element.count === 2
+												? thicket2
+												: thicket3
+										: element.type === 'leader'
+											? element.part === 'top'
+												? leaderTop
+												: element.part === 'middle'
+													? leaderMiddle
+													: element.part === 'bottom'
+														? leaderBottom
+														: (element.part satisfies never)
+											: element.type === 'web'
+												? web
+												: (element satisfies never)
 							}
 						/>
 					)}
