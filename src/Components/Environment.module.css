@@ -39,8 +39,8 @@
 .foundation.is_edge_right::after {
 	border-right: none;
 }
-.foundation img,
-.element > img {
+.foundation .image,
+.element .image {
 	width: 100%;
 	object-fit: cover;
 	position: absolute;

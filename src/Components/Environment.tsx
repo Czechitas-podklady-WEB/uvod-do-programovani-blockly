@@ -13,12 +13,9 @@ import floorHole from '../assets/environment/floor-hole.png'
 import floor from '../assets/environment/floor.png'
 import frog from '../assets/environment/frog.png'
 import grassHole from '../assets/environment/grass-hole.png'
-import grass from '../assets/environment/grass.png'
 import leaderBottom from '../assets/environment/leader-bottom.png'
 import leaderMiddle from '../assets/environment/leader-middle.png'
 import leaderTop from '../assets/environment/leader-top.png'
-import sky from '../assets/environment/sky.png'
-import soil from '../assets/environment/soil.png'
 import thicket1 from '../assets/environment/thicket-1.png'
 import thicket2 from '../assets/environment/thicket-2.png'
 import thicket3 from '../assets/environment/thicket-3.png'
@@ -41,7 +38,10 @@ import {
 	runEnvironment,
 } from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
+import { Grass } from './Environment/Grass'
 import { Princess } from './Environment/Princess'
+import { Sky } from './Environment/Sky'
+import { Soil } from './Environment/Soil'
 import { Sword } from './Environment/Sword'
 
 export const Environment: FunctionComponent<{
@@ -319,21 +319,24 @@ export const EnvironmentGrid: FunctionComponent<{
 								} as CSSProperties
 							}
 						>
-							<img
-								src={
-									foundation === 'sky'
-										? sky
-										: foundation === 'soil'
-											? soil
-											: foundation === 'grass'
-												? grass
-												: foundation === 'floor'
-													? floor
-													: foundation === 'wall'
-														? wall
-														: (foundation satisfies never)
-								}
-							/>
+							{foundation === 'sky' ? (
+								<Sky />
+							) : foundation === 'grass' ? (
+								<Grass />
+							) : foundation === 'soil' ? (
+								<Soil />
+							) : (
+								<img
+									className={styles.image}
+									src={
+										foundation === 'floor'
+											? floor
+											: foundation === 'wall'
+												? wall
+												: (foundation satisfies never)
+									}
+								/>
+							)}
 						</div>
 					))}
 				</Fragment>
@@ -353,6 +356,7 @@ export const EnvironmentGrid: FunctionComponent<{
 						<Sword />
 					) : (
 						<img
+							className={styles.image}
 							src={
 								element.type === 'frog'
 									? frog

@@ -3,7 +3,7 @@
 	height: 100%;
 	display: grid;
 	justify-items: center;
-	grid-template-rows: 2fr auto 1fr;
+	grid-template-rows: 3fr auto 1fr;
 }
 
 .plain {
