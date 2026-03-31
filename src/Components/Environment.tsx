@@ -14,9 +14,6 @@ import frog from '../assets/environment/frog.png'
 import leaderBottom from '../assets/environment/leader-bottom.png'
 import leaderMiddle from '../assets/environment/leader-middle.png'
 import leaderTop from '../assets/environment/leader-top.png'
-import thicket1 from '../assets/environment/thicket-1.png'
-import thicket2 from '../assets/environment/thicket-2.png'
-import thicket3 from '../assets/environment/thicket-3.png'
 import wall from '../assets/environment/wall.png'
 import web from '../assets/environment/web.png'
 import type {
@@ -42,6 +39,7 @@ import { Princess } from './Environment/Princess'
 import { Sky } from './Environment/Sky'
 import { Soil } from './Environment/Soil'
 import { Sword } from './Environment/Sword'
+import { Thicket } from './Environment/Thicket'
 
 export const Environment: FunctionComponent<{
 	environment: Level['environment']
@@ -355,29 +353,27 @@ export const EnvironmentGrid: FunctionComponent<{
 						<Sword />
 					) : element.type === 'hole' ? (
 						<Hole foundation={element.foundation} />
+					) : element.type === 'thicket' ? (
+						<Thicket
+							count={element.count} /* @TODO: add support for count 0 */
+						/>
 					) : (
 						<img
 							className={styles.image}
 							src={
 								element.type === 'frog'
 									? frog
-									: element.type === 'thicket'
-										? element.count === 1
-											? thicket1
-											: element.count === 2
-												? thicket2
-												: thicket3
-										: element.type === 'leader'
-											? element.part === 'top'
-												? leaderTop
-												: element.part === 'middle'
-													? leaderMiddle
-													: element.part === 'bottom'
-														? leaderBottom
-														: (element.part satisfies never)
-											: element.type === 'web'
-												? web
-												: (element satisfies never)
+									: element.type === 'leader'
+										? element.part === 'top'
+											? leaderTop
+											: element.part === 'middle'
+												? leaderMiddle
+												: element.part === 'bottom'
+													? leaderBottom
+													: (element.part satisfies never)
+										: element.type === 'web'
+											? web
+											: (element satisfies never)
 							}
 						/>
 					)}
