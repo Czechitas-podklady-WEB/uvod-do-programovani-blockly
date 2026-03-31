@@ -6,7 +6,7 @@ import { delay } from './utilities/delay.ts'
 const basePath = resolve(import.meta.dirname, './assets/thumbnails')
 
 console.log('Launching browser')
-const browser = await puppeteer.launch()
+const browser = await puppeteer.launch({ headless: false })
 const page = await browser.newPage()
 console.log('Loading page')
 await page.goto('http://localhost:5173/#/thumbnails')
