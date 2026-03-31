@@ -37,7 +37,7 @@ import {
 } from '../utilities/runEnvironment'
 import styles from './Environment.module.css'
 import { Grass } from './Environment/Grass'
-import { GrassHole } from './Environment/GrassHole'
+import { Hole } from './Environment/Hole'
 import { Princess } from './Environment/Princess'
 import { Sky } from './Environment/Sky'
 import { Soil } from './Environment/Soil'
@@ -354,7 +354,7 @@ export const EnvironmentGrid: FunctionComponent<{
 					{element.type === 'sword' ? (
 						<Sword />
 					) : element.type === 'hole' ? (
-						<GrassHole foundation={element.foundation} />
+						<Hole foundation={element.foundation} />
 					) : (
 						<img
 							className={styles.image}

@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react'
 import grassHole from '../../assets/environment/grassHole.svg'
-import styles from './GrassHole.module.css'
+import styles from './Hole.module.css'
 
-export const GrassHole: FunctionComponent<{
+export const Hole: FunctionComponent<{
 	foundation: 'grass' | 'floor'
 }> = ({ foundation }) => {
 	return (
