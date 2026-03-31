@@ -26,7 +26,6 @@ const keyToUrl = new Map<string, string>()
 
 const levels = await page.$$('div[data-level-key]')
 console.log('Levels found:', levels.length)
-let lastNameBase = 0
 for (const level of levels) {
 	const levelKey = await level.evaluate((element) =>
 		element.getAttribute('data-level-key'),
@@ -38,7 +37,7 @@ for (const level of levels) {
 	await level.screenshot({
 		path: resolve(basePath, `${levelKey}.png`),
 	})
-	const name = `l_${lastNameBase++}`
+	const name = `l_${levelKey}`
 	exportFileContent += `import ${name} from './${levelKey}.png'\n`
 	keyToUrl.set(levelKey, name)
 }
