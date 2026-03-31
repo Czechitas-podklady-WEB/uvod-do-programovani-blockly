@@ -23,7 +23,7 @@ export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
 const makeLevelKeyLabelThumbnail = (() => {
-	let lastLevel = -1
+	let lastLevel = -2
 	return () => {
 		lastLevel++
 		const key = makeLevelKey(lastLevel.toString())
