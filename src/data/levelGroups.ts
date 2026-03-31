@@ -23,14 +23,13 @@ export type LevelKey = string & Brand.Brand<'LevelKey'>
 export const makeGroupKey = Brand.nominal<GroupKey>()
 export const makeLevelKey = Brand.nominal<LevelKey>()
 const makeLevelKeyLabelThumbnail = (() => {
-	let lastLevel = -2
-	return () => {
-		lastLevel++
-		const key = makeLevelKey(lastLevel.toString())
+	let lastLevel = -1
+	return (forcedKey?: string) => {
+		const key = makeLevelKey(forcedKey ?? (++lastLevel).toString())
 		const thumbnailImage = thumbnails.get(key) ?? mystery
 		return {
 			key,
-			label: `Level ${lastLevel}`,
+			label: `Level ${key}`,
 			thumbnailImage,
 		}
 	}
@@ -57,7 +56,7 @@ export const developmentGroup = {
 	label: 'Testovací prostředí',
 	levels: [
 		{
-			...makeLevelKeyLabelThumbnail(),
+			...makeLevelKeyLabelThumbnail('demo'),
 			instructions:
 				'Prostředí pouze pro testovací účely. V produkčním prostředí se nezobrazuje.',
 			reward: { image: tester, label: 'Test', description: 'Test' },
