@@ -1,3 +1,4 @@
+import l_demo from './demo.png'
 import l_0 from './0.png'
 import l_1 from './1.png'
 import l_2 from './2.png'
@@ -48,9 +49,9 @@ import l_46 from './46.png'
 import l_47 from './47.png'
 import l_48 from './48.png'
 import l_49 from './49.png'
-import l_50 from './50.png'
 
 export const thumbnails = new Map([
+	['demo', l_demo],
 	['0', l_0],
 	['1', l_1],
 	['2', l_2],
@@ -101,5 +102,4 @@ export const thumbnails = new Map([
 	['47', l_47],
 	['48', l_48],
 	['49', l_49],
-	['50', l_50],
 ])
