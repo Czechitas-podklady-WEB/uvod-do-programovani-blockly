@@ -11,9 +11,6 @@ import {
 } from 'react'
 import floor from '../assets/environment/floor.png'
 import frog from '../assets/environment/frog.png'
-import leaderBottom from '../assets/environment/leader-bottom.png'
-import leaderMiddle from '../assets/environment/leader-middle.png'
-import leaderTop from '../assets/environment/leader-top.png'
 import wall from '../assets/environment/wall.png'
 import web from '../assets/environment/web.png'
 import type {
@@ -35,6 +32,7 @@ import {
 import styles from './Environment.module.css'
 import { Grass } from './Environment/Grass'
 import { Hole } from './Environment/Hole'
+import { Leader } from './Environment/Leader'
 import { Princess } from './Environment/Princess'
 import { Sky } from './Environment/Sky'
 import { Soil } from './Environment/Soil'
@@ -357,23 +355,17 @@ export const EnvironmentGrid: FunctionComponent<{
 						<Thicket
 							count={element.count} /* @TODO: add support for count 0 */
 						/>
+					) : element.type === 'leader' ? (
+						<Leader part={element.part} />
 					) : (
 						<img
 							className={styles.image}
 							src={
 								element.type === 'frog'
 									? frog
-									: element.type === 'leader'
-										? element.part === 'top'
-											? leaderTop
-											: element.part === 'middle'
-												? leaderMiddle
-												: element.part === 'bottom'
-													? leaderBottom
-													: (element.part satisfies never)
-										: element.type === 'web'
-											? web
-											: (element satisfies never)
+									: element.type === 'web'
+										? web
+										: (element satisfies never)
 							}
 						/>
 					)}

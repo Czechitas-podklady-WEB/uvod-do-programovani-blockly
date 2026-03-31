@@ -1,0 +1,65 @@
+.wrapper {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	justify-items: center;
+}
+
+.segment {
+	position: relative;
+	width: 40%; /* @TODO: Make it more narrow. */
+	aspect-ratio: 2 / 1;
+	isolation: isolate;
+}
+
+.is_part_top .segment:first-child {
+	visibility: hidden;
+}
+
+.is_part_bottom .segment:last-child {
+	visibility: hidden;
+}
+
+.segment::before,
+.segment::after,
+.segment_rung {
+	position: absolute;
+	color: #000000;
+	border: 0.0625rem solid; /* Use border in percentage to be relative same way as in svg. */
+	background-color: #dfff00;
+}
+
+.segment::before,
+.segment::after {
+	content: '';
+	width: 16%;
+	height: 100%;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+}
+
+.is_part_top .segment:nth-child(2)::before,
+.is_part_top .segment:nth-child(2)::after {
+	border-top-color: currentColor;
+}
+
+.is_part_bottom .segment:nth-child(4)::before,
+.is_part_bottom .segment:nth-child(4)::after {
+	border-bottom-color: currentColor;
+}
+
+.segment::before {
+	left: 0;
+}
+
+.segment::after {
+	right: 0;
+}
+
+.segment_rung {
+	left: 0;
+	right: 0;
+	top: calc(50% - 24% / 2);
+	height: 24%;
+	z-index: 1;
+}
