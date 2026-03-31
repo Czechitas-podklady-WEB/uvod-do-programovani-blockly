@@ -16,7 +16,7 @@ import story9 from '../assets/story-9.png'
 import tester from '../assets/tester.png'
 import { thumbnails } from '../assets/thumbnails/thumbnails'
 import { isDevelopmentMode } from '../utilities/isDevelopmentMode'
-import type { LevelGroup } from './Level'
+import type { Level, LevelGroup } from './Level'
 
 export type GroupKey = string & Brand.Brand<'GroupKey'>
 export type LevelKey = string & Brand.Brand<'LevelKey'>
@@ -35,6 +35,22 @@ const makeLevelKeyLabelThumbnail = (() => {
 		}
 	}
 })()
+
+// @TODO: Drop this once all levels are implemented.
+const generateDummyPlaceholderLevel = (): Level => {
+	return {
+		...makeLevelKeyLabelThumbnail(),
+		instructions: '@TODO',
+		reward: { image: mystery, label: '@TODO', description: '@TODO' },
+		maximumInstructionsCountForBestRating: 4,
+		allowedBlocks: ['go_forward', 'kiss'],
+		environment: {
+			startRowIndex: 0,
+			elements: [{ x: 3, y: 0, type: 'frog' }],
+			foundations: [['grass', 'grass', 'grass', 'grass']],
+		},
+	}
+}
 
 export const developmentGroup = {
 	key: makeGroupKey('development'),
@@ -936,6 +952,13 @@ export const levelGroups = [
 					],
 				},
 			},
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
 		],
 	},
 	{
@@ -993,6 +1016,14 @@ export const levelGroups = [
 					],
 				}, // @TODO
 			},
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
 		],
 	},
 	{
@@ -1050,6 +1081,14 @@ export const levelGroups = [
 					],
 				}, // @TODO
 			},
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
 		],
 	},
 	{
@@ -1107,6 +1146,14 @@ export const levelGroups = [
 					],
 				}, // @TODO
 			},
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
+			generateDummyPlaceholderLevel(),
 		],
 	},
 ] as const satisfies Array<LevelGroup>
